@@ -2,11 +2,18 @@
 
 https://www.youtube.com/watch?v=bHRe5XNP5l8
 
+## This Git
+
+https://github.com/samedan/2302_Laravel_React_Survey
+
 ## Starting steps
 
 > .env > php artisan migrate
+
 > npm create vite@latest > npm i > npm run dev
+
 > npm install -D tailwindcss postcss autoprefixer
+
 > npm install @heroicons/react
 
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>

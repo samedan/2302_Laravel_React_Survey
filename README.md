@@ -10,6 +10,10 @@ https://github.com/thecodeholic/laravel-react-survey
 
 https://github.com/samedan/2302_Laravel_React_Survey
 
+## tailwind
+
+https://tailwindui.com/components
+
 ## Starting steps
 
 > .env > php artisan migrate

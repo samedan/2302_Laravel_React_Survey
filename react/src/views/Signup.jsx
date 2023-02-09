@@ -1,6 +1,31 @@
 import { LockClosedIcon } from "@heroicons/react/20/solid";
+import { Link } from "react-router-dom";
+import { useState } from "react";
+import axiosClient from "./../axios";
 
 export default function Signup() {
+    const [fullName, setFullName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [passwordConfirmation, setPasswordConfirmation] = useState("");
+    const [error, setError] = useState({ __html: "" });
+
+    const onSubmit = (ev) => {
+        ev.preventDefault();
+        setError({ __html: "" });
+        axiosClient
+            .post("/signup", {
+                name: fullName,
+                email,
+                password,
+                password_confirmation: passwordConfirmation,
+            })
+            .then(({ data }) => {
+                console.log(data);
+            })
+            .catch(({ response }) => console.log(response));
+    };
+
     return (
         <>
             <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
@@ -8,16 +33,36 @@ export default function Signup() {
             </h2>
             <p className="mt-2 text-center text-sm text-gray-600">
                 Or{" "}
-                <a
-                    href="#"
+                <Link
+                    to="/login"
                     className="font-medium text-indigo-600 hover:text-indigo-500"
                 >
-                    start your 14-day free trial
-                </a>
+                    Login in your account
+                </Link>
             </p>
-            <form className="mt-8 space-y-6" action="#" method="POST">
+            <form
+                className="mt-8 space-y-6"
+                action="#"
+                method="POST"
+                onSubmit={onSubmit}
+            >
                 <input type="hidden" name="remember" defaultValue="true" />
                 <div className="-space-y-px rounded-md shadow-sm">
+                    {/* Full Name */}
+                    <div>
+                        <label htmlFor="full-name" className="sr-only">
+                            Full Name
+                        </label>
+                        <input
+                            id="full-name"
+                            name="name"
+                            type="text"
+                            required
+                            className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                            placeholder="Full Name"
+                        />
+                    </div>
+
                     <div>
                         <label htmlFor="email-address" className="sr-only">
                             Email address
@@ -28,7 +73,7 @@ export default function Signup() {
                             type="email"
                             autoComplete="email"
                             required
-                            className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                            className="relative block w-full appearance-none rounded-none border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                             placeholder="Email address"
                         />
                     </div>
@@ -42,35 +87,23 @@ export default function Signup() {
                             type="password"
                             autoComplete="current-password"
                             required
-                            className="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                            className="relative block w-full appearance-none rounded-none border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                             placeholder="Password"
                         />
                     </div>
-                </div>
 
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center">
-                        <input
-                            id="remember-me"
-                            name="remember-me"
-                            type="checkbox"
-                            className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                        />
-                        <label
-                            htmlFor="remember-me"
-                            className="ml-2 block text-sm text-gray-900"
-                        >
-                            Remember me
+                    <div>
+                        <label htmlFor="password" className="sr-only">
+                            Password confirmation
                         </label>
-                    </div>
-
-                    <div className="text-sm">
-                        <a
-                            href="#"
-                            className="font-medium text-indigo-600 hover:text-indigo-500"
-                        >
-                            Forgot your password?
-                        </a>
+                        <input
+                            id="passwordConfirmation"
+                            name="password_confirmation"
+                            type="password"
+                            required
+                            className="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                            placeholder="Password confirmation"
+                        />
                     </div>
                 </div>
 
@@ -85,7 +118,7 @@ export default function Signup() {
                                 aria-hidden="true"
                             />
                         </span>
-                        Sign in
+                        Signup
                     </button>
                 </div>
             </form>

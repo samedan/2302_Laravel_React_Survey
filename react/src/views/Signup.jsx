@@ -23,7 +23,21 @@ export default function Signup() {
             .then(({ data }) => {
                 console.log(data);
             })
-            .catch(({ response }) => console.log(response));
+            .catch((error) => {
+                // error.response.data =
+                // {"message":"The name field is required. (and 2 more errors)",
+                //  "errors":{
+                //         "name":["The name field is required."],
+                //         "email":["The email field is required."],
+                //         "password":["The password field is required."]
+                //     }} => Object.values = [[], [], []] => [].reduce() => [ "error1", "error2", "error3" ]
+                if (error.response) {
+                    const finalErrors = Object.values(
+                        error.response.data.errors
+                    ).reduce((accum, next) => [...accum, ...next], []);
+                    setError({ __html: finalErrors.join("<br>") });
+                }
+            });
     };
 
     return (
@@ -40,6 +54,13 @@ export default function Signup() {
                     Login in your account
                 </Link>
             </p>
+
+            {error.__html && (
+                <div
+                    className="bg-red-500 rounded py-2 px-3 text-white"
+                    dangerouslySetInnerHTML={error}
+                ></div>
+            )}
             <form
                 className="mt-8 space-y-6"
                 action="#"

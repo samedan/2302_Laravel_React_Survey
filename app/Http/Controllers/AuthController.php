@@ -17,6 +17,7 @@ class AuthController extends Controller
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
+
             'password' => bcrypt($data['password']),
         ]);
         $token = $user->createToken('main')->plainTextToken;
@@ -33,7 +34,7 @@ class AuthController extends Controller
         $remember = $credentials['remember'] ?? false;
         unset($credentials['remember']);
 
-        if(!Auth::atempt($credentials, $remember)) {
+        if(!Auth::attempt($credentials, $remember)) {
             return response([
                 'error' => 'The provided credentials are not correct'
             ], 422);

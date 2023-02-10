@@ -8,6 +8,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { Navigate, NavLink, Outlet } from "react-router-dom";
 import { useStateContext } from "../contexts/ContextProvider";
+import axiosClient from "./../axios";
 
 const navigation = [
     { name: "Dashboard", to: "/" },
@@ -19,18 +20,24 @@ function classNames(...classes) {
 }
 
 export default function DefaultLayout() {
-    const { currentUser, userToken } = useStateContext();
+    const { currentUser, userToken, setCurrentUser, setUserToken } =
+        useStateContext();
 
     // console.log(currentUser);
 
     const logout = (ev) => {
         ev.preventDefault();
-        console.log("Logout");
+        axiosClient.post("/logout").then((res) => {
+            setCurrentUser({});
+            setUserToken(null);
+        });
     };
 
     if (!userToken) {
         return <Navigate to="/login" />;
     }
+
+    console.log(currentUser);
 
     return (
         <>
@@ -44,7 +51,7 @@ export default function DefaultLayout() {
                                         <div className="flex-shrink-0">
                                             <img
                                                 className="h-8 w-8"
-                                                src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
+                                                src="https://tailwindui.com/img/logos/mark.svg?color=green&shade=500"
                                                 alt="Your Company"
                                             />
                                         </div>
@@ -80,6 +87,11 @@ export default function DefaultLayout() {
                                             >
                                                 <div>
                                                     <Menu.Button className="flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                                                        {currentUser && (
+                                                            <div className="text-white pr-2">
+                                                                {`Welcome, ${currentUser.name}  `}
+                                                            </div>
+                                                        )}
                                                         <span className="sr-only">
                                                             Open user menu
                                                         </span>

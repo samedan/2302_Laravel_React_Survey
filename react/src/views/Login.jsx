@@ -1,6 +1,43 @@
 import { LockClosedIcon } from "@heroicons/react/20/solid";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { useStateContext } from "../contexts/ContextProvider";
+import axiosClient from "./../axios";
 
 export default function Login() {
+    const { setCurrentUser, setUserToken } = useStateContext();
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState({ __html: "" });
+
+    const onSubmit = (ev) => {
+        ev.preventDefault();
+        setError({ __html: "" });
+        axiosClient
+            .post("/login", {
+                email,
+                password,
+            })
+            .then(({ data }) => {
+                setCurrentUser(data.user);
+                setUserToken(data.token);
+            })
+            .catch((error) => {
+                if (error.response) {
+                    console.log(error.response.data);
+                    if (error.response.data.errors) {
+                        console.log("here");
+                        const finalErrors = Object.values(
+                            error.response.data.errors
+                        ).reduce((accum, next) => [...accum, ...next], []);
+                        setError({ __html: finalErrors.join("<br>") });
+                    } else {
+                        const finalErrors = Object.values(error.response.data);
+                        setError({ __html: finalErrors[0] });
+                    }
+                }
+            });
+    };
     return (
         <>
             <div>
@@ -11,14 +48,25 @@ export default function Login() {
 
             <p className="mt-2 text-center text-sm text-gray-600">
                 Or{" "}
-                <a
-                    href="#"
+                <Link
+                    to="/signup"
                     className="font-medium text-indigo-600 hover:text-indigo-500"
                 >
-                    start your 14-day free trial
-                </a>
+                    Signup for free
+                </Link>
             </p>
-            <form className="mt-8 space-y-6" action="#" method="POST">
+            {error.__html && (
+                <div
+                    className="bg-red-500 rounded py-2 px-3 text-white"
+                    dangerouslySetInnerHTML={error}
+                ></div>
+            )}
+            <form
+                onSubmit={onSubmit}
+                className="mt-8 space-y-6"
+                action="#"
+                method="POST"
+            >
                 <input type="hidden" name="remember" defaultValue="true" />
                 <div className="-space-y-px rounded-md shadow-sm">
                     <div>
@@ -30,7 +78,8 @@ export default function Login() {
                             name="email"
                             type="email"
                             autoComplete="email"
-                            required
+                            value={email}
+                            onChange={(ev) => setEmail(ev.target.value)}
                             className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                             placeholder="Email address"
                         />
@@ -43,8 +92,9 @@ export default function Login() {
                             id="password"
                             name="password"
                             type="password"
+                            value={password}
+                            onChange={(ev) => setPassword(ev.target.value)}
                             autoComplete="current-password"
-                            required
                             className="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                             placeholder="Password"
                         />
@@ -65,15 +115,6 @@ export default function Login() {
                         >
                             Remember me
                         </label>
-                    </div>
-
-                    <div className="text-sm">
-                        <a
-                            href="#"
-                            className="font-medium text-indigo-600 hover:text-indigo-500"
-                        >
-                            Forgot your password?
-                        </a>
                     </div>
                 </div>
 

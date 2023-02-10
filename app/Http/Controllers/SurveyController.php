@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Http\Requests\SurveyStoreRequest;
-use App\Http\Requests\SurveyUpdateRequest;
+use App\Models\Survey;
+use App\Http\Requests\StoreSurveyRequest;
+use App\Http\Requests\UpdateSurveyRequest;
 
 class SurveyController extends Controller
 {
@@ -18,40 +18,39 @@ class SurveyController extends Controller
         //
     }
 
+    
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\StoreSurveyRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(SurveyStoreRequest $request)
-    {
-        $user = $request->$user();
-        return Survey::where('user_id', $user->id)->orderBy('created_by', 'desc')->get();
-
-
-
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function store(StoreSurveyRequest $request)
     {
         //
     }
 
     /**
-     * Update the specified resource in storage.
+     * Display the specified resource.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Models\Survey  $survey
      * @return \Illuminate\Http\Response
      */
-    public function update(SurveyUpdateRequest $request, $id)
+    public function show(Survey $survey)
+    {
+        //
+    }
+
+    
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \App\Http\Requests\UpdateSurveyRequest  $request
+     * @param  \App\Models\Survey  $survey
+     * @return \Illuminate\Http\Response
+     */
+    public function update(UpdateSurveyRequest $request, Survey $survey)
     {
         //
     }
@@ -59,10 +58,10 @@ class SurveyController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Models\Survey  $survey
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Survey $survey)
     {
         //
     }

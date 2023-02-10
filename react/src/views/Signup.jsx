@@ -2,8 +2,10 @@ import { LockClosedIcon } from "@heroicons/react/20/solid";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import axiosClient from "./../axios";
+import { useStateContext } from "../contexts/ContextProvider";
 
 export default function Signup() {
+    const { setCurrentUser, setUserToken } = useStateContext();
     const [fullName, setFullName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -22,6 +24,8 @@ export default function Signup() {
             })
             .then(({ data }) => {
                 console.log(data);
+                setCurrentUser(data.user);
+                setUserToken(data.token);
             })
             .catch((error) => {
                 // error.response.data =
@@ -74,10 +78,13 @@ export default function Signup() {
                         <label htmlFor="full-name" className="sr-only">
                             Full Name
                         </label>
+
                         <input
                             id="full-name"
                             name="name"
                             type="text"
+                            value={fullName}
+                            onChange={(ev) => setFullName(ev.target.value)}
                             required
                             className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                             placeholder="Full Name"
@@ -92,6 +99,8 @@ export default function Signup() {
                             id="email-address"
                             name="email"
                             type="email"
+                            value={email}
+                            onChange={(ev) => setEmail(ev.target.value)}
                             autoComplete="email"
                             required
                             className="relative block w-full appearance-none rounded-none border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
@@ -108,6 +117,8 @@ export default function Signup() {
                             type="password"
                             autoComplete="current-password"
                             required
+                            value={password}
+                            onChange={(ev) => setPassword(ev.target.value)}
                             className="relative block w-full appearance-none rounded-none border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                             placeholder="Password"
                         />
@@ -122,6 +133,10 @@ export default function Signup() {
                             name="password_confirmation"
                             type="password"
                             required
+                            value={passwordConfirmation}
+                            onChange={(ev) =>
+                                setPasswordConfirmation(ev.target.value)
+                            }
                             className="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                             placeholder="Password confirmation"
                         />

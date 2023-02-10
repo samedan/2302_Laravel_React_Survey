@@ -34,6 +34,22 @@ https://tailwindui.com/components
 
 > saves TOKEN to localStorage
 
+## Surveys
+
+# Functions
+
+> php artisan make:controller SurveyController --api
+
+> php artisan make:resource SurveyResource
+
+> php artisan make:request SurveyUpdateRequest
+
+> php artisan make:request SurveyStoreRequest
+
+# Database
+
+![alt text](https://github.com/samedan/2302_Laravel_React_Survey/blob/main/public/schema_dbb.jpg?raw=true)
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">

@@ -50,6 +50,16 @@ https://tailwindui.com/components
 
 ![alt text](https://github.com/samedan/2302_Laravel_React_Survey/blob/main/public/schema_dbb.jpg?raw=true)
 
+m=Model c=Controller r=resource R=Requests
+
+> php artisan make:model Survey -mcrR
+
+> php artisan make:model SurveyQuestion -m
+
+> php artisan make:model SurveyAnswer -m
+
+> php artisan make:model SurveyQuestionAnswer -m
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">

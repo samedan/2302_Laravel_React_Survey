@@ -2,6 +2,7 @@ import { PhotoIcon } from "@heroicons/react/24/outline";
 import React, { useState } from "react";
 import TButton from "../components/core/TButton";
 import PageComponent from "../components/PageComponent";
+import axiosClient from "./../axios";
 
 export default function SurveyView() {
     const [survey, setSurvey] = useState({
@@ -16,11 +17,17 @@ export default function SurveyView() {
     });
 
     const onImageChoose = () => {
-        console.log("On Imag echose");
+        console.log("On Image choose");
     };
     const onSubmit = (ev) => {
         ev.preventDefault();
-        console.log(ev);
+        axiosClient.post("/survey", {
+            title: "Lorem ipsum",
+            description: "Lorem ipsum",
+            expire_date: "2023-02-14",
+            status: true,
+            questions: [],
+        });
     };
 
     return (
@@ -59,7 +66,7 @@ export default function SurveyView() {
                                     <input
                                         type="file"
                                         className="absolute left-0 top-0 right-0 bottom-0 opacity-0"
-                                        // onChange={onImageChoose}
+                                        onChange={onImageChoose}
                                     />
                                     Change
                                 </button>
@@ -80,12 +87,12 @@ export default function SurveyView() {
                                 name="title"
                                 id="title"
                                 value={survey.title}
-                                // onChange={(ev) =>
-                                //     setSurvey({
-                                //         ...survey,
-                                //         title: ev.target.value,
-                                //     })
-                                // }
+                                onChange={(ev) =>
+                                    setSurvey({
+                                        ...survey,
+                                        title: ev.target.value,
+                                    })
+                                }
                                 placeholder="Survey Title"
                                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                             />
@@ -105,12 +112,12 @@ export default function SurveyView() {
                                 name="description"
                                 id="description"
                                 value={survey.description || ""}
-                                // onChange={(ev) =>
-                                //     setSurvey({
-                                //         ...survey,
-                                //         description: ev.target.value,
-                                //     })
-                                // }
+                                onChange={(ev) =>
+                                    setSurvey({
+                                        ...survey,
+                                        description: ev.target.value,
+                                    })
+                                }
                                 placeholder="Describe your survey"
                                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                             ></textarea>
@@ -130,12 +137,12 @@ export default function SurveyView() {
                                 name="expire_date"
                                 id="expire_date"
                                 value={survey.expire_date}
-                                // onChange={(ev) =>
-                                //     setSurvey({
-                                //         ...survey,
-                                //         expire_date: ev.target.value,
-                                //     })
-                                // }
+                                onChange={(ev) =>
+                                    setSurvey({
+                                        ...survey,
+                                        expire_date: ev.target.value,
+                                    })
+                                }
                                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                             />
                         </div>
@@ -149,12 +156,12 @@ export default function SurveyView() {
                                     name="status"
                                     type="checkbox"
                                     checked={survey.status}
-                                    // onChange={(ev) =>
-                                    //     setSurvey({
-                                    //         ...survey,
-                                    //         status: ev.target.checked,
-                                    //     })
-                                    // }
+                                    onChange={(ev) =>
+                                        setSurvey({
+                                            ...survey,
+                                            status: ev.target.checked,
+                                        })
+                                    }
                                     className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                                 />
                             </div>

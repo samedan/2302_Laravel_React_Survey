@@ -1,10 +1,12 @@
 import { PhotoIcon } from "@heroicons/react/24/outline";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import TButton from "../components/core/TButton";
 import PageComponent from "../components/PageComponent";
 import axiosClient from "./../axios";
 
 export default function SurveyView() {
+    const navigate = useNavigate();
     const [survey, setSurvey] = useState({
         title: "",
         slug: "",
@@ -15,17 +17,21 @@ export default function SurveyView() {
         expire_date: "",
         questions: [],
     });
+    // const [error, setError] = useState({ __html: "" });
+    const [errors, setErrors] = useState({ __html: "" });
+    const [errorExpireDate, setErrorExpireDate] = useState("");
+    const [errorTitle, setErrorTitle] = useState("");
 
     const onImageChoose = (ev) => {
         // console.log("On Image choose");
         const file = ev.target.files[0];
-        const reader = new FileReader();
+        const reader = new FileReader(); // Lets web applications asynchronously read the contents of files (or raw data buffers) stored on the user's computer, using File or Blob objects to specify the file or data to read.
 
         reader.onload = () => {
             setSurvey({
                 ...survey,
                 image: file,
-                image_url: reader.result, //// base64 of teh image
+                image_url: reader.result, // base64 of the image
             });
             ev.target.value = "";
         };
@@ -33,6 +39,7 @@ export default function SurveyView() {
     };
     const onSubmit = (ev) => {
         ev.preventDefault();
+        setErrors({ __html: "" });
         // axiosClient.post("/survey", {
         //     title: "Lorem ipsum",
         //     description: "Lorem ipsum",
@@ -42,10 +49,43 @@ export default function SurveyView() {
         // });
         const payload = { ...survey };
         if (payload.image) {
-            payload.image = payload.image_url;
+            payload.image = payload.image_url; // image is part of json
         }
         delete payload.image_url;
-        axiosClient.post("/survey", payload).then((res) => console.log(res));
+        axiosClient
+            .post("/survey", payload)
+            .then((res) => {
+                console.log(res);
+                navigate("/surveys");
+            })
+            .catch((err) => {
+                console.log(err.response.data.errors);
+                if (
+                    err.response.data.errors &&
+                    err.response.data.errors["expire_date"] !== null
+                ) {
+                    setErrorExpireDate(err.response.data.errors["expire_date"]);
+                }
+                if (
+                    err.response.data.errors &&
+                    err.response.data.errors["title"] !== null
+                ) {
+                    setErrorTitle(err.response.data.errors["title"]);
+                }
+                if (err.response) {
+                    console.log(err.response.data);
+                    if (err.response.data.errors) {
+                        console.log("here");
+                        const finalErrors = Object.values(
+                            err.response.data.errors
+                        ).reduce((accum, next) => [...accum, ...next], []);
+                        setErrors({ __html: finalErrors.join("<br>") });
+                    } else {
+                        const finalErrors = Object.values(err.response.data);
+                        setErrors({ __html: finalErrors[0] });
+                    }
+                }
+            });
     };
 
     return (
@@ -53,11 +93,18 @@ export default function SurveyView() {
             <form action="#" method="POST" onSubmit={onSubmit}>
                 <div className="shadow sm:overflow-hidden sm:rounded-md">
                     <div className="space-y-6 bg-white px-4 py-5 sm:p-6">
-                        {/* {error && (
+                        {/* {errors && (
                             <div className="bg-red-500 text-white py-3 px-3">
-                                {error}
+                                {errors}
                             </div>
                         )} */}
+
+                        {errors.__html && (
+                            <div
+                                className="bg-red-500 rounded py-2 px-3 text-white"
+                                dangerouslySetInnerHTML={errors}
+                            ></div>
+                        )}
 
                         {/*Image*/}
                         <div>
@@ -112,8 +159,15 @@ export default function SurveyView() {
                                     })
                                 }
                                 placeholder="Survey Title"
-                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
+                                    errorTitle ? "border-red-500" : ""
+                                }`}
                             />
+                            {errorTitle && (
+                                <small className="text-red-500">
+                                    {errorTitle}
+                                </small>
+                            )}
                         </div>
                         {/*Title*/}
 
@@ -161,8 +215,15 @@ export default function SurveyView() {
                                         expire_date: ev.target.value,
                                     })
                                 }
-                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
+                                    errorExpireDate ? "border-red-500" : ""
+                                }`}
                             />
+                            {errorExpireDate && (
+                                <small className="text-red-500">
+                                    {errorExpireDate}
+                                </small>
+                            )}
                         </div>
                         {/*Expire Date*/}
 

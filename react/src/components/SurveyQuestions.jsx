@@ -6,20 +6,28 @@ import QuestionEditor from "./QuestionEditor";
 export default function SurveyQuestions({ survey, onSurveyUpdate }) {
     const [model, setModel] = useState({ ...survey });
 
-    const addQuestion = (ev) => {
-        ev.preventDefault();
+    const addQuestion = (index) => {
+        console.log(index);
+        index =
+            index !== undefined
+                ? // (Add small Question button in Between Questions)
+                  index
+                : // index=undefined (Add New Question button) -> last position in the list of questions (NEW Question)
+                  model.questions.length - 1;
+        model.questions.splice(
+            index,
+            0, // how many elements to delete
+            {
+                id: uuidv4(),
+                type: "text",
+                question: "",
+                description: "",
+                data: {},
+            }
+        );
         setModel({
             ...model,
-            questions: [
-                ...model.questions,
-                {
-                    id: uuidv4(),
-                    type: "text",
-                    question: "",
-                    description: "",
-                    data: {},
-                },
-            ],
+            questions: [...model.questions],
         });
     };
 
@@ -56,11 +64,11 @@ export default function SurveyQuestions({ survey, onSurveyUpdate }) {
             <div className="flex justify-between">
                 <h3 className="text-2xl font-bold">Questions</h3>
                 <button
-                    onClick={addQuestion}
+                    onClick={() => addQuestion()}
                     className="flex bg-gray-600 hover:bg-gray-700 items-center text-sm py-1 px-4 rounded-sm text-white"
                 >
                     <PlusIcon className="w-4 mr-2" />
-                    Add Question
+                    Add Question (last question)
                 </button>
             </div>
             {model.questions.length ? (

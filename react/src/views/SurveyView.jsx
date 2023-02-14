@@ -50,49 +50,62 @@ export default function SurveyView() {
         //     questions: [],
         // });
         const payload = { ...survey };
+
         if (payload.image) {
             payload.image = payload.image_url; // image is part of json
         }
         delete payload.image_url;
-        axiosClient
-            .post("/survey", payload)
-            .then((res) => {
-                console.log(res);
-                navigate("/surveys");
-            })
-            .catch((err) => {
-                console.log(err.response.data.errors);
-                if (
-                    err.response.data.errors &&
-                    err.response.data.errors["expire_date"] !== null
-                ) {
-                    setErrorExpireDate(err.response.data.errors["expire_date"]);
-                }
-                if (
-                    err.response.data.errors &&
-                    err.response.data.errors["title"] !== null
-                ) {
-                    setErrorTitle(err.response.data.errors["title"]);
-                }
-                if (err.response) {
-                    console.log(err.response.data);
-                    if (err.response.data.errors) {
-                        console.log("here");
-                        const finalErrors = Object.values(
-                            err.response.data.errors
-                        ).reduce((accum, next) => [...accum, ...next], []);
-                        setErrors({ __html: finalErrors.join("<br>") });
-                    } else {
-                        const finalErrors = Object.values(err.response.data);
-                        setErrors({ __html: finalErrors[0] });
-                    }
-                }
-            });
+        console.log(payload);
+        // axiosClient
+        //     .post("/survey", payload)
+        //     .then((res) => {
+        //         console.log(res);
+        //         navigate("/surveys");
+        //     })
+        //     .catch((err) => {
+        //         console.log(err.response.data.errors);
+        //         if (
+        //             err.response.data.errors &&
+        //             err.response.data.errors["expire_date"] !== null
+        //         ) {
+        //             setErrorExpireDate(err.response.data.errors["expire_date"]);
+        //         }
+        //         if (
+        //             err.response.data.errors &&
+        //             err.response.data.errors["title"] !== null
+        //         ) {
+        //             setErrorTitle(err.response.data.errors["title"]);
+        //         }
+        //         if (err.response) {
+        //             console.log(err.response.data);
+        //             if (err.response.data.errors) {
+        //                 console.log("here");
+        //                 const finalErrors = Object.values(
+        //                     err.response.data.errors
+        //                 ).reduce((accum, next) => [...accum, ...next], []);
+        //                 setErrors({ __html: finalErrors.join("<br>") });
+        //             } else {
+        //                 const finalErrors = Object.values(err.response.data);
+        //                 setErrors({ __html: finalErrors[0] });
+        //             }
+        //         }
+        //     });
     };
 
-    const onSurveyUpdate = (survey) => {
+    const addQuestion = () => {
+        survey.questions.push({
+            id: uuidv4(),
+            type: "text",
+            question: "",
+            description: "",
+            data: {},
+        });
         setSurvey({ ...survey });
     };
+
+    function onSurveyUpdate(survey) {
+        setSurvey({ ...survey });
+    }
 
     return (
         <PageComponent title="Create New Survey">
@@ -265,6 +278,9 @@ export default function SurveyView() {
                         {/*Active*/}
 
                         {/* Survey Questions */}
+                        <button type="button" onClick={addQuestion}>
+                            Add question
+                        </button>
                         <SurveyQuestions
                             survey={survey}
                             onSurveyUpdate={onSurveyUpdate}

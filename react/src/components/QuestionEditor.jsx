@@ -32,7 +32,7 @@ export default function QuestionEditor({
                         <button
                             type="button"
                             className="flex items-center text-xs py-1 px-3 mr-2 rounded-sm text-white bg-gray-600 hover:bg-gray-700"
-                            onClick={addQuestion}
+                            onClick={() => addQuestion(index + 1)}
                         >
                             <PlusIcon className="w-4" />
                             Add
@@ -94,6 +94,7 @@ export default function QuestionEditor({
                             {questionTypes.map((type) => (
                                 <option
                                     value={type}
+                                    key={type}
                                     selected={model.type == type}
                                 >
                                     {upperCaseFirst(type)}

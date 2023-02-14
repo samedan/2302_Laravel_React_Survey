@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import TButton from "../components/core/TButton";
 import PageComponent from "../components/PageComponent";
+import QuestionEditor from "../components/QuestionEditor";
+import SurveyQuestions from "../components/SurveyQuestions";
 import axiosClient from "./../axios";
 
 export default function SurveyView() {
@@ -86,6 +88,10 @@ export default function SurveyView() {
                     }
                 }
             });
+    };
+
+    const onSurveyUpdate = (survey) => {
+        setSurvey({ ...survey });
     };
 
     return (
@@ -258,7 +264,12 @@ export default function SurveyView() {
                         </div>
                         {/*Active*/}
 
-                        <button type="button">Add question</button>
+                        {/* Survey Questions */}
+                        <SurveyQuestions
+                            survey={survey}
+                            onSurveyUpdate={onSurveyUpdate}
+                        />
+                        {/* Survey Questions */}
                     </div>
                     <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
                         <TButton>Save</TButton>

@@ -18,6 +18,7 @@ use App\Http\Controllers\SurveyController;
 
 Route::middleware('auth:sanctum')->group(function() {
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/me', [AuthController::class, 'me']); // return user to check
     Route::apiResource('survey', SurveyController::class);
 });
 

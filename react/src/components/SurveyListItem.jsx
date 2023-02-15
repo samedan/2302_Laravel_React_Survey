@@ -7,7 +7,6 @@ import {
 } from "@heroicons/react/24/outline";
 
 export default function SurveyListItem({ survey, onDeleteClick }) {
-    console.log(survey);
     return (
         <div className="flex flex-col py-4 px-6 shadow-md bg-white hover:bg-gray-50 h-[470px]">
             <img

@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, useEffect } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import {
     Bars3Icon,
@@ -37,7 +37,12 @@ export default function DefaultLayout() {
         return <Navigate to="/login" />;
     }
 
-    console.log(currentUser);
+    useEffect(() => {
+        axiosClient.get("/me").then(({ data }) => {
+            // debugger;
+            setCurrentUser(data);
+        });
+    }, []);
 
     return (
         <>
@@ -87,11 +92,18 @@ export default function DefaultLayout() {
                                             >
                                                 <div>
                                                     <Menu.Button className="flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                                                        {currentUser && (
-                                                            <div className="text-white pr-2">
-                                                                {`Welcome, ${currentUser.name}  `}
-                                                            </div>
-                                                        )}
+                                                        {currentUser !== {} &&
+                                                            currentUser.name !==
+                                                                undefined && (
+                                                                <div className="text-white pr-2">
+                                                                    {`Welcome, ${currentUser.name}  `}
+                                                                    <div className="text-sm font-medium leading-none text-gray-400">
+                                                                        {
+                                                                            currentUser.email
+                                                                        }
+                                                                    </div>
+                                                                </div>
+                                                            )}
                                                         <span className="sr-only">
                                                             Open user menu
                                                         </span>
@@ -174,10 +186,14 @@ export default function DefaultLayout() {
                                         </div>
                                         <div className="ml-3">
                                             <div className="text-base font-medium leading-none text-white">
-                                                {currentUser.name}
+                                                {/* {currentUser.name} */}
+                                                {currentUser !== {} &&
+                                                    currentUser.name}
                                             </div>
                                             <div className="text-sm font-medium leading-none text-gray-400">
-                                                {currentUser.email}
+                                                {/* {currentUser.email} */}
+                                                {currentUser !== {} &&
+                                                    currentUser.email}
                                             </div>
                                         </div>
                                     </div>

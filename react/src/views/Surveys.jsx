@@ -1,5 +1,6 @@
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axiosClient from "../axios";
 import TButton from "../components/core/TButton";
 import PageComponent from "../components/PageComponent";
 import SurveyListItem from "../components/SurveyListItem";
@@ -7,13 +8,20 @@ import { useStateContext } from "../contexts/ContextProvider";
 
 export default function Surveys() {
     // const state = useStateContext();
-    const { surveys } = useStateContext();
+    // const { surveys } = useStateContext();
+    const [surveys, setSurveys] = useState([]);
 
     console.log(surveys);
 
     const onDeleteClick = () => {
         console.log("OnCDeleteClick");
     };
+
+    useEffect(() => {
+        axiosClient.get("/survey").then(({ data }) => {
+            setSurveys(data.data);
+        });
+    }, []);
 
     return (
         <PageComponent

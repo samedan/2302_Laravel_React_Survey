@@ -58,5 +58,10 @@ class AuthController extends Controller
         ]);
     }
 
+    // Current LOGGED State
+    public function me(Request $request){
+        return $request->user();
+    }
+
     
 }

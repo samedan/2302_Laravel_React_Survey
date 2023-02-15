@@ -22,7 +22,7 @@ export default function QuestionEditor({
 
     return (
         <>
-            <div>
+            <div className="bg-gray-100 p-5 mb-4 rounded border">
                 <div className="flex justify-between mb-3">
                     <h4>
                         {index + 1}.{model.question}
@@ -95,7 +95,8 @@ export default function QuestionEditor({
                                 <option
                                     value={type}
                                     key={type}
-                                    selected={model.type == type}
+                                    // selected={model.type == type}
+                                    defaultValue={model.type == type}
                                 >
                                     {upperCaseFirst(type)}
                                 </option>

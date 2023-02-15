@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\SurveyQuestion;
 use App\Enums\QuestionTypeEnum;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\File;
 use Illuminate\Validation\Rules\Enum;
 use App\Http\Resources\SurveyResource;
@@ -204,7 +205,17 @@ class SurveyController extends Controller
         }
         $validator = Validator::make($data, [
             'question' => 'required|string',
-            'type' => ['required', new Enum(QuestionTypeEnum::class)],
+            'type' => [
+                'required', new Enum(QuestionTypeEnum::class)
+            ],
+                // 'required', Rule::in([
+                // QuestionTypeEnum::Text->value,
+                // QuestionTypeEnum::Textarea->value,
+                // QuestionTypeEnum::Select->value,
+                // QuestionTypeEnum::Radio->value,
+                // QuestionTypeEnum::Checkbox->value,
+                
+                // ])],
             'description' => 'nullable|string',
             'data' => 'present',
             'survey_id' => 'exists:App\Models\Survey,id'

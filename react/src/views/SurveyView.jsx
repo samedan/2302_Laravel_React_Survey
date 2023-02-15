@@ -56,40 +56,40 @@ export default function SurveyView() {
         }
         delete payload.image_url;
         console.log(payload);
-        // axiosClient
-        //     .post("/survey", payload)
-        //     .then((res) => {
-        //         console.log(res);
-        //         navigate("/surveys");
-        //     })
-        //     .catch((err) => {
-        //         console.log(err.response.data.errors);
-        //         if (
-        //             err.response.data.errors &&
-        //             err.response.data.errors["expire_date"] !== null
-        //         ) {
-        //             setErrorExpireDate(err.response.data.errors["expire_date"]);
-        //         }
-        //         if (
-        //             err.response.data.errors &&
-        //             err.response.data.errors["title"] !== null
-        //         ) {
-        //             setErrorTitle(err.response.data.errors["title"]);
-        //         }
-        //         if (err.response) {
-        //             console.log(err.response.data);
-        //             if (err.response.data.errors) {
-        //                 console.log("here");
-        //                 const finalErrors = Object.values(
-        //                     err.response.data.errors
-        //                 ).reduce((accum, next) => [...accum, ...next], []);
-        //                 setErrors({ __html: finalErrors.join("<br>") });
-        //             } else {
-        //                 const finalErrors = Object.values(err.response.data);
-        //                 setErrors({ __html: finalErrors[0] });
-        //             }
-        //         }
-        //     });
+        axiosClient
+            .post("/survey", payload)
+            .then((res) => {
+                console.log(res);
+                navigate("/surveys");
+            })
+            .catch((err) => {
+                console.log(err.response.data.errors);
+                if (
+                    err.response.data.errors &&
+                    err.response.data.errors["expire_date"] !== null
+                ) {
+                    setErrorExpireDate(err.response.data.errors["expire_date"]);
+                }
+                if (
+                    err.response.data.errors &&
+                    err.response.data.errors["title"] !== null
+                ) {
+                    setErrorTitle(err.response.data.errors["title"]);
+                }
+                if (err.response) {
+                    console.log(err.response.data);
+                    if (err.response.data.errors) {
+                        console.log("here");
+                        const finalErrors = Object.values(
+                            err.response.data.errors
+                        ).reduce((accum, next) => [...accum, ...next], []);
+                        setErrors({ __html: finalErrors.join("<br>") });
+                    } else {
+                        const finalErrors = Object.values(err.response.data);
+                        setErrors({ __html: finalErrors[0] });
+                    }
+                }
+            });
     };
 
     const addQuestion = () => {

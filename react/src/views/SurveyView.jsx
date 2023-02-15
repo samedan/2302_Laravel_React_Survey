@@ -5,6 +5,7 @@ import TButton from "../components/core/TButton";
 import PageComponent from "../components/PageComponent";
 import QuestionEditor from "../components/QuestionEditor";
 import SurveyQuestions from "../components/SurveyQuestions";
+import { v4 as uuidv4 } from "uuid";
 import axiosClient from "./../axios";
 
 export default function SurveyView() {
@@ -103,8 +104,8 @@ export default function SurveyView() {
         setSurvey({ ...survey });
     };
 
-    function onSurveyUpdate(survey) {
-        setSurvey({ ...survey });
+    function onQuestionsUpdate(questions) {
+        setSurvey({ ...survey, questions });
     }
 
     return (
@@ -278,12 +279,16 @@ export default function SurveyView() {
                         {/*Active*/}
 
                         {/* Survey Questions */}
-                        <button type="button" onClick={addQuestion}>
-                            Add question
+                        <button
+                            type="button"
+                            onClick={addQuestion}
+                            className="flex bg-gray-600 hover:bg-gray-700 items-center text-sm py-1 px-4 rounded-sm text-white"
+                        >
+                            Add question (SurveyView) without fetch
                         </button>
                         <SurveyQuestions
-                            survey={survey}
-                            onSurveyUpdate={onSurveyUpdate}
+                            questions={survey.questions}
+                            onQuestionsUpdate={onQuestionsUpdate}
                         />
                         {/* Survey Questions */}
                     </div>
@@ -292,6 +297,7 @@ export default function SurveyView() {
                     </div>
                 </div>
             </form>
+            <p>Survey(SurveyView): {JSON.stringify(survey)}</p>
         </PageComponent>
     );
 }

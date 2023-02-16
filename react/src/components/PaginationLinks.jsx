@@ -9,23 +9,43 @@ export default function PaginationLinks({ meta, onPageClick }) {
         onPageClick(link);
     }
 
-    console.log(meta);
+    // console.log(meta);
     return (
         <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6 shadow-md mt-4">
             <div className="flex flex-1 justify-between sm:hidden">
                 <a
                     href="#"
-                    onClick={(ev) => onClick(ev, meta.links[0])}
-                    className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                    onClick={(ev) => {
+                        console.log(meta.links[0]);
+                        onClick(ev, meta.links[0]);
+                    }}
+                    className={
+                        "relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium  hover:bg-gray-50" +
+                        (meta.links[0].url === null
+                            ? "bg-gray-200 text-gray-400 cursor-not-allowed opacity-50"
+                            : "") +
+                        (meta.links[0].url !== null
+                            ? "border-indigo-500 text-white z-10 bg-indigo-500 "
+                            : "")
+                    }
                 >
                     Previous
                 </a>
                 <a
                     href="#"
-                    onClick={(ev) =>
-                        onClick(ev, meta.links[meta.links.length - 1])
+                    onClick={(ev) => {
+                        console.log(meta.links[meta.links.length - 1]);
+                        onClick(ev, meta.links[meta.links.length - 1]);
+                    }}
+                    className={
+                        "relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium  hover:bg-gray-50" +
+                        (meta.links[meta.links.length - 1].url === null
+                            ? "bg-gray-100 text-gray-200 cursor-not-allowed hidden "
+                            : "") +
+                        (meta.links[meta.links.length - 1].url !== null
+                            ? "border-indigo-500   text-white z-10 bg-indigo-500 "
+                            : "")
                     }
-                    className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
                 >
                     Next
                 </a>
@@ -55,16 +75,16 @@ export default function PaginationLinks({ meta, onPageClick }) {
                                         key={ind}
                                         aria-current="page"
                                         className={
-                                            "relative z-10 inline-flex items-center border   px-4 py-2 text-sm font-medium focus:z-20 hover:bg-gray-50 " +
+                                            "relative z-10 inline-flex items-center border   px-4 py-2 text-sm font-medium focus:z-20 hover:bg-gray-200 " +
                                             (ind === 0 ? "rounded-l-md " : "") +
                                             (ind === meta.links.length - 1
                                                 ? "rounded-r-md "
                                                 : "") +
                                             (link.url === null
-                                                ? "bg-gray-200 text-gray-400 "
+                                                ? "bg-gray-200 text-gray-400 cursor-not-allowed "
                                                 : "") +
                                             (link.active
-                                                ? "border-indigo-500 bg-indigo-50 text-white z-10 bg-indigo-500 "
+                                                ? "border-indigo-500 hover:bg-indigo-50 hover:text-indigo-500  text-white z-10 bg-indigo-500 "
                                                 : "")
                                         }
                                         dangerouslySetInnerHTML={{

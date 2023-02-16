@@ -106,6 +106,12 @@ export default function QuestionEditor({
                     {/* Question type */}
                 </div>
 
+                {/* Select Options */}
+                {<div>Type chosen: {JSON.stringify(model)}</div>}
+                {model.type === "select" && <div>{<div></div>}</div>}
+
+                {/* Select Options */}
+
                 <div className="mb-3">
                     {/* Description */}
                     <div>

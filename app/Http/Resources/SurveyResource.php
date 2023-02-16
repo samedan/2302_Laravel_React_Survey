@@ -25,7 +25,7 @@ class SurveyResource extends JsonResource
             'description'=>$this->description,
             'created_at'=>$this->created_at->format('Y-m-d H:i:s'),
             'updated_at'=>$this->updated_at->format('Y-m-d H:i:s'),
-            'expire_date' => (new \DateTime($this->expire_date))->format('Y-m-d'),
+            'expire_date' => (new \DateTime($this->expire_date))->format('Y-m-d'), // convert from string to Date type
             'questions'=> SurveyQuestionResource::collection($this->questions)
         ];
     }

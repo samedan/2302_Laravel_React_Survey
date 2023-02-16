@@ -85,7 +85,7 @@ class SurveyController extends Controller
      */
     public function update(UpdateSurveyRequest $request, Survey $survey)
     {
-        $data = $requets->validated();
+        $data = $request->validated();
         // Check if image was given and save on Local file system
         if(isset($data['image'])) {
             $relativePath = $this->saveImage($data['image']);
@@ -108,7 +108,7 @@ class SurveyController extends Controller
         $newIds = Arr::pluck($data['questions'], 'id');
 
         // Find questions to delete
-        $toDelete = array_diff($existinIds, $newIds);
+        $toDelete = array_diff($existingIds, $newIds);
         // Find questions to add
         $toAdd = array_diff($newIds, $existingIds);
 

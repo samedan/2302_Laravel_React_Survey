@@ -118,7 +118,7 @@ export default function QuestionEditor({
                         <textarea
                             name="questionDescription"
                             id="questionDescription"
-                            value={model.description}
+                            value={model.description || ""}
                             onChange={(ev) =>
                                 setModel({
                                     ...model,

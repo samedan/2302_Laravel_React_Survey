@@ -6,10 +6,12 @@ import PageComponent from "../components/PageComponent";
 import PaginationLinks from "../components/PaginationLinks";
 import SurveyListItem from "../components/SurveyListItem";
 import "tw-elements"; // Loading CSS
+import { useStateContext } from "../contexts/ContextProvider";
 
 export default function Surveys() {
     // const state = useStateContext();
     // const { surveys } = useStateContext();
+    const { showToast } = useStateContext();
     const [surveys, setSurveys] = useState([]);
     const [meta, setMeta] = useState({}); // for pagination
     const [loading, setLoading] = useState(false);
@@ -30,6 +32,7 @@ export default function Surveys() {
         if (window.confirm("Are you sure you want to delete this survey?")) {
             axiosClient.delete(`/survey/${id}`).then(() => {
                 getSurveys(); //reload
+                showToast("The survey was deleted");
             });
         }
     };
@@ -64,6 +67,11 @@ export default function Surveys() {
             )}
             {!loading && (
                 <>
+                    {surveys.length === 0 && (
+                        <div className="py-8 text-center text-gray-700">
+                            You dont have any surveys created.
+                        </div>
+                    )}
                     <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3">
                         {surveys.map((survey) => (
                             <SurveyListItem

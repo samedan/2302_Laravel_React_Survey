@@ -8,8 +8,10 @@ import SurveyQuestions from "../components/SurveyQuestions";
 import { v4 as uuidv4 } from "uuid";
 import axiosClient from "./../axios";
 import "tw-elements";
+import { useStateContext } from "../contexts/ContextProvider";
 
 export default function SurveyView() {
+    const { showToast } = useStateContext();
     const { id } = useParams();
     const navigate = useNavigate();
 
@@ -23,7 +25,6 @@ export default function SurveyView() {
         expire_date: "",
         questions: [],
     });
-    // const [error, setError] = useState({ __html: "" });
     const [errors, setErrors] = useState({ __html: "" });
     const [loading, setLoading] = useState(false);
     const [errorExpireDate, setErrorExpireDate] = useState("");
@@ -47,13 +48,7 @@ export default function SurveyView() {
     const onSubmit = (ev) => {
         ev.preventDefault();
         setErrors({ __html: "" });
-        // axiosClient.post("/survey", {
-        //     title: "Lorem ipsum",
-        //     description: "Lorem ipsum",
-        //     expire_date: "2023-02-14",
-        //     status: true,
-        //     questions: [],
-        // });
+
         const payload = { ...survey };
 
         if (payload.image) {
@@ -73,6 +68,11 @@ export default function SurveyView() {
         res.then((res) => {
             console.log(res);
             navigate("/surveys");
+            if (id) {
+                showToast("The survey was edited successfully");
+            } else {
+                showToast("The survey was created");
+            }
         }).catch((err) => {
             console.log(err.response.data.errors);
             if (

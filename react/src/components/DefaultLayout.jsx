@@ -1,4 +1,4 @@
-import { Fragment, useEffect } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import {
     Bars3Icon,
@@ -9,6 +9,8 @@ import {
 import { Navigate, NavLink, Outlet } from "react-router-dom";
 import { useStateContext } from "../contexts/ContextProvider";
 import axiosClient from "./../axios";
+import Toast from "./Toast";
+import "tw-elements"; // Loading CSS
 
 const navigation = [
     { name: "Dashboard", to: "/" },
@@ -22,14 +24,17 @@ function classNames(...classes) {
 export default function DefaultLayout() {
     const { currentUser, userToken, setCurrentUser, setUserToken } =
         useStateContext();
+    const [loading, setLoading] = useState(false);
 
     // console.log(currentUser);
 
     const logout = (ev) => {
         ev.preventDefault();
+        setLoading(true);
         axiosClient.post("/logout").then((res) => {
             setCurrentUser({});
             setUserToken(null);
+            setLoading(false);
         });
     };
 
@@ -38,9 +43,11 @@ export default function DefaultLayout() {
     }
 
     useEffect(() => {
+        setLoading(true);
         axiosClient.get("/me").then(({ data }) => {
             // debugger;
             setCurrentUser(data);
+            setLoading(false);
         });
     }, []);
 
@@ -85,54 +92,73 @@ export default function DefaultLayout() {
                                     </div>
                                     <div className="hidden md:block">
                                         <div className="ml-4 flex items-center md:ml-6">
-                                            {/* Profile dropdown */}
-                                            <Menu
-                                                as="div"
-                                                className="relative ml-3"
-                                            >
-                                                <div>
-                                                    <Menu.Button className="flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                                                        {currentUser &&
-                                                            currentUser.name && (
-                                                                <div className="text-white pr-2">
-                                                                    {`Welcome, ${currentUser.name}  `}
-                                                                    <div className="text-sm font-medium leading-none text-gray-400">
-                                                                        {
-                                                                            currentUser.email
-                                                                        }
-                                                                    </div>
-                                                                </div>
-                                                            )}
-                                                        <span className="sr-only">
-                                                            Open user menu
+                                            {loading && (
+                                                <div className="flex justify-center items-center">
+                                                    <div
+                                                        className="text-purple-500 spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full"
+                                                        role="status"
+                                                    >
+                                                        <span className="visually-hidden">
+                                                            Loading...
                                                         </span>
-                                                        <UserIcon className="w-8 h-8 bg-white p-2 rounded-full text-black" />
-                                                    </Menu.Button>
+                                                    </div>
                                                 </div>
-                                                <Transition
-                                                    as={Fragment}
-                                                    enter="transition ease-out duration-100"
-                                                    enterFrom="transform opacity-0 scale-95"
-                                                    enterTo="transform opacity-100 scale-100"
-                                                    leave="transition ease-in duration-75"
-                                                    leaveFrom="transform opacity-100 scale-100"
-                                                    leaveTo="transform opacity-0 scale-95"
+                                            )}
+                                            {/* Profile dropdown */}
+
+                                            {!loading && (
+                                                <Menu
+                                                    as="div"
+                                                    className="relative ml-3"
                                                 >
-                                                    <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                                        <Menu.Item>
-                                                            <a
-                                                                href="#"
-                                                                onClick={(ev) =>
-                                                                    logout(ev)
-                                                                }
-                                                                className="block px-4 py-2 text-sm text-gray-700"
-                                                            >
-                                                                Sign out
-                                                            </a>
-                                                        </Menu.Item>
-                                                    </Menu.Items>
-                                                </Transition>
-                                            </Menu>
+                                                    <div>
+                                                        <Menu.Button className="flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                                                            {currentUser &&
+                                                                currentUser.name && (
+                                                                    <div className="text-white pr-2">
+                                                                        {`Welcome, ${currentUser.name}  `}
+                                                                        <div className="text-sm font-medium leading-none text-gray-400">
+                                                                            {
+                                                                                currentUser.email
+                                                                            }
+                                                                        </div>
+                                                                    </div>
+                                                                )}
+                                                            <span className="sr-only">
+                                                                Open user menu
+                                                            </span>
+                                                            <UserIcon className="w-8 h-8 bg-white p-2 rounded-full text-black" />
+                                                        </Menu.Button>
+                                                    </div>
+                                                    <Transition
+                                                        as={Fragment}
+                                                        enter="transition ease-out duration-100"
+                                                        enterFrom="transform opacity-0 scale-95"
+                                                        enterTo="transform opacity-100 scale-100"
+                                                        leave="transition ease-in duration-75"
+                                                        leaveFrom="transform opacity-100 scale-100"
+                                                        leaveTo="transform opacity-0 scale-95"
+                                                    >
+                                                        <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                                            <Menu.Item>
+                                                                <a
+                                                                    href="#"
+                                                                    onClick={(
+                                                                        ev
+                                                                    ) =>
+                                                                        logout(
+                                                                            ev
+                                                                        )
+                                                                    }
+                                                                    className="block px-4 py-2 text-sm text-gray-700"
+                                                                >
+                                                                    Sign out
+                                                                </a>
+                                                            </Menu.Item>
+                                                        </Menu.Items>
+                                                    </Transition>
+                                                </Menu>
+                                            )}
                                         </div>
                                     </div>
                                     <div className="-mr-2 flex md:hidden">
@@ -214,6 +240,8 @@ export default function DefaultLayout() {
 
                 {/* Replace with your content */}
                 <Outlet />
+
+                <Toast />
             </div>
         </>
     );

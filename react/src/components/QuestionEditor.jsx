@@ -49,7 +49,7 @@ export default function QuestionEditor({
                     {/* Buttons */}
                 </div>
 
-                <div className="flex gap-3 justify-between mb-3">
+                <div className="flex gap-3 justify-between mb-3 shadow-lg">
                     {/* Question text */}
                     <div className="flex-1">
                         <label className="block text-sm font-medium text-gray-700">

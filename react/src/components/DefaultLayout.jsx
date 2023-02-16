@@ -92,9 +92,8 @@ export default function DefaultLayout() {
                                             >
                                                 <div>
                                                     <Menu.Button className="flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                                                        {currentUser !== {} &&
-                                                            currentUser.name !==
-                                                                undefined && (
+                                                        {currentUser &&
+                                                            currentUser.name && (
                                                                 <div className="text-white pr-2">
                                                                     {`Welcome, ${currentUser.name}  `}
                                                                     <div className="text-sm font-medium leading-none text-gray-400">
@@ -187,12 +186,12 @@ export default function DefaultLayout() {
                                         <div className="ml-3">
                                             <div className="text-base font-medium leading-none text-white">
                                                 {/* {currentUser.name} */}
-                                                {currentUser !== {} &&
+                                                {currentUser &&
                                                     currentUser.name}
                                             </div>
                                             <div className="text-sm font-medium leading-none text-gray-400">
                                                 {/* {currentUser.email} */}
-                                                {currentUser !== {} &&
+                                                {currentUser &&
                                                     currentUser.email}
                                             </div>
                                         </div>

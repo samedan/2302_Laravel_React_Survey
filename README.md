@@ -10,6 +10,10 @@ https://github.com/thecodeholic/laravel-react-survey
 
 https://github.com/samedan/2302_Laravel_React_Survey
 
+## TO DO
+
+> errors on questions post/put
+
 ## tailwind
 
 https://tailwindui.com/components

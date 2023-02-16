@@ -5,7 +5,7 @@ import TButton from "../components/core/TButton";
 import PageComponent from "../components/PageComponent";
 import PaginationLinks from "../components/PaginationLinks";
 import SurveyListItem from "../components/SurveyListItem";
-import "tw-elements";
+import "tw-elements"; // Loading CSS
 
 export default function Surveys() {
     // const state = useStateContext();
@@ -26,8 +26,12 @@ export default function Surveys() {
         });
     };
 
-    const onDeleteClick = () => {
-        console.log("OnCDeleteClick");
+    const onDeleteClick = (id) => {
+        if (window.confirm("Are you sure you want to delete this survey?")) {
+            axiosClient.delete(`/survey/${id}`).then(() => {
+                getSurveys(); //reload
+            });
+        }
     };
 
     const onPageClick = (link) => {

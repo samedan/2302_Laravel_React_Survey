@@ -157,7 +157,7 @@ export default function QuestionEditor({
                 {/* Select Options */}
                 {/* {<div>Type chosen: {JSON.stringify(model)}</div>} */}
                 {shouldHaveOptions() && (
-                    <div className="p-5 bg-white border-spacing-1">
+                    <div className="p-5 bg-white border-spacing-1 border-4 border-dashed border-rose-200">
                         <h4 className="text-sm font-semibold mb-1 flex justify-between items-center text-green-700">
                             Options
                             <button

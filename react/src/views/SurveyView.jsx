@@ -321,7 +321,7 @@ export default function SurveyView() {
                         <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
                             <TButton>Save</TButton>
                         </div>
-                        <p>Survey(SurveyView): {JSON.stringify(survey)}</p>
+                        {/* <p>Survey(SurveyView): {JSON.stringify(survey)}</p> */}
                     </div>
                 </form>
             )}

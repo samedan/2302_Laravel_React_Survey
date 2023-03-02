@@ -57,7 +57,10 @@ export default function SurveyQuestions({ questions, onQuestionsUpdate }) {
 
     return (
         <>
-            <p>Questions(SurveyQuestions): {JSON.stringify(myQuestions)}</p>
+            <p>
+                Questions(SurveyQuestions):
+                {/* {JSON.stringify(myQuestions)} */}
+            </p>
 
             <div className="flex justify-between">
                 <h3 className="text-2xl font-bold">Questions</h3>

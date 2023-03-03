@@ -1,4 +1,4 @@
-import { PhotoIcon } from "@heroicons/react/24/outline";
+import { LinkIcon, PhotoIcon, TrashIcon } from "@heroicons/react/24/outline";
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import TButton from "../components/core/TButton";
@@ -130,9 +130,25 @@ export default function SurveyView() {
         }
     }, []);
 
+    const onDelete = () => {};
     return (
         <PageComponent
             title={id ? `Update/edit Survey  ` : "Create New Survey"}
+            buttons={
+                <div className="flex gap-2">
+                    <TButton
+                        color="green"
+                        href={`/survey/public/${survey.slug}`}
+                    >
+                        <LinkIcon className="h-4 w-4 mr-2" />
+                        Public link
+                    </TButton>
+                    <TButton color="red" onClick={onDelete}>
+                        <TrashIcon className="h-4 w-4 mr-2" />
+                        Delete
+                    </TButton>
+                </div>
+            }
         >
             {!loading && (
                 <form action="#" method="POST" onSubmit={onSubmit}>

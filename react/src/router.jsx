@@ -4,13 +4,14 @@ import GuestLayout from "./components/GuestLayout";
 import Dashboard from "./views/Dashboard";
 import Login from "./views/Login";
 import Signup from "./views/Signup";
+import SurveyPublicView from "./views/SurveyPublicView";
 import Surveys from "./views/Surveys";
 import SurveyView from "./views/SurveyView";
 
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <DefaultLayout />,
+        element: <DefaultLayout />, // Authorized users
         children: [
             {
                 path: "/dashboard",
@@ -48,6 +49,10 @@ const router = createBrowserRouter([
                 element: <Signup />,
             },
         ],
+    },
+    {
+        path: "/survey/public/:slug",
+        element: <SurveyPublicView />,
     },
 ]);
 

@@ -243,5 +243,16 @@ class SurveyController extends Controller
         return $question->update($validator->validated());
     }
 
+    public function getBySlug (Survey $survey) {
+        if(!$survey->status) {
+            return response("X", 404);
+        }
+        $currentDate = new \DateTime();
+        $expireDate = new \DateTime($survey->expire_date);
+        if($currentDate > $expireDate) {
+            return response("Y", 404);
+        }
+        return new SurveyResource($survey); // includes answers
+    }
 
 }

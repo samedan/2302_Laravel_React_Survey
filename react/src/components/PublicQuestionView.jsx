@@ -33,6 +33,7 @@ export default function PublicQuestionView({
                     </p>
                 </div>
                 <div className="mt-3">
+                    {/* SELECT */}
                     {question.type === "select" && (
                         <div>
                             <select
@@ -53,6 +54,7 @@ export default function PublicQuestionView({
                             </select>
                         </div>
                     )}
+                    {/* RADIO */}
                     {question.type === "radio" && (
                         <div>
                             {question.data.options.map((option, ind) => (
@@ -80,7 +82,33 @@ export default function PublicQuestionView({
                             ))}
                         </div>
                     )}
-                    {question.type === "checkbox" &&
+                    {/* CHECKBOX */}
+                    {question.type === "checkbox" && (
+                        <div>
+                            {question.data.options.map((option, ind) => (
+                                <div
+                                    key={option.uuid}
+                                    className="flex items-center"
+                                >
+                                    <input
+                                        id={option.uuid}
+                                        onChange={(ev) =>
+                                            onCheckboxChange(option, ev)
+                                        }
+                                        type="checkbox"
+                                        className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                                    />
+                                    <label
+                                        htmlFor={option.uuid}
+                                        className="ml-3 block text-sm font-medium text-gray-700"
+                                    >
+                                        {option.text}
+                                    </label>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                    {/* {question.type === "checkbox" &&
                         question.data.options.map((option, ind) => (
                             <div
                                 className="flex items-center"
@@ -103,7 +131,8 @@ export default function PublicQuestionView({
                                     {option.text}
                                 </label>
                             </div>
-                        ))}
+                        ))} */}
+                    {/* TEXTAREA */}
                     {question.type === "text" && (
                         <div>
                             <input

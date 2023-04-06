@@ -29,3 +29,4 @@ Route::post('/login', [AuthController::class, 'login']);
 // {survey:slug} = survey that will be type casted
 // it will query 'survey' by using the 'slug'
 Route::get('/survey/get-by-slug/{survey:slug}', [SurveyController::class, 'getBySlug']); 
+Route::post('/survey/{survey}/answer', [SurveyController::class, 'storeAnswer']);

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\SurveyAnswer;
 use Spatie\Sluggable\HasSlug;
 use App\Models\SurveyQuestion;
 use Spatie\Sluggable\SlugOptions;
@@ -31,5 +32,9 @@ class Survey extends Model
 
         public function questions() {
             return $this->hasMany(SurveyQuestion::class);
+        }
+        
+        public function answers() {
+            return $this->hasMany(SurveyAnswer::class); // allows access to SurveyResourceDashboard
         }
 }

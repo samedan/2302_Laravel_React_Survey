@@ -43,10 +43,10 @@ export default function SurveyPublicView() {
         setLoadedConseils(conseils);
     }, []);
 
-    // useEffect(() => {
-    //     // countSameMedsInArray(meds);
-    //     setCountedMeds(countSameMedsInArray(meds));
-    // }, [meds]);
+    useEffect(() => {
+        // countSameMedsInArray(meds);
+        setCountedMeds(countSameMedsInArray(meds));
+    }, [meds]);
 
     function answerChanged(question, value) {
         answers[question.id] = value;
@@ -140,12 +140,12 @@ export default function SurveyPublicView() {
     function removeFromMeds(question) {
         console.log("removeMeds");
         let newMeds;
-        let medsArray = translateIntoNumbers(question.description);
+        let medsArrayToRemove = translateIntoNumbers(question.description);
         // let medsArray = question.description;
 
         // console.log("numbers to remove");
         // console.log(medsArray);
-        console.log("remove from meds");
+
         // console.log(meds);
 
         let removeElement = (myArray, n) => {
@@ -159,19 +159,24 @@ export default function SurveyPublicView() {
             console.log(`myArray values: ${myArray}`);
             return myArray;
         };
-        newMeds = medsArray.map((eachElToRemoveFromMeds) => {
+        let arrayOfMultiples;
+        arrayOfMultiples = medsArrayToRemove.map((eachElToRemoveFromMeds) => {
+            removeElement(meds, eachElToRemoveFromMeds);
+
             // console.log("eachElToRemoveFromMeds");
+
             // console.log(typeof eachElToRemoveFromMeds);
             // console.log(eachElToRemoveFromMeds);
-            removeElement(medsArray, eachElToRemoveFromMeds);
-            // console.log("elementromeved Array");
-            // console.log(medsArray);
+
+            console.log("ArrayLeft in Meds");
+            console.log(meds);
+            // setMeds(arrayOfMultiples);
         });
 
         // newMeds = translateIntoNumbers(newMeds);
-        setMeds(newMeds);
-        console.log("newMeds");
-        console.log(newMeds);
+        // setMeds(meds);
+        // console.log("newMeds");
+        // console.log(arrayOfMultiples);
         // setMeds(newMeds);
     }
 

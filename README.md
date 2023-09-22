@@ -2,6 +2,10 @@
 
 https://www.youtube.com/watch?v=bHRe5XNP5l8
 
+## Tutorial Git
+
+https://github.com/LearnWebCode/laravel-course
+
 ## Original Git
 
 https://github.com/thecodeholic/laravel-react-survey

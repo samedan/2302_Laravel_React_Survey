@@ -9,6 +9,24 @@ export default function SurveyPublicView() {
     const [survey, setSurvey] = useState({ questions: [] });
     const [loading, setLoading] = useState(false);
     const { slug } = useParams();
+    const [meds, setMeds] = useState([]);
+    const [countedMeds, setCountedMeds] = useState([]);
+    const [loadedConseils, setLoadedConseils] = useState([]);
+
+    const conseils = [
+        {
+            id: 1,
+            nom: "Cystiphane Biorga Cpr B/120",
+            cod: 3560398504251,
+            prix: 19.9,
+        },
+        {
+            id: 7,
+            nom: "FORCAPIL FOTIF Gél chev ongl pilul/180+6",
+            cod: 3401547819976,
+            prix: 34.9,
+        },
+    ];
 
     useEffect(() => {
         setLoading(true);
@@ -22,11 +40,139 @@ export default function SurveyPublicView() {
             .catch(() => {
                 setLoading(false);
             });
+        setLoadedConseils(conseils);
     }, []);
+
+    // useEffect(() => {
+    //     // countSameMedsInArray(meds);
+    //     setCountedMeds(countSameMedsInArray(meds));
+    // }, [meds]);
 
     function answerChanged(question, value) {
         answers[question.id] = value;
-        console.log(question, value);
+        console.log(question);
+        // console.log(value);
+
+        if (value == "Oui") {
+            console.log("addToMeds");
+            addToMeds(question);
+        } else if (value == "Non") {
+            console.log("removeFromMeds");
+            removeFromMeds(question);
+        }
+    }
+
+    function checkForProduct(id) {
+        const filterObj = conseils.filter((e) => e.id == id);
+
+        if (filterObj[0]) {
+            console.log("filterObj[0]");
+            console.log(filterObj[0].nom);
+            return filterObj[0].nom;
+            console.log(id);
+        }
+    }
+
+    function countSameMedsInArray(myArray) {
+        let countObject = myArray.reduce(function (count, currentValue) {
+            return (
+                count[currentValue]
+                    ? ++count[currentValue]
+                    : (count[currentValue] = 1),
+                count
+            );
+        }, {});
+
+        // console.log(countObject);
+        setCountedMeds(countObject);
+        // const keys = Object.keys(a);
+        // const values = Object.values(a);
+        const keys = Object.keys(countObject);
+        console.log(keys);
+        const values = Object.values(countObject);
+        console.log(values);
+        return countObject;
+    }
+
+    function convertObjectOfCountsIntoArray(countedMeds) {
+        const res_array = [];
+        for (let i in countedMeds) {
+            res_array.push([i, countedMeds[i]]);
+        }
+        // console.log(res_array);
+        // employees.sort((a, b) => b.age - a.age);
+        // employees.forEach((e) => {
+        //     console.log(`${e.firstName} ${e.lastName} ${e.age}`);
+        // });
+        res_array.sort((a, b) => b[1] - a[1]);
+        // res_array.forEach((e) => {
+        //     console.log(`${e[0]} ${e[1]}`);
+        // });
+        return res_array;
+    }
+
+    function translateIntoNumbers(desc) {
+        let numberedMeds;
+        // console.log(typeof desc);
+        numberedMeds = desc.split(",");
+        // let arr = desc.split(",").filter((element) => element);
+        // console.log("numberedMeds");
+        // console.log(numberedMeds);
+        let resultsWithoutSpaces;
+        resultsWithoutSpaces = numberedMeds.map((el) => {
+            return el.trim();
+        });
+        console.log("resultsWithoutSpaces");
+        console.log(resultsWithoutSpaces);
+
+        return resultsWithoutSpaces;
+    }
+
+    function addToMeds(question) {
+        // console.log("questionToAdd");
+        let newMeds;
+        let medsArray = translateIntoNumbers(question.description);
+        newMeds = meds.concat(medsArray);
+        // newMeds = translateIntoNumbers(newMeds);
+        setMeds(newMeds);
+    }
+
+    function removeFromMeds(question) {
+        console.log("removeMeds");
+        let newMeds;
+        let medsArray = translateIntoNumbers(question.description);
+        // let medsArray = question.description;
+
+        // console.log("numbers to remove");
+        // console.log(medsArray);
+        console.log("remove from meds");
+        // console.log(meds);
+
+        let removeElement = (myArray, n) => {
+            // const myArray = [1, 2, 3, 4, 5];
+            // const index = myArray.indexOf(2);
+            // const x = myArray.splice(index, 1);
+            // console.log(`myArray values: ${myArray}`);
+
+            const index = myArray.indexOf(n);
+            const x = myArray.splice(index, 1);
+            console.log(`myArray values: ${myArray}`);
+            return myArray;
+        };
+        newMeds = medsArray.map((eachElToRemoveFromMeds) => {
+            // console.log("eachElToRemoveFromMeds");
+            // console.log(typeof eachElToRemoveFromMeds);
+            // console.log(eachElToRemoveFromMeds);
+            removeElement(medsArray, eachElToRemoveFromMeds);
+            // console.log("elementromeved Array");
+            // console.log(medsArray);
+        });
+
+        // newMeds = translateIntoNumbers(newMeds);
+        setMeds(newMeds);
+        console.log("newMeds");
+        console.log(newMeds);
+        // setMeds(newMeds);
     }
 
     function onSubmit(ev) {
@@ -43,6 +189,7 @@ export default function SurveyPublicView() {
     }
 
     // return <div>{JSON.stringify(survey, undefined, 2)}</div>;
+
     return (
         <div>
             {loading && <div className="flex justify-center">Loading...</div>}
@@ -55,7 +202,7 @@ export default function SurveyPublicView() {
                         <div className="mr-4">
                             <img src={survey.image_url} alt="" />
                         </div>
-                        <div className="col-span-5">
+                        <div className="col-span-3">
                             <h1 className="text-3xl mb-3">
                                 Title: {survey.title}
                             </h1>
@@ -66,6 +213,61 @@ export default function SurveyPublicView() {
                                 Description: {survey.description}
                             </p>
                         </div>
+                        <div
+                            className="col-span-2"
+                            style={{ backgroundColor: "white" }}
+                        >
+                            {countedMeds != [] && (
+                                <>
+                                    <h2
+                                        style={{
+                                            color: "green",
+                                            fontWeight: "bold",
+                                        }}
+                                    >
+                                        Produits conseils
+                                    </h2>
+                                    <h3>
+                                        {convertObjectOfCountsIntoArray(
+                                            countedMeds
+                                        ).map((res, index) => {
+                                            // console.log("res[0]");
+                                            // console.log(res[0]);
+                                            // console.log(
+                                            //     "loadedConseils[res[0]]"
+                                            // );
+
+                                            // console.log(loadedConseils[res[0]]);
+                                            return (
+                                                <>
+                                                    <p>
+                                                        <strong>
+                                                            {res[0]}
+                                                        </strong>{" "}
+                                                        - {res[1]} -{" "}
+                                                        {
+                                                            <>
+                                                                {checkForProduct(
+                                                                    res[0]
+                                                                )}
+                                                            </>
+                                                        }
+                                                    </p>
+                                                </>
+                                            );
+                                        })}
+                                    </h3>
+                                </>
+                            )}
+
+                            <strong>MedsForQuestion: {meds}</strong>
+                        </div>
+                    </div>
+                    <div className="grid grid-cols-4">
+                        <p>
+                            <strong>Question: {meds && meds.question}</strong>
+                            <strong>MedsForQuestion: {meds}</strong>
+                        </p>
                     </div>
 
                     {surveyFinished && (

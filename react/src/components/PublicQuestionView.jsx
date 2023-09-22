@@ -14,6 +14,7 @@ export default function PublicQuestionView({
         } else {
             selectedOptions = selectedOptions.filter((op) => op != option.text);
         }
+        console.log(selectedOptions);
         answerChanged(selectedOptions);
     }
 
@@ -66,9 +67,10 @@ export default function PublicQuestionView({
                                         id={option.uuid}
                                         name={"question" + question.id}
                                         value={option.text}
-                                        onChange={(ev) =>
-                                            answerChanged(ev.target.value)
-                                        }
+                                        onChange={(ev) => {
+                                            console.log(ev.target.value);
+                                            answerChanged(ev.target.value);
+                                        }}
                                         type="radio"
                                         className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
                                     />

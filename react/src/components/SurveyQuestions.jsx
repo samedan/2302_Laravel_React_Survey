@@ -22,6 +22,7 @@ export default function SurveyQuestions({ questions, onQuestionsUpdate }) {
                 type: "text",
                 question: "",
                 description: "",
+                conseils: "",
                 data: {},
             }
         );

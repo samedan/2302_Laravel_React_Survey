@@ -237,7 +237,32 @@ export default function QuestionEditor({
                  focus:ring-indigo-500 sm:text-sm"
                         ></textarea>
                     </div>
-                    {/* Description */}
+                    {/* END Description */}
+                </div>
+                <div className="mb-3 mt-4">
+                    {/* Conseils */}
+                    <div className="mb-3">
+                        <label
+                            htmlFor="questionConseils"
+                            className="block text-sm font-medium text-yellow-700 "
+                        >
+                            Conseils
+                        </label>
+                        <textarea
+                            name="questionConseils"
+                            id="questionConseils"
+                            value={model.conseils || ""}
+                            onChange={(ev) =>
+                                setModel({
+                                    ...model,
+                                    conseils: ev.target.value,
+                                })
+                            }
+                            className="my-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500
+                 focus:ring-indigo-500 sm:text-sm"
+                        ></textarea>
+                    </div>
+                    {/* EDN Conseils */}
                 </div>
             </div>
         </>

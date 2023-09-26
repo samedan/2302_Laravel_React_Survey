@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('type', 45);
             $table->string('question',2000);
             $table->longText('description')->nullable();
+            $table->longText('conseils')->nullable();
             $table->longText('data')->nullable();
             $table->foreignIdFor(Survey::class, 'survey_id'); //foreignId('survey_id)->references('id')->on('surveys)
             // $table->foreignId('survey_id')->references('id')->on('surveys');

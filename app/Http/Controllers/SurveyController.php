@@ -220,6 +220,7 @@ class SurveyController extends Controller
                 
                 // ])],
             'description' => 'nullable|string',
+            'conseils' => 'nullable|string',
             'data' => 'present',
             'survey_id' => 'exists:App\Models\Survey,id'
         ]);
@@ -241,6 +242,7 @@ class SurveyController extends Controller
             'question' => 'required|string',
             'type' => ['required', new Enum(QuestionTypeEnum::class)],
             'description' =>'nullable|string',
+            'conseils' =>'nullable|string',
             'data' => 'present'
         ]);
         return $question->update($validator->validated());

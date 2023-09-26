@@ -109,6 +109,7 @@ export default function SurveyView() {
             type: "text",
             question: "",
             description: "",
+            conseils: "",
             data: {},
         });
         setSurvey({ ...survey });

@@ -32,6 +32,7 @@ export default function PublicQuestionView({
                     <p className="text-gray-500 text-sm">
                         {question.description}
                     </p>
+                    <p className="text-gray-500 text-sm">{question.conseils}</p>
                 </div>
                 <div className="mt-3">
                     {/* SELECT */}

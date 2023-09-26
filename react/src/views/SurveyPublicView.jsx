@@ -21,10 +21,76 @@ export default function SurveyPublicView() {
             prix: 19.9,
         },
         {
+            id: 2,
+            nom: "DAYANG OLIGO ELEMENT Se ACR Gél B/30",
+            cod: 3700026996130,
+            prix: 10.8,
+        },
+        {
+            id: 3,
+            nom: "DORIANCE SOLAIRE Caps 2B/30",
+            cod: 3700026996130,
+            prix: 23.9,
+        },
+        {
+            id: 4,
+            nom: "FORCAPIL ANTI-CHUTE Cpr 3Pilul/30",
+            cod: 3578835502954,
+            prix: 39.4,
+        },
+        {
+            id: 5,
+            nom: "FORCAPIL ANTI-CHUTE Gom P/60",
+            cod: 3578835504255,
+            prix: 39.5,
+        },
+        {
+            id: 6,
+            nom: "FORCAPIL CROISSANCE Gom P/60",
+            cod: 3578835503494,
+            prix: 20.9,
+        },
+        {
             id: 7,
             nom: "FORCAPIL FOTIF Gél chev ongl pilul/180+6",
             cod: 3401547819976,
             prix: 34.9,
+        },
+        {
+            id: 8,
+            nom: "FORCAPIL FORTIF Gél Pilulier/180+600+sh",
+            cod: 3578835503258,
+            prix: 34.9,
+        },
+        {
+            id: 9,
+            nom: "LUXEOL GUMMIES FORCE CROIS Gom P/60",
+            cod: 3760007337109,
+            prix: 32.9,
+        },
+        {
+            id: 10,
+            nom: "NUTRISENTIELS Collagène Gél B/30",
+            cod: 3515450070574,
+            prix: 7.9,
+        },
+        {
+            id: 11,
+            nom: "NUTRISENTIELS Zn Gél B/30",
+            cod: 3515450073315,
+            prix: 8.5,
+        },
+        {
+            id: 12,
+            nom: "SEBACTASE Cpr B/30",
+            cod: 3525722014295,
+            prix: 15.9,
+        },
+        {
+            id: 13,
+            nom: "UV3DERM CONFORT Gél B/120",
+            cod: 3525722035170,
+            prix: 44.5,
         },
     ];
 

@@ -15,9 +15,14 @@ export default function SurveyListItem({ survey, onDeleteClick }) {
                 className="w-full h-48 object-cover"
             />
             <h4 className="mt-4 text-lg font-bold">{survey.title}</h4>
-            Description:
+            <strong>Description:</strong>
             <div
                 dangerouslySetInnerHTML={{ __html: survey.description }}
+                className="overflow-hidden flex-1"
+            ></div>
+            Conseils:
+            <div
+                dangerouslySetInnerHTML={{ __html: survey.conseils }}
                 className="overflow-hidden flex-1"
             ></div>
             {survey.questions.length !== 0 && (

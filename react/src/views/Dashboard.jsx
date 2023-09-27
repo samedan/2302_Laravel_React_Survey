@@ -4,6 +4,8 @@ import DashboardCard from "../components/DashboardCard";
 import TButton from "../components/core/TButton";
 import { EyeIcon, PencilIcon } from "@heroicons/react/24/outline";
 import axiosClient from "./../axios";
+import Answers from "./Answers";
+import { Link } from "react-router-dom";
 
 export default function Dashboard() {
     const [loading, setLoading] = useState(true);
@@ -15,6 +17,8 @@ export default function Dashboard() {
             .get("/dashboard")
             .then((res) => {
                 setLoading(false);
+                console.log("latestAnswers");
+                console.log(res.data.latestAnswers);
                 setData(res.data);
                 return res;
             })
@@ -116,22 +120,48 @@ export default function Dashboard() {
                     >
                         {data.latestAnswers.length && (
                             <div className="text-left">
+                                {/* ANSWERS */}
                                 {data.latestAnswers.map((answer) => (
-                                    <a
-                                        href="#"
-                                        key={answer.id}
-                                        className="block p-2 hover:bg-gray-100/90"
-                                    >
-                                        <div className="font-semibold">
-                                            {answer.survey.title}
-                                        </div>
-                                        <small>
-                                            Answer Made at :{" "}
-                                            <i className="font-semibold">
-                                                {answer.end_date}
-                                            </i>
-                                        </small>
-                                    </a>
+                                    <>
+                                        <Link
+                                            to={`/answers/${answer.id}`}
+                                            // state={{ answer: "occupation" }}
+                                            // state={{ from: "occupation" }}
+                                            state={answer}
+                                            key={answer.id}
+                                            answer={answer}
+                                            className="block p-2 hover:bg-gray-100/90"
+                                        >
+                                            <div className="font-semibold">
+                                                {answer.survey.title}
+                                            </div>
+                                            <small>
+                                                Answer Made at :{" "}
+                                                <i className="font-semibold">
+                                                    {answer.end_date}
+                                                </i>
+                                            </small>
+                                        </Link>
+                                        {/* <Link
+                                            to={`/answers/${answer.id}`}
+                                            // state={{ answer: "occupation" }}
+                                            // state={{ from: "occupation" }}
+                                            state={answer}
+                                        >
+                                            <p>Click {answer.id}</p>
+                                        </Link> */}
+                                        {/* <TButton
+                                            to={`/answers/${answer.id}`}
+                                            onClick={(answer) => (
+                                                <Answers
+                                                    answer={"answer"}
+                                                    id={"answer.id"}
+                                                />
+                                            )}
+                                            key={answer.id}
+                                        ></TButton> */}
+                                        {/* Answer: {answer.id} */}
+                                    </>
                                 ))}
                             </div>
                         )}

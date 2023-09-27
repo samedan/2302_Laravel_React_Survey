@@ -4,6 +4,7 @@ import PublicQuestionView from "../components/PublicQuestionView";
 import axiosClient from "./../axios";
 
 export default function SurveyPublicView() {
+    const answers = {};
     const [surveyFinished, setSurveyFinished] = useState(false);
     const [survey, setSurvey] = useState({ questions: [] });
     const [loading, setLoading] = useState(false);
@@ -12,7 +13,6 @@ export default function SurveyPublicView() {
     const [countedMeds, setCountedMeds] = useState([]);
     const [loadedConseils, setLoadedConseils] = useState([]);
     const [manquements, setManquements] = useState([]);
-    const [answers, setAnswers] = useState({ 0: "cur" });
 
     const conseils = [
         {
@@ -117,17 +117,7 @@ export default function SurveyPublicView() {
 
     function answerChanged(question, value) {
         console.log(question, value);
-        console.log(typeof question.id);
-        const idQuestion = parseInt(question.id);
-        console.log(idQuestion);
-        // let response = { idQuestion: { value } };
-        // answers[question.id] = value;
-        let objPrimaire = { idQuestion: value };
-        let obj = Object.defineProperty(answers, idQuestion, { value });
-
-        console.log(obj);
-        // answers = obj;
-        setAnswers(obj);
+        answers[question.id] = value;
         console.log("answers");
         console.log(answers);
         if (value == "Oui") {
@@ -333,7 +323,7 @@ export default function SurveyPublicView() {
 
                                             // console.log(loadedConseils[res[0]]);
                                             return (
-                                                <div key={index}>
+                                                <>
                                                     <p>
                                                         <strong>
                                                             {res[0]}
@@ -347,7 +337,7 @@ export default function SurveyPublicView() {
                                                             </>
                                                         }
                                                     </p>
-                                                </div>
+                                                </>
                                             );
                                         })}
                                     </h3>

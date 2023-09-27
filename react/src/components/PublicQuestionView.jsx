@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 export default function PublicQuestionView({
     question,
@@ -8,6 +8,8 @@ export default function PublicQuestionView({
 }) {
     let selectedOptions = [];
 
+    const [displayProblems, setDisplayProblems] = useState(false);
+
     function onCheckboxChange(option, $event) {
         if ($event.target.checked) {
             selectedOptions.push(option.text);
@@ -16,6 +18,13 @@ export default function PublicQuestionView({
         }
         console.log(selectedOptions);
         answerChanged(selectedOptions);
+    }
+
+    function setVisible(option) {
+        if (option == "Oui") {
+            console.log("Oui");
+            setDisplayProblems(true);
+        }
     }
 
     if (question.type === "checkbox") {
@@ -30,9 +39,13 @@ export default function PublicQuestionView({
                         {index + 1} . {question.question}
                     </legend>
                     <p className="text-gray-500 text-sm">
-                        {question.description}
+                        <strong>Description:</strong> {question.description}
                     </p>
-                    <p className="text-gray-500 text-sm">{question.conseils}</p>
+                    {displayProblems && (
+                        <p className="text-gray-500 text-sm">
+                            <strong>Manquements de:</strong> {question.conseils}
+                        </p>
+                    )}
                 </div>
                 <div className="mt-3">
                     {/* SELECT */}
@@ -71,6 +84,7 @@ export default function PublicQuestionView({
                                         onChange={(ev) => {
                                             console.log(ev.target.value);
                                             answerChanged(ev.target.value);
+                                            setVisible(ev.target.value);
                                         }}
                                         type="radio"
                                         className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"

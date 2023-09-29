@@ -67,6 +67,7 @@ export default function Dashboard() {
                                 <h3 className="font-bold text-xl mb-3">
                                     {data.latestSurvey.title}
                                 </h3>
+
                                 <div className="flex justify-between text-sm mb-1">
                                     <div>Create Date:</div>
                                     <div>{data.latestSurvey.created_at}</div>
@@ -133,8 +134,15 @@ export default function Dashboard() {
                                             className="block p-2 hover:bg-gray-100/90"
                                         >
                                             <div className="font-semibold">
-                                                {answer.survey.title}
+                                                {answer.survey.title} by{" "}
+                                                {answer.user} - age:{" "}
+                                                {answer.age}
                                             </div>
+
+                                            <p className="font-bold text-xl mb-3">
+                                                {answer.weight} -{" "}
+                                                {answer.height}- {answer.other}
+                                            </p>
                                             <small>
                                                 Answer Made at :{" "}
                                                 <i className="font-semibold">

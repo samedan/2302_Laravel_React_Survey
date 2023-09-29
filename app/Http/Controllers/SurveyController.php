@@ -262,16 +262,41 @@ class SurveyController extends Controller
 
     public function storeAnswer (StoreSurveyAnswerRequest $request, Survey $survey) {
         $validated = $request->validated();
+        
+        // dd($request->all());
+        //or
+        // print_r($request->all());
+        // print_r($request->user);
+        // echo $request->user;
+    
+        //also print one by one
+        // echo $request->name;
+        // echo $request->email;
+        // echo $request->phone;
+        
         $surveyAnswer = SurveyAnswer::create([
             'survey_id' => $survey->id,
             'start_date' => date('Y-m-d H:i:s'),
-            'end_date' => date('Y-m-d H:i:s'),
+            'end_date' => date('Y-m-d H:i:s'),  
+            'user' => $request['user'],
+            'age' => $request['age'],
+            'weight' => $request['weight'],
+            'height' => $request['height'],
+            'other' => $request['other'],
+            // 'user' => "request->user",
+            
+            
         ]);
 
         foreach($validated['answers'] as $questionId => $answer) {
             $question = SurveyQuestion::where([ 
                 'id' => $questionId,
                 'survey_id' => $survey->id ])->get();
+                // 'user' = "cur",
+                // 'age' => $survey->age,
+                // 'weight' => $survey->weight,
+                // 'height' => $survey->height,
+                // 'other' => $survey->other,
             if(!$question) {
                 return response("Invalid question ID: \"$questionId\"", 400);
             }

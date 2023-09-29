@@ -2,6 +2,7 @@ import { createContext, useContext, useState } from "react";
 
 const StateContext = createContext({
     currentUser: {},
+    currentPatient: {},
     userToken: null,
     surveys: [],
     questionTypes: [],
@@ -11,6 +12,7 @@ const StateContext = createContext({
     },
     setCurrentUser: () => {},
     setUserToken: () => {},
+    setCurrentPatient: () => {},
 });
 
 const tmpSurveys = [
@@ -194,6 +196,7 @@ const tmpSurveys = [
 
 export const ContextProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState({});
+    const [currentPatient, setCurrentPatient] = useState({});
     const [userToken, _setUserToken] = useState(
         localStorage.getItem("TOKEN") || ""
     );
@@ -235,6 +238,8 @@ export const ContextProvider = ({ children }) => {
                 toast,
                 showToast,
                 setToast,
+                currentPatient,
+                setCurrentPatient,
             }}
         >
             {children}

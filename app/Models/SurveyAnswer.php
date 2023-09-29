@@ -11,7 +11,7 @@ class SurveyAnswer extends Model
     use HasFactory;
     const UPDATED_AT = null;
     const CREATED_AT = null;
-    protected $fillable = ['survey_id', 'start_date', 'end_date'];
+    protected $fillable = ['survey_id', 'start_date', 'end_date', 'user', 'age', 'weight', 'height', 'other'];
 
     public function survey() {
         return $this->belongsTo(Survey::class); // allows to get the surveys inside SurveyAnswerResource

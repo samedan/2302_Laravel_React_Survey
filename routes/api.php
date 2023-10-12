@@ -41,3 +41,4 @@ Route::get('/posts', function() {
         ]
             ]);
 });
+Route::get('/available/surveys', [DashboardController::class, 'getSurveysForPatient']);

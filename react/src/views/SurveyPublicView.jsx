@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import PublicQuestionView from "../components/PublicQuestionView";
 import axiosClient from "./../axios";
 import PatientData from "./PatientData";
@@ -15,7 +15,8 @@ export default function SurveyPublicView() {
     const [loadedConseils, setLoadedConseils] = useState([]);
     const [manquements, setManquements] = useState([]);
     const [answers, setAnswers] = useState({ 0: "cur" });
-
+    const [additionalSurveys, setAdditionalSurveys] = useState();
+    const [finishedAllSurveys, setFinishedAllSurveys] = useState(false);
     const { currentPatient, setCurrentPatient } = useStateContext();
     const { currentPatientHere, setCurrentPatientHere } = useState({});
 
@@ -107,13 +108,13 @@ export default function SurveyPublicView() {
             .then(({ data }) => {
                 setLoading(false);
                 setSurvey(data.data);
-                // console.log(data.data);
+                console.log(data.data);
             })
             .catch(() => {
                 setLoading(false);
             });
         setLoadedConseils(conseils);
-    }, []);
+    }, [slug]);
 
     useEffect(() => {
         // countSameMedsInArray(meds);
@@ -149,7 +150,7 @@ export default function SurveyPublicView() {
     //     console.log(question, value);
     // }
 
-    console.log("currentPatient on SurveyPublicView", currentPatient);
+    // console.log("currentPatient on SurveyPublicView", currentPatient);
 
     function checkForProduct(id) {
         const filterObj = conseils.filter((e) => e.id == id);
@@ -275,6 +276,17 @@ export default function SurveyPublicView() {
         // setMeds(newMeds);
     }
 
+    function verifyAvailableSurveys(patient) {
+        console.log("patient", patient);
+        axiosClient
+            .get(`/available/surveys?user=${patient.user}`)
+            .then((response) => {
+                console.log(response.data);
+                getOnlyLeftOverSurveys(response.data);
+                // setAdditionalSurveys(response.data);
+            });
+    }
+
     function onSubmit(ev) {
         ev.preventDefault();
         // console.log(answers);
@@ -291,13 +303,67 @@ export default function SurveyPublicView() {
             })
             .then((response) => {
                 console.log(response);
-                debugger;
+                // debugger;
                 setSurveyFinished(true);
+                setMeds([]);
+                setCountedMeds([]);
+                setLoadedConseils([]);
+                setManquements([]);
+                setAnswers({});
+                // verifyAvailableSurveys(currentPatient["user"]);
+                resetPatient();
+                // setAdditionalSurveys();
             });
     }
 
+    function getOnlyLeftOverSurveys(data) {
+        console.log("data", data);
+        const x = data.totalSurveysNumber - data.totalAnswers;
+        const {
+            totalSurveys,
+            totalAnswers,
+            totalAnswersByUser,
+            totalSurveysNumber,
+        } = data;
+
+        console.log("NumberOfStillAvailableSurveys: ", x);
+        console.log("NumberOfAnsweredSurveys: ", totalAnswers);
+        let surveysAnsweredIds = [];
+        let surveysAnsweredIdsArray = [];
+        totalAnswersByUser.map((answer) => {
+            console.log(answer.survey_id);
+            surveysAnsweredIds.push(answer.survey_id);
+        });
+        // surveysAnsweredIds = surveysAnsweredIdsArray;
+        console.log("surveysAnsweredIds", surveysAnsweredIds);
+        let totalSurveyIds = [];
+        totalSurveys.map((survey) => {
+            totalSurveyIds.push(survey.id);
+        });
+        console.log("totalSurveyIds", totalSurveyIds);
+        // const intersection = totalSurveyIds.filter((element) =>
+        //     surveysAnsweredIds.includes(element)
+        // );
+        const surveysLeftToAnswerIds = totalSurveyIds.filter(
+            (element) => !surveysAnsweredIds.includes(element)
+        );
+        console.log("surveysLeftToAnswerIds", surveysLeftToAnswerIds);
+
+        const surveysLeftToAnswer = totalSurveys.filter((element) =>
+            surveysLeftToAnswerIds.includes(element.id)
+        );
+        console.log("surveysLeftToAnswer", surveysLeftToAnswer);
+        if (surveysLeftToAnswer == []) {
+            // Finished all surveys
+            setFinishedAllSurveys(true);
+        } else {
+            setAdditionalSurveys(surveysLeftToAnswer);
+        }
+    }
+
     function resetPatient() {
-        setCurrentPatientHere({});
+        // setCurrentPatientHere({});
+        verifyAvailableSurveys(currentPatient);
     }
 
     function isObjEmpty(obj) {
@@ -422,11 +488,46 @@ export default function SurveyPublicView() {
                                     <strong>MedsForQuestion: {meds}</strong>
                                 </p>
                             </div>
-
-                            {surveyFinished && (
-                                <div className="py-8 px-6 bg-emerald-500 text-white w-[600px] mx-auto">
-                                    Thank you for participating in the survey
-                                </div>
+                            {finishedAllSurveys && (
+                                <>
+                                    <div className="py-8 px-6 bg-emerald-500 text-white w-[600px] mx-auto">
+                                        Thank you. You finished all our surveys.
+                                    </div>
+                                </>
+                            )}
+                            {surveyFinished && !finishedAllSurveys && (
+                                <>
+                                    <div className="py-8 px-6 bg-emerald-500 text-white w-[600px] mx-auto">
+                                        Thank you for participating in the
+                                        survey
+                                    </div>
+                                    <ul>
+                                        {additionalSurveys &&
+                                            additionalSurveys.map(
+                                                (surveyLeft) => (
+                                                    <li key={surveyLeft.title}>
+                                                        <p>
+                                                            <Link
+                                                                to={`/survey/public/${surveyLeft.slug}`}
+                                                                // state={{ answer: "occupation" }}
+                                                                // state={{ from: "occupation" }}
+                                                                onClick={() =>
+                                                                    setSurveyFinished(
+                                                                        false
+                                                                    )
+                                                                }
+                                                                className="block p-2 hover:bg-gray-100/90"
+                                                            >
+                                                                {
+                                                                    surveyLeft.title
+                                                                }
+                                                            </Link>
+                                                        </p>
+                                                    </li>
+                                                )
+                                            )}
+                                    </ul>
+                                </>
                             )}
                             {!surveyFinished && (
                                 <>

@@ -278,7 +278,7 @@ class SurveyController extends Controller
             'survey_id' => $survey->id,
             'start_date' => date('Y-m-d H:i:s'),
             'end_date' => date('Y-m-d H:i:s'),  
-            'user' => $request['user'],
+            'user' => $request['user'] ,
             'age' => $request['age'],
             'weight' => $request['weight'],
             'height' => $request['height'],
@@ -305,8 +305,9 @@ class SurveyController extends Controller
             $data = [
                 'survey_question_id' => $questionId,
                 'survey_answer_id' => $surveyAnswer->id,
-                'answer' => is_array($answer) ? json_encode($answer) : $answer
-
+                'trist' => 'trist',
+                'answer' => is_array($answer) ? json_encode($answer) : $answer,
+                
             ];
 
             $questionAnswer = SurveyQuestionAnswer::create($data);

@@ -17,7 +17,7 @@ export default function SurveyPublicView() {
     const [loadedConseils, setLoadedConseils] = useState([]);
     const [manquements, setManquements] = useState([]);
     // const [answers, setAnswers] = useState({ 0: "cur" });
-    const [answers, setAnswers] = useState({ 0: "Zero" });
+    const [answers, setAnswers] = useState({});
     const [additionalSurveys, setAdditionalSurveys] = useState();
     const [finishedAllSurveys, setFinishedAllSurveys] = useState(false);
     const { currentPatient, setCurrentPatient } = useStateContext();
@@ -331,7 +331,7 @@ export default function SurveyPublicView() {
                 setCountedMeds([]);
                 setLoadedConseils([]);
                 setManquements([]);
-                setAnswers({ 0: "Zero" });
+                setAnswers({});
                 // verifyAvailableSurveys(currentPatient["user"]);
                 resetPatient();
                 // setAdditionalSurveys();

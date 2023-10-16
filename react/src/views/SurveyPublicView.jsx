@@ -123,9 +123,12 @@ export default function SurveyPublicView() {
     useEffect(() => {
         if (finishedAllSurveys) {
             console.log("here");
+
             setTimeout(3000);
 
-            // navigate("/display-results");
+            navigate("/display-results");
+        } else {
+            console.log("still here");
         }
     }, [finishedAllSurveys]);
 
@@ -307,11 +310,18 @@ export default function SurveyPublicView() {
     function verifyAvailableSurveys(patient) {
         console.log("patient", patient);
         axiosClient
-            .get(`/available/surveys?user=${patient.user}`)
+            .get(`/available/surveys?user=${patient.other}`)
             .then((response) => {
                 console.log(response.data);
                 getOnlyLeftOverSurveys(response.data);
                 // setAdditionalSurveys(response.data);
+                // if (response.data.surveysLeftToAnswerIds == []) {
+                //     console.log("here");
+
+                //     setTimeout(3000);
+
+                //     navigate("/display-results");
+                // }
             });
     }
 
@@ -364,6 +374,15 @@ export default function SurveyPublicView() {
         } = data;
 
         console.log("NumberOfStillAvailableSurveys: ", x);
+        if (x == 0) {
+            console.log("X 378 here");
+
+            setTimeout(3000);
+
+            navigate("/display-results");
+        } else {
+            console.log(x);
+        }
         console.log("NumberOfAnsweredSurveys: ", totalAnswers);
         let surveysAnsweredIds = [];
         let surveysAnsweredIdsArray = [];
@@ -536,7 +555,7 @@ export default function SurveyPublicView() {
                             {finishedAllSurveys && (
                                 <>
                                     <div className="py-8 px-6 bg-emerald-500 text-white w-[600px] mx-auto">
-                                        Thank you. You finished all our surveys.
+                                        Thank you. You finished ALL our surveys.
                                     </div>
                                 </>
                             )}

@@ -45,7 +45,7 @@ class DashboardController extends Controller
         // return $user;
         // Total number of surveys
         // $total = SurveyAnswer::query()->where('user_id', $user->id)->count();
-        $total = SurveyAnswer::query()->where('user', $user->user)->count();
+        $total = SurveyAnswer::query()->where('other', $user->user)->count();
         // Latest survey
         // $latest = Survey::query()->where('user_id', $user->id)->latest('created_at')->first();
         
@@ -53,7 +53,7 @@ class DashboardController extends Controller
         $totalAnswersByUser = SurveyAnswer::query()
             // ->join('surveys', 'survey_answers.survey_id', '=', 'surveys.id')
             // ->where('surveys.user_id', $user->id)
-            ->where('survey_answers.user', $user->user)                   
+            ->where('survey_answers.other', $user->user)                   
             ->getModels('survey_answers.*');
 
         // $extract = $totalAnswersByUser[0]['survey_id'];

@@ -17,7 +17,7 @@ export default function SurveyPublicView() {
     const [loadedConseils, setLoadedConseils] = useState([]);
     const [manquements, setManquements] = useState([]);
     // const [answers, setAnswers] = useState({ 0: "cur" });
-    const [answers, setAnswers] = useState({ 0: "Zero" });
+    const [answers, setAnswers] = useState({});
     const [additionalSurveys, setAdditionalSurveys] = useState();
     const [finishedAllSurveys, setFinishedAllSurveys] = useState(false);
     const { currentPatient, setCurrentPatient } = useStateContext();
@@ -137,8 +137,8 @@ export default function SurveyPublicView() {
         console.log(question, value);
         console.log("question.id", question.id);
         console.log(typeof value);
-        const idQuestion = JSON.stringify(question.id);
-        // const idQuestion = parseInt(question.id);
+        // const idQuestion = JSON.stringify(question.id);
+        const idQuestion = parseInt(question.id);
         console.log(idQuestion);
         // let response = { idQuestion: { value } };
         // answers[question.id] = value;
@@ -308,20 +308,25 @@ export default function SurveyPublicView() {
         console.log("answers");
         console.log(answers);
 
-        const gipsy = JSON.stringify(answers);
+        const copy = JSON.parse(JSON.stringify(answers));
 
-        console.log(gipsy);
+        // const gipsy = JSON.stringify(answers);
+        console.log("copy");
+        console.log(copy);
+        console.log("answers");
+        console.log(answers);
+
+        // console.log(gipsy);
         debugger;
         axiosClient
             .post(`/survey/${survey.id}/answer`, {
-                answers: answers,
-
-                // answers: { 0: "cur" },
+                answers: { 1: "Oui", 2: "Oui" },
                 user: currentPatient["user"],
                 age: currentPatient["age"],
                 weight: currentPatient["weight"],
                 height: currentPatient["height"],
                 other: currentPatient["other"],
+                other_id: currentPatient["other"],
             })
             .then((response) => {
                 console.log(response);
@@ -331,7 +336,7 @@ export default function SurveyPublicView() {
                 setCountedMeds([]);
                 setLoadedConseils([]);
                 setManquements([]);
-                setAnswers({ 0: "Zero" });
+                setAnswers({});
                 // verifyAvailableSurveys(currentPatient["user"]);
                 resetPatient();
                 // setAdditionalSurveys();

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(\App\Models\SurveyQuestion::class, 'survey_question_id');
             $table->foreignIdFor(\App\Models\SurveyAnswer::class, 'survey_answer_id');
+            $table->foreignIdFor(\App\Models\SurveyAnswer::class, 'other_id');
             $table->text('answer');
             $table->timestamps();
         });

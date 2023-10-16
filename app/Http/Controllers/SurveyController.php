@@ -264,7 +264,7 @@ class SurveyController extends Controller
         $validated = $request->validated();
         
         // dd($request->all());
-        //or
+        // or
         // print_r($request->all());
         // print_r($request->user);
         // echo $request->user;
@@ -272,7 +272,7 @@ class SurveyController extends Controller
         //also print one by one
         // echo $request->name;
         // echo $request->email;
-        // echo $request->phone;
+        echo $request->other;
         
         $surveyAnswer = SurveyAnswer::create([
             'survey_id' => $survey->id,
@@ -283,20 +283,24 @@ class SurveyController extends Controller
             'weight' => $request['weight'],
             'height' => $request['height'],
             'other' => $request['other'],
+            'other_id' => $request['other'],
             // 'user' => "request->user",
             
             
         ]);
 
+        // $other_id = $request['other'];
+
         foreach($validated['answers'] as $questionId => $answer) {
             $question = SurveyQuestion::where([ 
                 'id' => $questionId,
-                'survey_id' => $survey->id ])->get();
+                'survey_id' => $survey->id
+                 ])->get();
                 // 'user' = "cur",
                 // 'age' => $survey->age,
                 // 'weight' => $survey->weight,
                 // 'height' => $survey->height,
-                // 'other' => $survey->other,
+                // 'other' => $survey->other
             if(!$question) {
                 return response("Invalid question ID: \"$questionId\"", 400);
             }
@@ -305,7 +309,7 @@ class SurveyController extends Controller
             $data = [
                 'survey_question_id' => $questionId,
                 'survey_answer_id' => $surveyAnswer->id,
-                'trist' => 'trist',
+                'other_id' => $request->other,
                 'answer' => is_array($answer) ? json_encode($answer) : $answer,
                 
             ];

@@ -24,7 +24,6 @@ class SurveyAnswerResource extends JsonResource
             'weight' => $this->weight,
             'height' => $this->height,
             'other' => $this->other           
-
         ];
     }
 }

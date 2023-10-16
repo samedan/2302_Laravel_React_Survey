@@ -16,19 +16,19 @@ export default function PublicQuestionView({
         } else {
             selectedOptions = selectedOptions.filter((op) => op != option.text);
         }
-        console.log(selectedOptions);
+        // console.log(selectedOptions);
         answerChanged(selectedOptions);
     }
 
     function setVisible(option) {
         if (option == "Oui") {
-            console.log("Oui");
+            // console.log("Oui");
             setDisplayProblems(true);
         }
     }
 
     if (question.type === "checkbox") {
-        console.log(question);
+        // console.log(question);
     }
 
     return (

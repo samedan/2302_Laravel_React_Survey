@@ -17,7 +17,8 @@ export default function SurveyPublicView() {
     const [loadedConseils, setLoadedConseils] = useState([]);
     const [manquements, setManquements] = useState([]);
     // const [answers, setAnswers] = useState({ 0: "cur" });
-    const [answers, setAnswers] = useState({});
+    const [answersQuestions, setAnswersQuestions] = useState({});
+    const [answers2, setAnswers2] = useState({});
     const [additionalSurveys, setAdditionalSurveys] = useState();
     const [finishedAllSurveys, setFinishedAllSurveys] = useState(false);
     const { currentPatient, setCurrentPatient } = useStateContext();
@@ -143,15 +144,26 @@ export default function SurveyPublicView() {
         // let response = { idQuestion: { value } };
         // answers[question.id] = value;
         let objPrimaire = { idQuestion: value };
-
-        let obj = Object.defineProperty(answers, idQuestion, { value });
-
+        let obj = { ...answersQuestions };
+        // let obj = Object.defineProperty(answers, idQuestion, { value });
+        // let obj = Object.defineProperty(answersQ, idQuestion, { value });
+        obj[idQuestion] = value;
         console.log("obj");
         console.log(obj);
+
+        // console.log("newObjectPatient");
+        // console.log(newObjectPatient);
+        // console.log(currentPatient);
+        // console.log(obj);
+        // let clone = Object.assign({}, obj);
+        // console.log("clone");
+        // console.log(clone);
+
         // answers = obj;
-        setAnswers(obj);
-        console.log("answers");
-        console.log(answers);
+        setAnswersQuestions(obj);
+
+        // console.log("answers");
+        // console.log(answersQ);
         if (value == "Oui") {
             // console.log("addToMeds");
             addToMeds(question);
@@ -305,22 +317,20 @@ export default function SurveyPublicView() {
 
     function onSubmit(ev) {
         ev.preventDefault();
-        console.log("answers");
-        console.log(answers);
-
-        const copy = JSON.parse(JSON.stringify(answers));
+        // const copy = { ...answers };
+        // console.log("copy");
+        // console.log(copy);
+        // console.log("answers");
+        console.log("answersQuestions");
+        console.log(answersQuestions);
 
         // const gipsy = JSON.stringify(answers);
-        console.log("copy");
-        console.log(copy);
-        console.log("answers");
-        console.log(answers);
 
         // console.log(gipsy);
         debugger;
         axiosClient
             .post(`/survey/${survey.id}/answer`, {
-                answers: { 1: "Oui", 2: "Oui" },
+                answers: answersQuestions,
                 user: currentPatient["user"],
                 age: currentPatient["age"],
                 weight: currentPatient["weight"],
@@ -336,7 +346,7 @@ export default function SurveyPublicView() {
                 setCountedMeds([]);
                 setLoadedConseils([]);
                 setManquements([]);
-                setAnswers({});
+                setAnswersQuestions({});
                 // verifyAvailableSurveys(currentPatient["user"]);
                 resetPatient();
                 // setAdditionalSurveys();

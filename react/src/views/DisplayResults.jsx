@@ -1,6 +1,6 @@
 import { LockClosedIcon } from "@heroicons/react/20/solid";
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { useStateContext } from "../contexts/ContextProvider";
 import axiosClient from "./../axios";
 
@@ -8,52 +8,54 @@ export default function DisplayResults() {
     const { setCurrentUser, setUserToken } = useStateContext();
     const { currentPatient, setCurrentPatient } = useStateContext();
     const [email, setEmail] = useState("");
-    const [user, setUser] = useState("");
+    // const [user, setUser] = useState("");
     const [age, setAge] = useState("");
     const [weight, setWeight] = useState("");
     const [height, setHeight] = useState("");
     const [other, setOther] = useState("");
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState({ __html: "" });
 
-    const onSubmit = (ev) => {
-        ev.preventDefault();
-        setError({ __html: "" });
-        let patientData = {
-            user,
-            age,
-            weight,
-            height,
-            other,
-        };
-        setCurrentPatient(patientData);
-        console.log(patientData);
-        console.log(currentPatient);
-        // console.log(useStateContext);
-        // axiosClient
-        //     .post("/login", {
-        //         email,
-        //         password,
-        //     })
-        //     .then(({ data }) => {
-        //         setCurrentUser(data.user);
-        //         setUserToken(data.token);
-        //     })
-        //     .catch((error) => {
-        //         if (error.response) {
-        //             console.log(error.response.data);
-        //             if (error.response.data.errors) {
-        //                 console.log("here");
-        //                 const finalErrors = Object.values(
-        //                     error.response.data.errors
-        //                 ).reduce((accum, next) => [...accum, ...next], []);
-        //                 setError({ __html: finalErrors.join("<br>") });
-        //             } else {
-        //                 const finalErrors = Object.values(error.response.data);
-        //                 setError({ __html: finalErrors[0] });
-        //             }
-        //         }
-        //     });
-    };
+    const { user } = useParams();
+
+    useEffect(() => {
+        setLoading(true);
+
+        if (user) {
+            axiosClient
+                .get(`patientData?user=${user}`)
+
+                .then(({ data }) => {
+                    setLoading(false);
+                    // setSurvey(data.data);
+                    console.log("data.data");
+                    console.log(data);
+                })
+                .catch(() => {
+                    setLoading(false);
+                });
+        } else {
+            axiosClient
+                .get(`available/surveys?user=${currentPatient.other}`)
+                .then(({ data }) => {
+                    setLoading(false);
+                    // setSurvey(data.data);
+                    console.log(data.data);
+                })
+                .catch(() => {
+                    setLoading(false);
+                });
+        }
+    }, []);
+
+    function getUser() {
+        const { user } = useParams();
+
+        console.log(user);
+        debugger;
+        return user;
+    }
+
     return (
         <>
             <div>

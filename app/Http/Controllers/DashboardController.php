@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Survey;
 use App\Models\SurveyAnswer;
+use App\Models\SurveyQuestionAnswer;
 use Illuminate\Http\Request;
 use App\Http\Resources\SurveyAnswerResource;
 use App\Http\Resources\SurveyResourceDashboard;
@@ -108,6 +109,52 @@ class DashboardController extends Controller
                 // 'totalSurveysLeft' => $totalSurveysLeft,
                 'totalSurveysNumber' => $totalSurveysNumber,
                 'totalSurveys' => $totalSurveys,
+                // 'extract' => $extract,
+                // 'extract2' => $extract2,
+                // 'latestSurveys' => $latestSurveys,
+                // 'latestSurvey' => $latest ? new SurveyResourceDashboard($latest): null,
+                // 'totalAnswers' => $totalAnswers,
+                // 'latestAnswers' => SurveyAnswerResource::collection($latestAnswers)
+            ];
+    }
+
+    public function getPatientAndAnswers(Request $request) {
+        // $user = $request->user();
+        $user = $request;
+
+        // PatientData SurveysAnswered
+        $patientDataSurveysAnswered = SurveyAnswer::query()->where('other', $user->user)->get();
+        
+        
+        $patientDataAnswers = SurveyQuestionAnswer::query()->where('other_id', $user->user)->get();
+        
+        // Total number of surveys
+        // $total = SurveyAnswer::query()->where('user_id', $user->id)->count();
+        // $total = SurveyAnswer::query()->where('other', $user->user)->count();
+        
+        // // Total number of answers
+        // $totalAnswersByUser = SurveyAnswer::query()
+          
+            // ->where('survey_answers.other', $user->user)                   
+            // ->getModels('survey_answers.*');
+
+      
+        // Total surveys
+      
+        // $totalSurveysNumber = Survey::query()->count();
+        // // Total surveys
+      
+        // $totalSurveys = Survey::get();
+
+      
+            return [
+                // '$studivs'=> $studivs,
+                'patientData' => $patientDataSurveysAnswered,
+                'patientDataAnswers' => $patientDataAnswers,
+                // 'totalAnswersByUser' => $totalAnswersByUser,
+                // // 'totalSurveysLeft' => $totalSurveysLeft,
+                // 'totalSurveysNumber' => $totalSurveysNumber,
+                // 'totalSurveys' => $totalSurveys,
                 // 'extract' => $extract,
                 // 'extract2' => $extract2,
                 // 'latestSurveys' => $latestSurveys,

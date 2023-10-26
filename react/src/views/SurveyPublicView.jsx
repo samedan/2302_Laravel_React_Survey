@@ -23,6 +23,7 @@ export default function SurveyPublicView() {
     const [finishedAllSurveys, setFinishedAllSurveys] = useState(false);
     const { currentPatient, setCurrentPatient } = useStateContext();
     const { currentPatientHere, setCurrentPatientHere } = useState({});
+    const [totalDataPatient, setTotalDataPatient] = useState([]);
 
     const conseils = [
         {
@@ -125,8 +126,9 @@ export default function SurveyPublicView() {
             console.log("here");
 
             setTimeout(3000);
+            console.log(currentPatient.other_id);
 
-            navigate("/display-results");
+            navigate(`/display-results:${currentPatient.other_id}`);
         } else {
             console.log("still here");
         }
@@ -313,6 +315,7 @@ export default function SurveyPublicView() {
             .get(`/available/surveys?user=${patient.other}`)
             .then((response) => {
                 console.log(response.data);
+                setTotalDataPatient(response.data);
                 getOnlyLeftOverSurveys(response.data);
                 // setAdditionalSurveys(response.data);
                 // if (response.data.surveysLeftToAnswerIds == []) {

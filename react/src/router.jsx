@@ -64,6 +64,10 @@ const router = createBrowserRouter([
         path: "/display-results",
         element: <DisplayResults />,
     },
+    {
+        path: "/display-results/:user",
+        element: <DisplayResults />,
+    },
 ]);
 
 export default router;

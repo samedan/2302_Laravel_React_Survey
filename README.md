@@ -73,3 +73,8 @@ m=Model c=Controller r=resource R=Requests
 ## Saving Answers
 
 > SurveyPublicView.jsx -> answerChanged() -> Object.defineProperty()
+
+## Changed returned Surveys to all for logged in users
+
+> http://127.0.0.1:3000/surveys
+> SurveyController.php -> public function index(Request $request)

@@ -78,3 +78,7 @@ m=Model c=Controller r=resource R=Requests
 
 > http://127.0.0.1:3000/surveys
 > SurveyController.php -> public function index(Request $request)
+
+## Delete others Surveys
+
+> SurveyController.php ->public function destroy()

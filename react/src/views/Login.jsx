@@ -18,11 +18,24 @@ export default function Login() {
                 email,
                 password,
             })
-            .then(({ data }) => {
+            // .then(({ data }) => {
+            .then((res) => {
+                const { data } = res;
+                if (res.status) {
+                    console.log("no connexion");
+                    console.log(res.status);
+                    setError({ __html: "No connexion" });
+                }
                 setCurrentUser(data.user);
                 setUserToken(data.token);
             })
             .catch((error) => {
+                console.log(error.message);
+                if (error.message == "Network Error") {
+                    console.log(error.message);
+                    setError({ __html: error.message });
+                }
+
                 if (error.response) {
                     console.log(error.response.data);
                     if (error.response.data.errors) {

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Survey;
 use App\Models\SurveyAnswer;
+use App\Models\SurveyQuestion;
 use App\Models\SurveyQuestionAnswer;
 use Illuminate\Http\Request;
 use App\Http\Resources\SurveyAnswerResource;
@@ -57,6 +58,15 @@ class DashboardController extends Controller
             ->where('survey_answers.other', $user->user)                   
             ->getModels('survey_answers.*');
 
+        // // Total Questions answered
+        $totalQuestionsAnswered = SurveyQuestion::get();
+
+        // Answers by user
+        $answersByUser = SurveyQuestionAnswer::query()
+            // ->join('surveys', 'survey_answers.survey_id', '=', 'surveys.id')
+            // ->where('surveys.user_id', $user->id)
+            ->where('survey_question_answers.other_id', $user->user)                   
+            ->getModels('survey_question_answers.*');
         // $extract = $totalAnswersByUser[0]['survey_id'];
         // $extract2 = $totalAnswersByUser[1]['survey_id'];
 
@@ -104,6 +114,8 @@ class DashboardController extends Controller
 
             return [
                 // '$studivs'=> $studivs,
+                'answersByUser'=>$answersByUser,
+                'totalQuestions'=>$totalQuestionsAnswered,
                 'totalAnswers' => $total,
                 'totalAnswersByUser' => $totalAnswersByUser,
                 // 'totalSurveysLeft' => $totalSurveysLeft,

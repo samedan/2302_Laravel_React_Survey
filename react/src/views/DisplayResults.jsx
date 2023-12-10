@@ -15,6 +15,7 @@ export default function DisplayResults() {
     const [height, setHeight] = useState("");
     const [other, setOther] = useState("");
     const [results, setResults] = useState();
+    const [product, setProduct] = useState();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState({ __html: "" });
 
@@ -22,53 +23,53 @@ export default function DisplayResults() {
 
     useEffect(() => {
         setLoading(true);
+        getPrestashop();
+        // if (user) {
+        //     axiosClient
+        //         .get(`patientData?user=${user}`)
 
-        if (user) {
-            axiosClient
-                .get(`patientData?user=${user}`)
-
-                .then(({ data }) => {
-                    setLoading(false);
-                    // setSurvey(data.data);
-                    console.log("data.data");
-                    console.log(data);
-                })
-                .catch(() => {
-                    setLoading(false);
-                });
-        } else {
-            {
-                if (currentPatient.other !== undefined) {
-                    console.log("here");
-                    axiosClient
-                        .get(`available/surveys?user=${currentPatient.other}`)
-                        .then(({ data }) => {
-                            setLoading(false);
-                            // setSurvey(data.data);
-                            console.log(data.data);
-                            setResults(data);
-                        })
-                        .catch(() => {
-                            setLoading(false);
-                        });
-                }
-                // testing
-                else {
-                    axiosClient
-                        .get(`available/surveys?user=123456`)
-                        .then(({ data }) => {
-                            setLoading(false);
-                            // setSurvey(data.data);
-                            console.log(data);
-                            setResults(data);
-                        })
-                        .catch(() => {
-                            setLoading(false);
-                        });
-                    // end testing
-                }
-            }
-        }
+        //         .then(({ data }) => {
+        //             setLoading(false);
+        //             // setSurvey(data.data);
+        //             console.log("data.data");
+        //             console.log(data);
+        //         })
+        //         .catch(() => {
+        //             setLoading(false);
+        //         });
+        // } else {
+        //     {
+        //         if (currentPatient.other !== undefined) {
+        //             console.log("here");
+        //             axiosClient
+        //                 .get(`available/surveys?user=${currentPatient.other}`)
+        //                 .then(({ data }) => {
+        //                     setLoading(false);
+        //                     // setSurvey(data.data);
+        //                     console.log(data.data);
+        //                     setResults(data);
+        //                 })
+        //                 .catch(() => {
+        //                     setLoading(false);
+        //                 });
+        //         }
+        //         // testing
+        //         else {
+        //             axiosClient
+        //                 .get(`available/surveys?user=123456`)
+        //                 .then(({ data }) => {
+        //                     setLoading(false);
+        //                     // setSurvey(data.data);
+        //                     console.log(data);
+        //                     setResults(data);
+        //                 })
+        //                 .catch(() => {
+        //                     setLoading(false);
+        //                 });
+        //             // end testing
+        //         }
+        //     }
+        // }
     }, []);
 
     function getUser() {
@@ -78,24 +79,47 @@ export default function DisplayResults() {
         debugger;
         return user;
     }
-    function getPrestashop(url_id) {
-        const outerhtml = axiosClient
-            .get(
-                `https://shop.pharmacie-en-couleurs-eragny.com/recherche?controller=search&s=3532678600406`
-            )
-            .then(({ data }) => {
-                setLoading(false);
-                // setSurvey(data.data);
-                console.log(data);
-                setResults(data);
-            })
-            .catch(() => {
-                setLoading(false);
-            });
-        const image = document.getElementById("js-product-list").outerHTML;
-        console.log(image);
 
-        return <div className="App">{image}</div>;
+    function getPrestashop() {
+        fetch(
+            // "https://H8MU9WC4GQRDWKAFQ23WRY1HA4CQSBRD@shop.pharmacie-en-couleurs-eragny.com/api/products/&filter[reference]=[3532678600406]?display=full",
+            "https://shop.pharmacie-en-couleurs-eragny.com/api/products/&filter[reference]=[3401547819976]?display=full&output_format=JSON",
+            {
+                headers: {
+                    Authorization:
+                        "BASIC SDhNVTlXQzRHUVJEV0tBRlEyM1dSWTFIQTRDUVNCUkQ=",
+                },
+            }
+        )
+            // .then((response) => response.JSON())
+            .then((response) => response.json())
+            // .then((data) => console.log(data.products[0]))
+            .then((data) => setProduct(data.products[0]));
+        // .then(
+        //     console.log(
+        //         `https://shop.pharmacie-en-couleurs-eragny.com/${data.products[0].images[0].id}-medium_default/${data.products[0].link_rewrite}.jpg`
+        //     )
+
+        // .then(setProduct())
+        // .then((text) => console.log(text));
+        // axiosClient
+        //     .get(
+        //         `H8MU9WC4GQRDWKAFQ23WRY1HA4CQSBRD@shop.pharmacie-en-couleurs-eragny.com/api/products/&filter[reference]=[3401547819976]?display=full`
+        //     )
+        //     .then(({ data }) => {
+        //         setLoading(false);
+        //         // setSurvey(data.data);
+        //         console.log("prestashop_data");
+        //         console.log(data);
+        //         // setResults(data);
+        //     })
+        //     .catch(() => {
+        //         setLoading(false);
+        //     });
+        // const image = document.getElementById("js-product-list").outerHTML;
+        // console.log(image);
+
+        // return <div className="App">{image}</div>;
     }
 
     return (
@@ -113,6 +137,19 @@ export default function DisplayResults() {
                     <p>Height: {currentPatient.height}</p>
                     <p>Other: {currentPatient.other}</p>
                 </>
+            )}
+
+            {product && (
+                <div>
+                    {
+                        <img
+                            src={`https://shop.pharmacie-en-couleurs-eragny.com/${product.associations.images[0].id}-medium_default/${product.link_rewrite}.jpg`}
+                        />
+                    }{" "}
+                    {<>Description: {product.description_short}</>}
+                    <br />
+                    <p>{product.link_rewrite}</p>
+                </div>
             )}
 
             {/* {results && <p>{JSON.stringify(results, null, 2)}</p>} */}
@@ -170,7 +207,7 @@ export default function DisplayResults() {
                                                                 question.description}
                                                         </p>
                                                         <p>
-                                                            <iframe src="https://shop.pharmacie-en-couleurs-eragny.com/recherche?controller=search&s=3532678600406"></iframe>
+                                                            <img src="https://shop.pharmacie-en-couleurs-eragny.com/36-small_default/forcapil-shampoing-fortifiant.jpg" />
                                                         </p>
                                                     </>
                                                 )}

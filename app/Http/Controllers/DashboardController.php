@@ -42,6 +42,11 @@ class DashboardController extends Controller
             ];
     }
     public function getSurveysForPatient(Request $request) {
+        
+        $apiKey = `H8MU9WC4GQRDWKAFQ23WRY1HA4CQSBRD`;
+        $authorizationKey = base64_encode("H8MU9WC4GQRDWKAFQ23WRY1HA4CQSBRD"); // VUNDTExROU4yQVJTSFdDWExUNzRLVUtTU0szNEJGS1g6
+        // SDhNVTlXQzRHUVJEV0tBRlEyM1dSWTFIQTRDUVNCUkQ=
+        // https://devdocs.prestashop-project.org/8/webservice/tutorials/testing-access/
         // $user = $request->user();
         $user = $request;
         // return $user;
@@ -114,6 +119,7 @@ class DashboardController extends Controller
 
             return [
                 // '$studivs'=> $studivs,
+                'authorizationKey'=>$authorizationKey,
                 'answersByUser'=>$answersByUser,
                 'totalQuestions'=>$totalQuestionsAnswered,
                 'totalAnswers' => $total,

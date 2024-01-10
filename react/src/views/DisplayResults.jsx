@@ -15,68 +15,80 @@ export default function DisplayResults() {
     const [height, setHeight] = useState("");
     const [other, setOther] = useState("");
     const [results, setResults] = useState();
+    const [answers, setAnswers] = useState();
+    const [questions, setQuestions] = useState();
+    const [surveys, setSurveys] = useState();
     const [product, setProduct] = useState();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState({ __html: "" });
 
     const { user } = useParams();
 
+    console.log(user);
+
     useEffect(() => {
         setLoading(true);
-        getPrestashop();
-        // if (user) {
-        //     axiosClient
-        //         .get(`patientData?user=${user}`)
-
-        //         .then(({ data }) => {
-        //             setLoading(false);
-        //             // setSurvey(data.data);
-        //             console.log("data.data");
-        //             console.log(data);
-        //         })
-        //         .catch(() => {
-        //             setLoading(false);
-        //         });
-        // } else {
-        //     {
-        //         if (currentPatient.other !== undefined) {
-        //             console.log("here");
-        //             axiosClient
-        //                 .get(`available/surveys?user=${currentPatient.other}`)
-        //                 .then(({ data }) => {
-        //                     setLoading(false);
-        //                     // setSurvey(data.data);
-        //                     console.log(data.data);
-        //                     setResults(data);
-        //                 })
-        //                 .catch(() => {
-        //                     setLoading(false);
-        //                 });
-        //         }
-        //         // testing
-        //         else {
-        //             axiosClient
-        //                 .get(`available/surveys?user=123456`)
-        //                 .then(({ data }) => {
-        //                     setLoading(false);
-        //                     // setSurvey(data.data);
-        //                     console.log(data);
-        //                     setResults(data);
-        //                 })
-        //                 .catch(() => {
-        //                     setLoading(false);
-        //                 });
-        //             // end testing
-        //         }
-        //     }
-        // }
+        // const { user } = useParams();
+        // getPrestashop();
+        if (user) {
+            axiosClient
+                .get(`patientData?user=${user}`)
+                .then(({ data }) => {
+                    setLoading(false);
+                    // setSurvey(data.data);
+                    console.log("data.data");
+                    // console.log(data);
+                    // console.log(data.patientData[0]);
+                    setCurrentPatient(data.patientData[0]);
+                    setAnswers(data.patientDataAnswers);
+                    // console.log("answers");
+                    // console.log(answers);
+                    setQuestions(data.patientQuestionsAnswered);
+                    // console.log("questions");
+                    // console.log(questions);
+                    setSurveys(data.totalSurveys);
+                })
+                .catch(() => {
+                    setLoading(false);
+                });
+        } else {
+            {
+                if (currentPatient.other !== undefined) {
+                    console.log("here");
+                    axiosClient
+                        .get(`available/surveys?user=${currentPatient.other}`)
+                        .then(({ data }) => {
+                            setLoading(false);
+                            // setSurvey(data.data);
+                            console.log(data.data);
+                            setResults(data);
+                        })
+                        .catch(() => {
+                            setLoading(false);
+                        });
+                }
+                // testing
+                else {
+                    axiosClient
+                        .get(`available/surveys?user=${user}`)
+                        .then(({ data }) => {
+                            setLoading(false);
+                            // setSurvey(data.data);
+                            console.log(data);
+                            setResults(data);
+                        })
+                        .catch(() => {
+                            setLoading(false);
+                        });
+                    // end testing
+                }
+            }
+        }
     }, []);
 
     function getUser() {
         const { user } = useParams();
-
         console.log(user);
-        debugger;
         return user;
     }
 
@@ -121,6 +133,21 @@ export default function DisplayResults() {
 
         // return <div className="App">{image}</div>;
     }
+    function fetchQuestion(question) {
+        questions &&
+            questions.map((q) => {
+                if (q.id === question) {
+                    return "xor";
+                }
+            });
+
+        // questions.map((question) => {
+        //     if (questionId === question.id) {
+        //         console.log(question.question);
+        //         return <p>{question.question}</p>;
+        //     }
+        // });
+    }
 
     return (
         <>
@@ -139,6 +166,66 @@ export default function DisplayResults() {
                 </>
             )}
 
+            {answers && (
+                <>
+                    <p>///////////////////////////////</p>
+                    <ul>Surveys: </ul>
+                    {surveys.map((s) => (
+                        <>
+                            <li>
+                                <h3>{s.title}</h3>
+                                <ul>
+                                    {answers.map((answer) => (
+                                        <li>
+                                            <h2>Question answered: </h2>
+                                            <div>
+                                                {questions.map(
+                                                    (q) =>
+                                                        q.id ===
+                                                            answer.survey_question_id &&
+                                                        q.survey_id == s.id && (
+                                                            <ul>
+                                                                <li>
+                                                                    <strong>
+                                                                        SurveyID{" "}
+                                                                    </strong>
+                                                                    {
+                                                                        q.survey_id
+                                                                    }
+                                                                </li>
+                                                                <li>
+                                                                    <strong>
+                                                                        Question{" "}
+                                                                    </strong>
+                                                                    {q.question}
+                                                                </li>
+                                                                <li>
+                                                                    <strong>
+                                                                        Products{" "}
+                                                                    </strong>
+                                                                    {
+                                                                        q.description
+                                                                    }
+                                                                </li>
+                                                                <li>
+                                                                    <strong>
+                                                                        Conseils{" "}
+                                                                    </strong>
+                                                                    {q.conseils}
+                                                                </li>
+                                                            </ul>
+                                                        )
+                                                )}
+                                            </div>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </li>
+                        </>
+                    ))}
+                </>
+            )}
+
             {product && (
                 <div>
                     {
@@ -152,8 +239,8 @@ export default function DisplayResults() {
                 </div>
             )}
 
-            {/* {results && <p>{JSON.stringify(results, null, 2)}</p>} */}
-            {/* <p className="mt-2 text-center text-sm text-gray-600">
+            {results && <p>{JSON.stringify(results, null, 2)}</p>}
+            <p className="mt-2 text-center text-sm text-gray-600">
                 Or{" "}
                 <Link
                     to="/signup"
@@ -161,7 +248,7 @@ export default function DisplayResults() {
                 >
                     Signup for free
                 </Link>
-            </p> */}
+            </p>
 
             {results !== undefined &&
                 results.totalSurveys &&

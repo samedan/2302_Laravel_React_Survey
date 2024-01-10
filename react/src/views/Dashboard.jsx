@@ -169,7 +169,8 @@ export default function Dashboard() {
                                     {data.latestAnswers.map((answer) => (
                                         <>
                                             <Link
-                                                to={`/answers/${answer.id}`}
+                                                target={"_blank"}
+                                                to={`/display-results/${answer.other}`}
                                                 // state={{ answer: "occupation" }}
                                                 // state={{ from: "occupation" }}
                                                 state={answer}

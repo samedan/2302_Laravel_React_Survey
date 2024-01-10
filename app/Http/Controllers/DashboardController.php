@@ -140,11 +140,24 @@ class DashboardController extends Controller
         // $user = $request->user();
         $user = $request;
 
+        $patientDataAnswers = SurveyQuestionAnswer::query()->where('other_id', $user->user)->get();
         // PatientData SurveysAnswered
         $patientDataSurveysAnswered = SurveyAnswer::query()->where('other', $user->user)->get();
+        // $patientQuestionsAnswered = SurveyQuestion::query()
+        //     ->where('survey_questions.id', $user->user)->get();                   
+        $patientQuestionsAnswered = SurveyQuestion::get();                   
+        $totalSurveys = Survey::get();                   
+            
         
+
+        // $latestAnswers = SurveyAnswer::query()
+        //     ->join('surveys', 'survey_answers.survey_id', '=', 'surveys.id')
+        //     ->where('surveys.user_id', $user->id)
+        //     ->orderBy('end_date', 'DESC')
+        //     ->limit(5)
+        //     ->getModels('survey_answers.*');
+
         
-        $patientDataAnswers = SurveyQuestionAnswer::query()->where('other_id', $user->user)->get();
         
         // Total number of surveys
         // $total = SurveyAnswer::query()->where('user_id', $user->id)->count();
@@ -169,6 +182,9 @@ class DashboardController extends Controller
                 // '$studivs'=> $studivs,
                 'patientData' => $patientDataSurveysAnswered,
                 'patientDataAnswers' => $patientDataAnswers,
+                'patientQuestionsAnswered' => $patientQuestionsAnswered,
+                'user' => $user->user,
+                'totalSurveys' => $totalSurveys,
                 // 'totalAnswersByUser' => $totalAnswersByUser,
                 // // 'totalSurveysLeft' => $totalSurveysLeft,
                 // 'totalSurveysNumber' => $totalSurveysNumber,

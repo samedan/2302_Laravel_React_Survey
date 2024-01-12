@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export function convertObjectOfCountsIntoArray(countedMeds) {
     const res_array = [];
     for (let i in countedMeds) {
@@ -28,7 +30,7 @@ export function translateIntoNumbers(desc) {
     });
     console.log("resultsWithoutSpaces");
     console.log(resultsWithoutSpaces);
-    getPrestashop(resultsWithoutSpaces[0]);
+    resultsWithoutSpaces.map((res) => getPrestashop(res));
 
     return resultsWithoutSpaces;
 }
@@ -55,26 +57,60 @@ export function countSameMedsInArray(myArray) {
 }
 
 export function getPrestashop(x) {
-    fetch(
-        // "https://H8MU9WC4GQRDWKAFQ23WRY1HA4CQSBRD@shop.pharmacie-en-couleurs-eragny.com/api/products/&filter[reference]=[3532678600406]?display=full",
-        `https://shop.pharmacie-en-couleurs-eragny.com/api/products/&filter[reference]=[` +
-            x +
-            `]?display=full&output_format=JSON`,
-        {
-            headers: {
-                Authorization:
-                    "BASIC SDhNVTlXQzRHUVJEV0tBRlEyM1dSWTFIQTRDUVNCUkQ=",
-            },
-        }
-    )
-        // .then((response) => response.JSON())
-        .then((response) => response.json())
-        .then((data) => console.log(data.products[0]));
+    console.log("x");
+    console.log(x);
+    // const y = fetch(
+    //     // "https://H8MU9WC4GQRDWKAFQ23WRY1HA4CQSBRD@shop.pharmacie-en-couleurs-eragny.com/api/products/&filter[reference]=[3532678600406]?display=full",
+    //     `https://shop.pharmacie-en-couleurs-eragny.com/api/products/&filter[reference]=[` +
+    //         x +
+    //         `]?display=full&output_format=JSON`,
+    //     {
+    //         headers: {
+    //             Authorization:
+    //                 "BASIC SDhNVTlXQzRHUVJEV0tBRlEyM1dSWTFIQTRDUVNCUkQ=",
+    //         },
+    //     }
+    // )
+    //     // .then((response) => response.JSON())
+
+    //     .then((response) => response.json())
+    //     .then((data) => console.log(data.products[0].name));
+
+    // console.log(y);
+
+    try {
+        axios
+            .get(
+                `https://shop.pharmacie-en-couleurs-eragny.com/api/products/&filter[reference]=[` +
+                    x +
+                    `]?display=full&output_format=JSON`,
+                {
+                    headers: {
+                        Authorization:
+                            "BASIC SDhNVTlXQzRHUVJEV0tBRlEyM1dSWTFIQTRDUVNCUkQ=",
+                    },
+                }
+            )
+            .then((response) => {
+                if (response.data != []) {
+                    if (response.data.products !== undefined) {
+                        console.log("response.data.products[0]");
+                        console.log(response.data.products[0].reference);
+                        console.log(response.data.products[0].name);
+                    }
+                }
+            });
+    } catch (error) {
+        console.log(error);
+    }
+    // .then((data) => console.log(data.products[0].name));
+    // .then((data) => console.log(data.products[0]));
     // .then((data) => setProduct(data.products[0]));
     // .then(
     //     console.log(
     //         `https://shop.pharmacie-en-couleurs-eragny.com/${data.products[0].images[0].id}-medium_default/${data.products[0].link_rewrite}.jpg`
     //     )
+    // );
 
     // .then(setProduct())
     // .then((text) => console.log(text));

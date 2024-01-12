@@ -4,6 +4,14 @@ import { Link, useLocation, useParams } from "react-router-dom";
 import { useStateContext } from "../contexts/ContextProvider";
 import axiosClient from "./../axios";
 import { stringify } from "uuid";
+import SurveyListItem from "../components/SurveyListItem";
+import PageComponent from "../components/PageComponent";
+import DashboardCard from "../components/DashboardCard";
+import Dashboard from "./Dashboard";
+import {
+    convertObjectOfCountsIntoArray,
+    translateIntoNumbers,
+} from "../helpers/functions";
 
 export default function DisplayResults() {
     const { setCurrentUser, setUserToken } = useStateContext();
@@ -92,47 +100,6 @@ export default function DisplayResults() {
         return user;
     }
 
-    function getPrestashop() {
-        fetch(
-            // "https://H8MU9WC4GQRDWKAFQ23WRY1HA4CQSBRD@shop.pharmacie-en-couleurs-eragny.com/api/products/&filter[reference]=[3532678600406]?display=full",
-            "https://shop.pharmacie-en-couleurs-eragny.com/api/products/&filter[reference]=[3401547819976]?display=full&output_format=JSON",
-            {
-                headers: {
-                    Authorization:
-                        "BASIC SDhNVTlXQzRHUVJEV0tBRlEyM1dSWTFIQTRDUVNCUkQ=",
-                },
-            }
-        )
-            // .then((response) => response.JSON())
-            .then((response) => response.json())
-            // .then((data) => console.log(data.products[0]))
-            .then((data) => setProduct(data.products[0]));
-        // .then(
-        //     console.log(
-        //         `https://shop.pharmacie-en-couleurs-eragny.com/${data.products[0].images[0].id}-medium_default/${data.products[0].link_rewrite}.jpg`
-        //     )
-
-        // .then(setProduct())
-        // .then((text) => console.log(text));
-        // axiosClient
-        //     .get(
-        //         `H8MU9WC4GQRDWKAFQ23WRY1HA4CQSBRD@shop.pharmacie-en-couleurs-eragny.com/api/products/&filter[reference]=[3401547819976]?display=full`
-        //     )
-        //     .then(({ data }) => {
-        //         setLoading(false);
-        //         // setSurvey(data.data);
-        //         console.log("prestashop_data");
-        //         console.log(data);
-        //         // setResults(data);
-        //     })
-        //     .catch(() => {
-        //         setLoading(false);
-        //     });
-        // const image = document.getElementById("js-product-list").outerHTML;
-        // console.log(image);
-
-        // return <div className="App">{image}</div>;
-    }
     function fetchQuestion(question) {
         questions &&
             questions.map((q) => {
@@ -150,7 +117,7 @@ export default function DisplayResults() {
     }
 
     return (
-        <>
+        <PageComponent>
             <div>
                 <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
                     Résultats :
@@ -172,8 +139,55 @@ export default function DisplayResults() {
                     <ul>Surveys: </ul>
                     {surveys.map((s) => (
                         <>
+                            <DashboardCard
+                                title={s.title}
+                                className="order-4 lg:order-2 row-span-2"
+                                style={{ animationDelay: "0.3s" }}
+                            >
+                                <div className="flex flex-col py-4 px-6 shadow-md bg-white hover:bg-gray-50 h-[470px]">
+                                    <img
+                                        src={
+                                            import.meta.env.VITE_API_BASE_URL +
+                                            "/" +
+                                            s.image
+                                        }
+                                        alt={s.title}
+                                        className="w-full h-48 object-cover"
+                                    />
+                                    <h4 className="mt-4 text-lg font-bold">
+                                        {s.title}
+                                    </h4>
+                                    <strong>Description:</strong>
+                                    <div
+                                        dangerouslySetInnerHTML={{
+                                            __html: s.description,
+                                        }}
+                                        className="overflow-hidden flex-1"
+                                    ></div>
+                                    Conseils:
+                                    <div
+                                        dangerouslySetInnerHTML={{
+                                            __html: s.conseils,
+                                        }}
+                                        className="overflow-hidden flex-1"
+                                    ></div>
+                                </div>
+                            </DashboardCard>
+
                             <li>
-                                <h3>{s.title}</h3>
+                                {/* <div className="flex flex-col py-4 px-6 shadow-md bg-white hover:bg-gray-50 h-[470px]">
+                                    <img
+                                        src={
+                                            import.meta.env.VITE_API_BASE_URL +
+                                            "/" +
+                                            s.image
+                                        }
+                                        alt={s.title}
+                                        className="w-full h-48 object-cover"
+                                    />
+                                    <h3>{s.title}</h3>
+                                </div> */}
+
                                 <ul>
                                     {answers.map((answer) => (
                                         <li>
@@ -185,14 +199,14 @@ export default function DisplayResults() {
                                                             answer.survey_question_id &&
                                                         q.survey_id == s.id && (
                                                             <ul>
-                                                                <li>
+                                                                {/* <li>
                                                                     <strong>
                                                                         SurveyID{" "}
                                                                     </strong>
                                                                     {
                                                                         q.survey_id
                                                                     }
-                                                                </li>
+                                                                </li> */}
                                                                 <li>
                                                                     <strong>
                                                                         Question{" "}
@@ -206,6 +220,27 @@ export default function DisplayResults() {
                                                                     {
                                                                         q.description
                                                                     }
+
+                                                                    {q.description !=
+                                                                        [] && (
+                                                                        <>
+                                                                            <h2
+                                                                                style={{
+                                                                                    color: "green",
+                                                                                    fontWeight:
+                                                                                        "bold",
+                                                                                }}
+                                                                            >
+                                                                                Produits
+                                                                                conseils
+                                                                            </h2>
+                                                                            <h3>
+                                                                                {translateIntoNumbers(
+                                                                                    q.description
+                                                                                )}
+                                                                            </h3>
+                                                                        </>
+                                                                    )}
                                                                 </li>
                                                                 <li>
                                                                     <strong>
@@ -312,6 +347,6 @@ export default function DisplayResults() {
                     dangerouslySetInnerHTML={error}
                 ></div>
             )}
-        </>
+        </PageComponent>
     );
 }

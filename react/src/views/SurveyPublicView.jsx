@@ -5,6 +5,7 @@ import axiosClient from "./../axios";
 import PatientData from "./PatientData";
 import { useStateContext } from "../contexts/ContextProvider";
 import { stringify } from "uuid";
+import PageComponent from "../components/PageComponent";
 
 export default function SurveyPublicView() {
     const [surveyFinished, setSurveyFinished] = useState(false);
@@ -434,202 +435,220 @@ export default function SurveyPublicView() {
     // return <div>{JSON.stringify(survey, undefined, 2)}</div>;
 
     return (
-        <>
-            {isObjEmpty(currentPatient) && (
-                <div className="grid grid-cols-6">
-                    <PatientData />
-                </div>
-            )}
-            <div>
-                {loading && (
-                    <div className="flex justify-center">Loading...</div>
+        <PageComponent
+            title="Commencez votre Etude Santé. Cliquez pour choisir le premier étude."
+            // buttons={
+            //     <TButton color="green" to="/surveys/create">
+            //         <PlusCircleIcon className="h-6 w-6 mr-2" />
+            //         Create new
+            //     </TButton>
+            // }
+            // image={logo}
+        >
+            <>
+                {isObjEmpty(currentPatient) && (
+                    <div className="grid grid-cols-6">
+                        <PatientData />
+                    </div>
                 )}
-                {!loading && !isObjEmpty(currentPatient) && (
-                    <>
-                        <button
-                            type="submit"
-                            className="inline-flex justify-center py-2 px-4 borer border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600
+                <div>
+                    {loading && (
+                        <div className="flex justify-center">Loading...</div>
+                    )}
+                    {!loading && !isObjEmpty(currentPatient) && (
+                        <>
+                            <button
+                                type="submit"
+                                className="inline-flex justify-center py-2 px-4 borer border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600
                 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                            onClick={resetPatient}
-                        >
-                            Reset Patient
-                        </button>
-                        <button
-                            type="submit"
-                            className="inline-flex justify-center py-2 px-4 borer border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600
+                                onClick={resetPatient}
+                            >
+                                Reset Patient
+                            </button>
+                            <button
+                                type="submit"
+                                className="inline-flex justify-center py-2 px-4 borer border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600
                 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                            onClick={() => navigate("/display-results")}
-                        >
-                            Navigate to Results
-                        </button>
-                        <form
-                            onSubmit={(ev) => onSubmit(ev)}
-                            className="container mx-auto px-4"
-                        >
-                            <div className="grid grid-cols-6">
-                                <div className="mr-4">
-                                    <img src={survey.image_url} alt="" />
-                                </div>
-                                <div className="col-span-3">
-                                    <h1 className="text-3xl mb-3">
-                                        Title: {survey.title}
-                                    </h1>
-                                    <p className="text-gray-500 text-sm mb-3">
-                                        Expire date: {survey.expire_date}
-                                    </p>
-                                    <p className="text-gray-500 text-sm mb-3">
-                                        Description: {survey.description}
-                                    </p>
-                                </div>
-                                <div
-                                    className="col-span-1"
-                                    style={{ backgroundColor: "white" }}
-                                >
-                                    {countedMeds != [] && (
-                                        <>
-                                            <h2
-                                                style={{
-                                                    color: "green",
-                                                    fontWeight: "bold",
-                                                }}
-                                            >
-                                                Produits conseils
-                                            </h2>
-                                            <h3>
-                                                {convertObjectOfCountsIntoArray(
-                                                    countedMeds
-                                                ).map((res, index) => {
-                                                    // console.log("res[0]");
-                                                    // console.log(res[0]);
-                                                    // console.log(
-                                                    //     "loadedConseils[res[0]]"
-                                                    // );
+                                onClick={() => navigate("/display-results")}
+                            >
+                                Navigate to Results
+                            </button>
+                            <form
+                                onSubmit={(ev) => onSubmit(ev)}
+                                className="container mx-auto px-4"
+                            >
+                                <div className="grid grid-cols-6">
+                                    <div className="mr-4">
+                                        <img src={survey.image_url} alt="" />
+                                    </div>
+                                    <div className="col-span-3">
+                                        <h1 className="text-3xl mb-3">
+                                            Title: {survey.title}
+                                        </h1>
+                                        <p className="text-gray-500 text-sm mb-3">
+                                            Expire date: {survey.expire_date}
+                                        </p>
+                                        <p className="text-gray-500 text-sm mb-3">
+                                            Description: {survey.description}
+                                        </p>
+                                    </div>
+                                    <div
+                                        className="col-span-1"
+                                        style={{ backgroundColor: "white" }}
+                                    >
+                                        {countedMeds != [] && (
+                                            <>
+                                                <h2
+                                                    style={{
+                                                        color: "green",
+                                                        fontWeight: "bold",
+                                                    }}
+                                                >
+                                                    Produits conseils
+                                                </h2>
+                                                <h3>
+                                                    {convertObjectOfCountsIntoArray(
+                                                        countedMeds
+                                                    ).map((res, index) => {
+                                                        // console.log("res[0]");
+                                                        // console.log(res[0]);
+                                                        // console.log(
+                                                        //     "loadedConseils[res[0]]"
+                                                        // );
 
-                                                    // console.log(loadedConseils[res[0]]);
-                                                    return (
-                                                        <div key={index}>
+                                                        // console.log(loadedConseils[res[0]]);
+                                                        return (
+                                                            <div key={index}>
+                                                                <p>
+                                                                    <strong>
+                                                                        {res[0]}
+                                                                    </strong>{" "}
+                                                                    - {res[1]} -{" "}
+                                                                    {
+                                                                        <>
+                                                                            {checkForProduct(
+                                                                                res[0]
+                                                                            )}
+                                                                        </>
+                                                                    }
+                                                                </p>
+                                                            </div>
+                                                        );
+                                                    })}
+                                                </h3>
+                                            </>
+                                        )}
+
+                                        <strong>MedsForQuestion: {meds}</strong>
+                                    </div>
+                                    <div
+                                        className="col-span-1"
+                                        style={{ backgroundColor: "white" }}
+                                    >
+                                        <h2
+                                            style={{
+                                                color: "green",
+                                                fontWeight: "bold",
+                                            }}
+                                        >
+                                            Manque de:
+                                        </h2>
+                                        {manquements && (
+                                            <p>{manquements.toString()}</p>
+                                        )}
+                                    </div>
+                                </div>
+                                <div className="grid grid-cols-4">
+                                    <p>
+                                        <strong>
+                                            Question: {meds && meds.question}
+                                        </strong>
+                                        <strong>MedsForQuestion: {meds}</strong>
+                                    </p>
+                                </div>
+                                {finishedAllSurveys && (
+                                    <>
+                                        <div className="py-8 px-6 bg-emerald-500 text-white w-[600px] mx-auto">
+                                            Thank you. You finished ALL our
+                                            surveys.
+                                        </div>
+                                    </>
+                                )}
+                                {surveyFinished && (
+                                    // !finishedAllSurveys &&
+                                    <>
+                                        <div className="py-8 px-6 bg-emerald-500 text-white w-[600px] mx-auto">
+                                            Thank you for participating in the
+                                            survey
+                                        </div>
+                                        <ul>
+                                            {additionalSurveys &&
+                                                additionalSurveys.map(
+                                                    (surveyLeft) => (
+                                                        <li
+                                                            key={
+                                                                surveyLeft.title
+                                                            }
+                                                        >
                                                             <p>
-                                                                <strong>
-                                                                    {res[0]}
-                                                                </strong>{" "}
-                                                                - {res[1]} -{" "}
-                                                                {
-                                                                    <>
-                                                                        {checkForProduct(
-                                                                            res[0]
-                                                                        )}
-                                                                    </>
-                                                                }
+                                                                <Link
+                                                                    to={`/survey/public/${surveyLeft.slug}`}
+                                                                    // state={{ answer: "occupation" }}
+                                                                    // state={{ from: "occupation" }}
+                                                                    onClick={() =>
+                                                                        setSurveyFinished(
+                                                                            false
+                                                                        )
+                                                                    }
+                                                                    className="block p-2 hover:bg-gray-100/90"
+                                                                >
+                                                                    {
+                                                                        surveyLeft.title
+                                                                    }
+                                                                </Link>
                                                             </p>
-                                                        </div>
-                                                    );
-                                                })}
-                                            </h3>
-                                        </>
-                                    )}
-
-                                    <strong>MedsForQuestion: {meds}</strong>
-                                </div>
-                                <div
-                                    className="col-span-1"
-                                    style={{ backgroundColor: "white" }}
-                                >
-                                    <h2
-                                        style={{
-                                            color: "green",
-                                            fontWeight: "bold",
-                                        }}
-                                    >
-                                        Manque de:
-                                    </h2>
-                                    {manquements && (
-                                        <p>{manquements.toString()}</p>
-                                    )}
-                                </div>
-                            </div>
-                            <div className="grid grid-cols-4">
-                                <p>
-                                    <strong>
-                                        Question: {meds && meds.question}
-                                    </strong>
-                                    <strong>MedsForQuestion: {meds}</strong>
-                                </p>
-                            </div>
-                            {finishedAllSurveys && (
-                                <>
-                                    <div className="py-8 px-6 bg-emerald-500 text-white w-[600px] mx-auto">
-                                        Thank you. You finished ALL our surveys.
-                                    </div>
-                                </>
-                            )}
-                            {surveyFinished && (
-                                // !finishedAllSurveys &&
-                                <>
-                                    <div className="py-8 px-6 bg-emerald-500 text-white w-[600px] mx-auto">
-                                        Thank you for participating in the
-                                        survey
-                                    </div>
-                                    <ul>
-                                        {additionalSurveys &&
-                                            additionalSurveys.map(
-                                                (surveyLeft) => (
-                                                    <li key={surveyLeft.title}>
-                                                        <p>
-                                                            <Link
-                                                                to={`/survey/public/${surveyLeft.slug}`}
-                                                                // state={{ answer: "occupation" }}
-                                                                // state={{ from: "occupation" }}
-                                                                onClick={() =>
-                                                                    setSurveyFinished(
-                                                                        false
-                                                                    )
-                                                                }
-                                                                className="block p-2 hover:bg-gray-100/90"
-                                                            >
-                                                                {
-                                                                    surveyLeft.title
-                                                                }
-                                                            </Link>
-                                                        </p>
-                                                    </li>
-                                                )
-                                            )}
-                                    </ul>
-                                </>
-                            )}
-                            {!surveyFinished && (
-                                <>
-                                    <div>
-                                        {survey.questions &&
-                                            survey.questions.map(
-                                                (question, index) => (
-                                                    <PublicQuestionView
-                                                        key={question.id}
-                                                        question={question}
-                                                        index={index}
-                                                        answerChanged={(val) =>
-                                                            answerChanged(
-                                                                question,
+                                                        </li>
+                                                    )
+                                                )}
+                                        </ul>
+                                    </>
+                                )}
+                                {!surveyFinished && (
+                                    <>
+                                        <div>
+                                            {survey.questions &&
+                                                survey.questions.map(
+                                                    (question, index) => (
+                                                        <PublicQuestionView
+                                                            key={question.id}
+                                                            question={question}
+                                                            index={index}
+                                                            answerChanged={(
                                                                 val
-                                                            )
-                                                        }
-                                                    />
-                                                )
-                                            )}
-                                    </div>
-                                    <button
-                                        type="submit"
-                                        className="inline-flex justify-center py-2 px-4 borer border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600
+                                                            ) =>
+                                                                answerChanged(
+                                                                    question,
+                                                                    val
+                                                                )
+                                                            }
+                                                        />
+                                                    )
+                                                )}
+                                        </div>
+                                        <button
+                                            type="submit"
+                                            className="inline-flex justify-center py-2 px-4 borer border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600
                         hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                    >
-                                        Submit
-                                    </button>
-                                </>
-                            )}
-                        </form>
-                    </>
-                )}
-            </div>
-        </>
+                                        >
+                                            Submit
+                                        </button>
+                                    </>
+                                )}
+                            </form>
+                        </>
+                    )}
+                </div>
+            </>
+        </PageComponent>
     );
 }

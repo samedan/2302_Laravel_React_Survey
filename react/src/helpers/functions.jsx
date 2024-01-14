@@ -19,6 +19,8 @@ export function convertObjectOfCountsIntoArray(countedMeds) {
 
 export function translateIntoNumbers(desc) {
     let numberedMeds;
+    // console.log("desc before translate");
+    // console.log(desc);
     // console.log(typeof desc);
     numberedMeds = desc.split(",");
     // let arr = desc.split(",").filter((element) => element);
@@ -28,11 +30,12 @@ export function translateIntoNumbers(desc) {
     resultsWithoutSpaces = numberedMeds.map((el) => {
         return el.trim();
     });
-    console.log("resultsWithoutSpaces");
-    console.log(resultsWithoutSpaces);
+    // console.log("resultsWithoutSpaces");
+    // console.log(resultsWithoutSpaces);
     resultsWithoutSpaces.map((res) => getPrestashop(res));
-
-    return resultsWithoutSpaces;
+    // console.log("resultsWithoutSpaces After translate");
+    // console.log(resultsWithoutSpaces);
+    // return resultsWithoutSpaces;
 }
 
 export function countSameMedsInArray(myArray) {
@@ -57,8 +60,8 @@ export function countSameMedsInArray(myArray) {
 }
 
 export function getPrestashop(x) {
-    console.log("x");
-    console.log(x);
+    // console.log("x");
+    // console.log(x);
     // const y = fetch(
     //     // "https://H8MU9WC4GQRDWKAFQ23WRY1HA4CQSBRD@shop.pharmacie-en-couleurs-eragny.com/api/products/&filter[reference]=[3532678600406]?display=full",
     //     `https://shop.pharmacie-en-couleurs-eragny.com/api/products/&filter[reference]=[` +
@@ -91,15 +94,32 @@ export function getPrestashop(x) {
                     },
                 }
             )
-            .then((response) => {
-                if (response.data != []) {
-                    if (response.data.products !== undefined) {
-                        console.log("response.data.products[0]");
-                        console.log(response.data.products[0].reference);
-                        console.log(response.data.products[0].name);
-                    }
+            .then((res) => {
+                if (
+                    res != [] ||
+                    res.data != [] ||
+                    res.data.data != [] ||
+                    res.data.products[0] != undefined ||
+                    res.data.products != undefined
+                ) {
+                    // console.log(res.data.products[0]);
+                    console.log(res.data.products[0].name);
+                    return res.data.products[0].name;
                 }
+                // console.log("empty");
             });
+
+        // console.log(getData);
+
+        // .then((response) => {
+        //     if (response.data != []) {
+        //         if (response.data.products !== undefined) {
+        //             console.log("response.data.products[0]");
+        //             console.log(response.data.products[0].reference);
+        //             console.log(response.data.products[0].name);
+        //         }
+        //     }
+        // });
     } catch (error) {
         console.log(error);
     }

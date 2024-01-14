@@ -9,6 +9,7 @@ import Surveys from "./views/Surveys";
 import SurveyView from "./views/SurveyView";
 import Answers from "./views/Answers";
 import DisplayResults from "./views/DisplayResults";
+import SurveysPublic from "./views/SurveysPublic";
 
 const router = createBrowserRouter([
     {
@@ -67,6 +68,10 @@ const router = createBrowserRouter([
     {
         path: "/display-results/:user",
         element: <DisplayResults />,
+    },
+    {
+        path: "/start",
+        element: <SurveysPublic />,
     },
 ]);
 

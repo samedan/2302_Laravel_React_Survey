@@ -1,9 +1,11 @@
 import { LockClosedIcon } from "@heroicons/react/20/solid";
+import axios from "axios";
 import { useState, useEffect } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { useStateContext } from "../contexts/ContextProvider";
 import axiosClient from "./../axios";
 import { stringify } from "uuid";
+import "tw-elements"; // Loading CSS
 import SurveyListItem from "../components/SurveyListItem";
 import PageComponent from "../components/PageComponent";
 import DashboardCard from "../components/DashboardCard";
@@ -12,6 +14,7 @@ import {
     convertObjectOfCountsIntoArray,
     translateIntoNumbers,
 } from "../helpers/functions";
+import QuestionWithAnswers from "./QuestionWithAnswers";
 
 export default function DisplayResults() {
     const { setCurrentUser, setUserToken } = useStateContext();
@@ -23,6 +26,7 @@ export default function DisplayResults() {
     const [height, setHeight] = useState("");
     const [other, setOther] = useState("");
     const [results, setResults] = useState();
+    const [surveyArrayResults, setSurveyArrayResults] = useState([]);
     const [answers, setAnswers] = useState();
     const [questions, setQuestions] = useState();
     const [surveys, setSurveys] = useState();
@@ -32,7 +36,10 @@ export default function DisplayResults() {
 
     const { user } = useParams();
 
-    console.log(user);
+    // console.log(user);
+    // useEffect(() => {
+    //     setProduct();
+    // }, [translateIntoNumbers]);
 
     useEffect(() => {
         setLoading(true);
@@ -44,7 +51,7 @@ export default function DisplayResults() {
                 .then(({ data }) => {
                     setLoading(false);
                     // setSurvey(data.data);
-                    console.log("data.data");
+                    // console.log("data.data");
                     // console.log(data);
                     // console.log(data.patientData[0]);
                     setCurrentPatient(data.patientData[0]);
@@ -116,6 +123,61 @@ export default function DisplayResults() {
         // });
     }
 
+    let finalArray = [];
+    function translateIntoNumbers(desc, question, survey) {
+        let numberedMeds;
+        // console.log(`desc before counting ` + survey);
+        // console.log(desc);
+
+        numberedMeds = desc.split(",");
+        let resultsWithoutSpaces;
+        resultsWithoutSpaces = numberedMeds.map((el) => {
+            return el.trim();
+        });
+        let productsArray = [survey, question];
+        resultsWithoutSpaces.map((res) => {
+            if (!productsArray.includes(res) && !finalArray.includes(res)) {
+                productsArray.push(res);
+            }
+
+            // return getPrestashop(res);
+        });
+        console.log(productsArray);
+
+        // productsArray.map((p) => getPrestashop(p));
+
+        // console.log("after counting");
+        // console.log(resultsWithoutSpaces);
+    }
+
+    function translateIntoArray(desc, question, survey) {
+        let numberedMeds;
+        let numberedMedsWithSurvey = [survey, question];
+        numberedMeds = desc.split(",");
+        let resultsArrayWithoutSpaces;
+        let resultsArrayWithoutSpacesWithQandS;
+
+        resultsArrayWithoutSpaces = numberedMeds.map((el) => {
+            return el.trim();
+        });
+
+        // ["survey", "question", "1", "2"..]
+        resultsArrayWithoutSpaces.map((res) => {
+            if (
+                !numberedMedsWithSurvey.includes(res) &&
+                !finalArray.includes(res)
+            ) {
+                numberedMedsWithSurvey.push(res);
+            }
+        });
+
+        // console.log(numberedMedsWithSurvey);
+
+        // console.log(resultsArrayWithoutSpaces);
+        // return resultsArrayWithoutSpaces; // only numbers
+        return numberedMedsWithSurvey; // onlt numbers
+    }
+
     return (
         <PageComponent>
             <div>
@@ -144,7 +206,8 @@ export default function DisplayResults() {
                                 className="order-4 lg:order-2 row-span-2"
                                 style={{ animationDelay: "0.3s" }}
                             >
-                                <div className="flex flex-col py-4 px-6 shadow-md bg-white hover:bg-gray-50 h-[470px]">
+                                {/* <div className="flex flex-col py-4 px-6 shadow-md bg-white hover:bg-gray-50 h-[470px]"> */}
+                                <div className="flex flex-col py-4 px-6 shadow-md bg-white hover:bg-gray-50 ">
                                     <img
                                         src={
                                             import.meta.env.VITE_API_BASE_URL +
@@ -154,10 +217,10 @@ export default function DisplayResults() {
                                         alt={s.title}
                                         className="w-full h-48 object-cover"
                                     />
-                                    <h4 className="mt-4 text-lg font-bold">
+                                    {/* <h4 className="mt-4 text-lg font-bold">
                                         {s.title}
-                                    </h4>
-                                    <strong>Description:</strong>
+                                    </h4> */}
+                                    {/* <strong>Description:</strong>
                                     <div
                                         dangerouslySetInnerHTML={{
                                             __html: s.description,
@@ -170,7 +233,7 @@ export default function DisplayResults() {
                                             __html: s.conseils,
                                         }}
                                         className="overflow-hidden flex-1"
-                                    ></div>
+                                    ></div> */}
                                 </div>
                             </DashboardCard>
 
@@ -191,7 +254,7 @@ export default function DisplayResults() {
                                 <ul>
                                     {answers.map((answer) => (
                                         <li>
-                                            <h2>Question answered: </h2>
+                                            {/* <h2>Question answered: </h2> */}
                                             <div>
                                                 {questions.map(
                                                     (q) =>
@@ -209,6 +272,8 @@ export default function DisplayResults() {
                                                                 </li> */}
                                                                 <li>
                                                                     <strong>
+                                                                        _
+                                                                        <br />
                                                                         Question{" "}
                                                                     </strong>
                                                                     {q.question}
@@ -232,12 +297,31 @@ export default function DisplayResults() {
                                                                                 }}
                                                                             >
                                                                                 Produits
-                                                                                conseils
+                                                                                conseils:{" "}
+                                                                                {
+                                                                                    q.conseils
+                                                                                }
                                                                             </h2>
                                                                             <h3>
-                                                                                {translateIntoNumbers(
-                                                                                    q.description
-                                                                                )}
+                                                                                {" "}
+                                                                                <QuestionWithAnswers
+                                                                                    code={translateIntoArray(
+                                                                                        q.description,
+                                                                                        q.question,
+                                                                                        s.title
+                                                                                    )}
+                                                                                    question={
+                                                                                        q.question
+                                                                                    }
+                                                                                    survey={
+                                                                                        s.title
+                                                                                    }
+                                                                                />
+                                                                                {/* {translateIntoNumbers(
+                                                                                        q.description,
+                                                                                        q.question,
+                                                                                        s.title
+                                                                                    )} */}
                                                                             </h3>
                                                                         </>
                                                                     )}
@@ -261,7 +345,8 @@ export default function DisplayResults() {
                 </>
             )}
 
-            {product && (
+            {/* Category Image */}
+            {/* {product && (
                 <div>
                     {
                         <img
@@ -272,7 +357,8 @@ export default function DisplayResults() {
                     <br />
                     <p>{product.link_rewrite}</p>
                 </div>
-            )}
+            )} */}
+            {/* End Category Image */}
 
             {results && <p>{JSON.stringify(results, null, 2)}</p>}
             <p className="mt-2 text-center text-sm text-gray-600">

@@ -56,11 +56,11 @@ export default function PaginationLinks({ meta, onPageClick }) {
             <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
                 <div>
                     <p className="text-sm text-gray-700">
-                        Showing <span className="font-medium">{meta.from}</span>{" "}
-                        to <span className="font-medium">{meta.to}</span> of
+                        Etudes <span className="font-medium">{meta.from}</span>{" "}
+                        à <span className="font-medium">{meta.to}</span> de
                         &nbsp;
                         <span className="font-medium">{meta.total}</span>{" "}
-                        results
+                        résultats
                     </p>
                 </div>
                 <div>

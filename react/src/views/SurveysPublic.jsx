@@ -19,7 +19,9 @@ export default function SurveysPublic() {
     console.log(surveys);
 
     const getSurveys = (url) => {
-        url = url || "/survey"; // if first or previous/next pages survey?page=2
+        url = url || "/survey" || "/start"; // if first or previous/next pages survey?page=2
+        console.log("url");
+        console.log(url);
         setLoading(true);
         axiosClient.get(url).then(({ data }) => {
             setSurveys(data.data);

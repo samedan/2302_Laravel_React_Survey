@@ -20,12 +20,12 @@ use App\Http\Controllers\DashboardController;
 Route::middleware('auth:sanctum')->group(function() {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']); // return user to check
-    Route::apiResource('survey', SurveyController::class);
+    // Route::apiResource('survey', SurveyController::class);
     Route::get('/dashboard', [DashboardController::class, 'index']);
     
 });
 
-
+Route::apiResource('survey', SurveyController::class);
 Route::post('/signup', [AuthController::class, 'signup']);
 Route::post('/login', [AuthController::class, 'login']);
 // {survey:slug} = survey that will be type casted

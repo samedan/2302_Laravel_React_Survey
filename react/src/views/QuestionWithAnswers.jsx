@@ -41,9 +41,9 @@ export default function QuestionWithAnswers({ survey, question, code }) {
         console.log("filteredArr");
         console.log(filteredArr);
         return (
-            <div>
-                <h1>CHILD : {survey}</h1>
-                <p>QUESTION : {question}</p>
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 ">
+                {/* <h1>CHILD : {survey}</h1>
+                <p>QUESTION : {question}</p> */}
                 {/* <p>CODE : {code}</p> */}
                 {filteredArr.map((indexProduct) =>
                     // <p>INDEX: {getPrestashop(indexProduct)}</p>

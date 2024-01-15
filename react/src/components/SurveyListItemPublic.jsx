@@ -9,16 +9,37 @@ import {
 } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
 
-export default function SurveyListItemPublic({ survey, inactive }) {
+export default function SurveyListItemPublic({
+    survey,
+    inactive,
+    continuedSurvey,
+}) {
+    console.log(survey);
     return (
         <>
             <Link to={`/survey/public/${survey.slug}`}>
                 <div className="flex flex-col py-4 px-6 shadow-md bg-white hover:bg-gray-50">
-                    <img
-                        src={survey.image_url}
-                        alt={survey.title}
-                        className="w-full h-48 object-cover"
-                    />
+                    {/* Image Loading from SurveyListItemPublic */}
+                    {continuedSurvey && (
+                        <img
+                            // src={survey.image_url}
+                            src={
+                                import.meta.env.VITE_API_BASE_URL +
+                                "/" +
+                                survey.image
+                            }
+                            alt={survey.title}
+                            className="w-full h-48 object-cover"
+                        />
+                    )}
+                    {!continuedSurvey && (
+                        <img
+                            src={survey.image_url}
+                            alt={survey.title}
+                            className="w-full h-48 object-cover"
+                        />
+                    )}
+                    {/* END Image Loading from SurveyListItemPublic */}
 
                     {inactive && (
                         <div

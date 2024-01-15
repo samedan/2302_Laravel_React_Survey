@@ -49,7 +49,7 @@ export default function SurveysPublic() {
 
     return (
         <PageComponent
-            title="Commencez votre Etude Santé. Cliquez pour choisir le premier étude."
+            title="Commencez votre Etude Santé. Choisisez le premier sujet :"
             // buttons={
             //     <TButton color="green" to="/surveys/create">
             //         <PlusCircleIcon className="h-6 w-6 mr-2" />

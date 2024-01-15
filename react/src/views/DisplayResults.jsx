@@ -182,10 +182,10 @@ export default function DisplayResults() {
         <PageComponent>
             <div>
                 <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
-                    Résultats :
+                    Voici vos résultats :
                 </h2>
             </div>
-            {currentPatient && (
+            {/* {currentPatient && (
                 <>
                     <p>User: {currentPatient.user}</p>
                     <p>Age: {currentPatient.age}</p>
@@ -193,21 +193,22 @@ export default function DisplayResults() {
                     <p>Height: {currentPatient.height}</p>
                     <p>Other: {currentPatient.other}</p>
                 </>
-            )}
+            )} */}
 
             {answers && (
                 <>
-                    <p>///////////////////////////////</p>
-                    <ul>Surveys: </ul>
+                    {/* <p>///////////////////////////////</p> */}
+                    {/* <ul>Surveys: </ul> */}
                     {surveys.map((s) => (
                         <>
                             <DashboardCard
-                                title={s.title}
-                                className="order-4 lg:order-2 row-span-2"
+                                // title={s.title}
+                                className="order-4 lg:order-2 row-span-2 mb-10"
                                 style={{ animationDelay: "0.3s" }}
                             >
                                 {/* <div className="flex flex-col py-4 px-6 shadow-md bg-white hover:bg-gray-50 h-[470px]"> */}
-                                <div className="flex flex-col py-4 px-6 shadow-md bg-white hover:bg-gray-50 ">
+
+                                <div className="flex flex-row py-4 px-6 shadow-md bg-white hover:bg-gray-50">
                                     <img
                                         src={
                                             import.meta.env.VITE_API_BASE_URL +
@@ -215,8 +216,17 @@ export default function DisplayResults() {
                                             s.image
                                         }
                                         alt={s.title}
-                                        className="w-full h-48 object-cover"
+                                        className="h-28 object-cover mr-10"
                                     />
+                                    <div className="">
+                                        <p>
+                                            Voici nos conseils sur le sujet :{" "}
+                                        </p>
+                                        <h3 className="text-2xl font-semibold">
+                                            {s.title}
+                                        </h3>
+                                    </div>
+
                                     {/* <h4 className="mt-4 text-lg font-bold">
                                         {s.title}
                                     </h4> */}
@@ -235,10 +245,10 @@ export default function DisplayResults() {
                                         className="overflow-hidden flex-1"
                                     ></div> */}
                                 </div>
-                            </DashboardCard>
 
-                            <li>
-                                {/* <div className="flex flex-col py-4 px-6 shadow-md bg-white hover:bg-gray-50 h-[470px]">
+                                {/* Questions & Conseils */}
+                                <div>
+                                    {/* <div className="flex flex-col py-4 px-6 shadow-md bg-white hover:bg-gray-50 h-[470px]">
                                     <img
                                         src={
                                             import.meta.env.VITE_API_BASE_URL +
@@ -251,18 +261,27 @@ export default function DisplayResults() {
                                     <h3>{s.title}</h3>
                                 </div> */}
 
-                                <ul>
-                                    {answers.map((answer) => (
-                                        <li>
-                                            {/* <h2>Question answered: </h2> */}
-                                            <div>
-                                                {questions.map(
-                                                    (q) =>
-                                                        q.id ===
-                                                            answer.survey_question_id &&
-                                                        q.survey_id == s.id && (
-                                                            <ul>
-                                                                {/* <li>
+                                    <ul>
+                                        {answers.map((answer) => (
+                                            <li>
+                                                {/* <h2>Question answered: </h2> */}
+                                                <div>
+                                                    {questions.map(
+                                                        (q) =>
+                                                            q.id ===
+                                                                answer.survey_question_id &&
+                                                            q.survey_id ==
+                                                                s.id && (
+                                                                <DashboardCard
+                                                                    // title={s.title}
+                                                                    className="order-4 lg:order-2 row-span-2 mb-10 bg-slate-100"
+                                                                    style={{
+                                                                        animationDelay:
+                                                                            "0.3s",
+                                                                    }}
+                                                                >
+                                                                    <ul className="text-left">
+                                                                        {/* <li>
                                                                     <strong>
                                                                         SurveyID{" "}
                                                                     </strong>
@@ -270,76 +289,97 @@ export default function DisplayResults() {
                                                                         q.survey_id
                                                                     }
                                                                 </li> */}
-                                                                <li>
-                                                                    <strong>
-                                                                        _
-                                                                        <br />
-                                                                        Question{" "}
-                                                                    </strong>
-                                                                    {q.question}
-                                                                </li>
-                                                                <li>
-                                                                    <strong>
-                                                                        Products{" "}
-                                                                    </strong>
-                                                                    {
-                                                                        q.description
-                                                                    }
-
-                                                                    {q.description !=
-                                                                        [] && (
-                                                                        <>
-                                                                            <h2
-                                                                                style={{
-                                                                                    color: "green",
-                                                                                    fontWeight:
-                                                                                        "bold",
-                                                                                }}
-                                                                            >
-                                                                                Produits
-                                                                                conseils:{" "}
-                                                                                {
-                                                                                    q.conseils
-                                                                                }
-                                                                            </h2>
-                                                                            <h3>
-                                                                                {" "}
-                                                                                <QuestionWithAnswers
-                                                                                    code={translateIntoArray(
-                                                                                        q.description,
-                                                                                        q.question,
-                                                                                        s.title
-                                                                                    )}
-                                                                                    question={
+                                                                        <li>
+                                                                            <h2 className="text-2xl">
+                                                                                {/* Question
+                                                                                :{" "} */}
+                                                                                <span className="text-green-600 font-bold">
+                                                                                    {
                                                                                         q.question
                                                                                     }
-                                                                                    survey={
-                                                                                        s.title
-                                                                                    }
-                                                                                />
-                                                                                {/* {translateIntoNumbers(
+                                                                                </span>
+                                                                            </h2>
+                                                                        </li>
+                                                                        <li>
+                                                                            {/* Products code */}
+                                                                            {/* <strong>
+                                                                                Products{" "}
+                                                                            </strong>
+                                                                            {
+                                                                                q.description
+                                                                            } */}
+                                                                            {/* END Products code */}
+
+                                                                            {q.description !=
+                                                                                [] && (
+                                                                                <>
+                                                                                    <h2
+                                                                                        style={{
+                                                                                            color: "black",
+                                                                                        }}
+                                                                                    >
+                                                                                        Symptômes
+                                                                                        de
+                                                                                        la
+                                                                                        carence
+                                                                                        en
+                                                                                        :{" "}
+                                                                                        <span className="font-bold">
+                                                                                            {" "}
+                                                                                            {
+                                                                                                q.conseils
+                                                                                            }
+                                                                                        </span>
+                                                                                    </h2>
+                                                                                    <p className="text-left">
+                                                                                        Nous
+                                                                                        vous
+                                                                                        recommandons
+                                                                                        :{" "}
+                                                                                    </p>
+                                                                                    <h3>
+                                                                                        {" "}
+                                                                                        <QuestionWithAnswers
+                                                                                            code={translateIntoArray(
+                                                                                                q.description,
+                                                                                                q.question,
+                                                                                                s.title
+                                                                                            )}
+                                                                                            question={
+                                                                                                q.question
+                                                                                            }
+                                                                                            survey={
+                                                                                                s.title
+                                                                                            }
+                                                                                        />
+                                                                                        {/* {translateIntoNumbers(
                                                                                         q.description,
                                                                                         q.question,
                                                                                         s.title
                                                                                     )} */}
-                                                                            </h3>
-                                                                        </>
-                                                                    )}
-                                                                </li>
-                                                                <li>
-                                                                    <strong>
-                                                                        Conseils{" "}
-                                                                    </strong>
-                                                                    {q.conseils}
-                                                                </li>
-                                                            </ul>
-                                                        )
-                                                )}
-                                            </div>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </li>
+                                                                                    </h3>
+                                                                                </>
+                                                                            )}
+                                                                        </li>
+                                                                        {/* <li>
+                                                                            <strong>
+                                                                                Conseils{" "}
+                                                                            </strong>
+                                                                            {
+                                                                                q.conseils
+                                                                            }
+                                                                        </li> */}
+                                                                    </ul>
+                                                                </DashboardCard>
+                                                            )
+                                                    )}
+                                                </div>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                                {/* END Questions & Conseils */}
+                            </DashboardCard>
                         </>
                     ))}
                 </>

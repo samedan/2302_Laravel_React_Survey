@@ -1,9 +1,15 @@
 import { useState } from "react";
 import { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import axiosClient from "../axios";
 import axios from "axios";
 import PublicQuestionView from "../components/PublicQuestionView";
+import DashboardCard from "../components/DashboardCard";
+import {
+    ArrowRightCircleIcon,
+    ArrowTopRightOnSquareIcon,
+} from "@heroicons/react/20/solid";
+import TButton from "../components/core/TButton";
 
 export default function GetPrestashop({ indexProduct }) {
     const answers = {};
@@ -80,33 +86,77 @@ export default function GetPrestashop({ indexProduct }) {
     }
 
     // console.log(indexProduct);
+    const regex = /(<([^>]+)>)/gi;
+    // const result = text.replace(regex, "");
 
     return (
-        <div>
+        <DashboardCard
+            // title={s.title}
+            className="order-4 lg:order-2 row-span-2 mb-10 bg-white"
+            style={{
+                animationDelay: "0.3s",
+            }}
+        >
             {/* <p>getPrestashop: {JSON.stringify(getPrestashop(indexProduct))}</p> */}
-            <p>___</p>
-            <p style={{ backgroundColor: "red" }}>
-                Name: {productName && JSON.stringify(productName)}
+
+            <p className="font-bold min-h-5">
+                {productName && JSON.stringify(productName)}
             </p>
 
             <p>
                 {/* Category Image */}
                 {product && (
-                    <div>
-                        {
-                            <img
-                                class="w-28 h-28 object-cover"
-                                src={`https://shop.pharmacie-en-couleurs-eragny.com/${product.associations.images[0].id}-medium_default/${product.link_rewrite}.jpg`}
-                            />
-                        }{" "}
-                        {<>Description: {product.description_short}</>}
-                        <br />
-                        <p>{product.link_rewrite}</p>
-                    </div>
+                    <Link
+                        to={
+                            `https://shop.pharmacie-en-couleurs-eragny.com/?controller=product&id_product=` +
+                            product.id
+                        }
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        <div>
+                            {
+                                <img
+                                    class="max-w-48 object-cover"
+                                    src={`https://shop.pharmacie-en-couleurs-eragny.com/${product.associations.images[0].id}-medium_default/${product.link_rewrite}.jpg`}
+                                />
+                            }
+                            {
+                                <TButton
+                                    color="green"
+                                    className="max-w-[120px] "
+                                    style={{
+                                        maxWidth: "120px",
+                                        position: "fixed",
+                                        top: "90px",
+                                        right: "10px",
+                                    }}
+                                >
+                                    <ArrowTopRightOnSquareIcon className="h-4 w-4 mr-2" />
+                                </TButton>
+                            }
+                            {/* {<>Description: {product.description_short}</>} */}
+                            <div
+                                dangerouslySetInnerHTML={{
+                                    __html: product.description_short.replace(
+                                        regex,
+                                        ""
+                                    ),
+                                }}
+                                className="overflow-hidden flex-1"
+                            ></div>
+                            {/* <br />
+                            <p>
+                                URL ={" "}
+                                {`https://shop.pharmacie-en-couleurs-eragny.com/?controller=product&id_product=` +
+                                    product.id}
+                            </p> */}
+                        </div>
+                    </Link>
                 )}
                 {/* End Category Image */}
             </p>
-            <p style={{ marginBottom: "15px" }}>IndexProduct: {indexProduct}</p>
-        </div>
+            {/* <p style={{ marginBottom: "15px" }}>IndexProduct: {indexProduct}</p> */}
+        </DashboardCard>
     );
 }

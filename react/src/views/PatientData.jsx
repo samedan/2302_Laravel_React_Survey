@@ -1,5 +1,5 @@
 import { LockClosedIcon } from "@heroicons/react/20/solid";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useStateContext } from "../contexts/ContextProvider";
 import axiosClient from "./../axios";
@@ -15,15 +15,25 @@ export default function PatientData() {
     const [other, setOther] = useState("");
     const [error, setError] = useState({ __html: "" });
 
+    const handleRandomNum = () => {
+        // setRandomNum(Math.floor(Math.random() * (maxVal - minVal + 1) + minVal));
+        let x = Math.floor(Math.random() * (999999 - 100000 + 1) + 100000);
+        setOther(x);
+    };
+
+    useEffect(() => {
+        handleRandomNum();
+    }, []);
+
     const onSubmit = (ev) => {
         ev.preventDefault();
         setError({ __html: "" });
         let patientData = {
-            user,
-            age,
-            weight,
-            height,
-            other,
+            user: "NA",
+            age: "NA",
+            weight: "NA",
+            height: "NA",
+            other: other,
         };
         setCurrentPatient(patientData);
         console.log(patientData);
@@ -57,9 +67,9 @@ export default function PatientData() {
     return (
         <>
             <div>
-                <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
+                {/* <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
                     Sign in to your account
-                </h2>
+                </h2> */}
             </div>
 
             {/* <p className="mt-2 text-center text-sm text-gray-600">
@@ -85,10 +95,18 @@ export default function PatientData() {
             >
                 <input type="hidden" name="remember" defaultValue="true" />
                 <div className="-space-y-px rounded-md shadow-sm">
+                    <p>
+                        Les champs de données à remplir ne sont pas
+                        obligatoires. Si vous voulez garder les résultats de
+                        l'étude, vous devez remplir les champs{" "}
+                        <strong>Email</strong> et/ou{" "}
+                        <strong>Téléphone mobile</strong>.
+                    </p>
+                    <p></p>
                     <div>
-                        <label htmlFor="user" className="sr-only">
-                            User
-                        </label>
+                        {/* <label htmlFor="user" className="sr-only_">
+                            Nom Prénom
+                        </label> */}
                         <input
                             id="user"
                             name="user"
@@ -97,13 +115,13 @@ export default function PatientData() {
                             value={user}
                             onChange={(ev) => setUser(ev.target.value)}
                             className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                            placeholder="Nom Prenom user"
+                            placeholder="Nom Prenom"
                         />
                     </div>
                     <div>
-                        <label htmlFor="age" className="sr-only">
+                        {/* <label htmlFor="age" className="sr-only">
                             Age
-                        </label>
+                        </label> */}
                         <input
                             id="age"
                             name="age"
@@ -112,13 +130,13 @@ export default function PatientData() {
                             value={age}
                             onChange={(ev) => setAge(ev.target.value)}
                             className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                            placeholder="age"
+                            placeholder="Age"
                         />
                     </div>
                     <div>
-                        <label htmlFor="weight" className="sr-only">
+                        {/* <label htmlFor="weight" className="sr-only">
                             weight
-                        </label>
+                        </label> */}
                         <input
                             id="weight"
                             name="weight"
@@ -127,7 +145,7 @@ export default function PatientData() {
                             value={weight}
                             onChange={(ev) => setWeight(ev.target.value)}
                             className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                            placeholder="weight"
+                            placeholder="Email"
                         />
                     </div>
                     <div>
@@ -142,10 +160,10 @@ export default function PatientData() {
                             value={height}
                             onChange={(ev) => setHeight(ev.target.value)}
                             className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                            placeholder="height"
+                            placeholder="Tél mobile"
                         />
                     </div>
-                    <div>
+                    {/* <div>
                         <label htmlFor="other" className="sr-only">
                             other
                         </label>
@@ -155,11 +173,12 @@ export default function PatientData() {
                             type="text"
                             // autoComplete="email"
                             value={other}
-                            onChange={(ev) => setOther(ev.target.value)}
+                            // onChange={(ev) => setOther(ev.target.value)}
                             className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                             placeholder="Nom Prenom other"
+                            readOnly
                         />
-                    </div>
+                    </div> */}
 
                     {/* <div>
                         <label htmlFor="password" className="sr-only">

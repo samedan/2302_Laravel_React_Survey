@@ -35,17 +35,21 @@ export default function PublicQuestionView({
         <>
             <fieldset className="mb-4 ">
                 <div>
-                    <legend className="text-base font-medium text-gray-900">
+                    <legend className="text-base font-bold text-green-700 #15803d">
                         {index + 1} . {question.question}
                     </legend>
-                    <p className="text-gray-500 text-sm">
+
+                    {/* produits conseils - code  */}
+                    {/* <p className="text-gray-500 text-sm">
                         <strong>Description:</strong> {question.description}
-                    </p>
-                    {displayProblems && (
+                    </p> */}
+                    {/* END produits conseils - code  */}
+
+                    {/* {displayProblems && (
                         <p className="text-gray-500 text-sm">
                             <strong>Manquements de:</strong> {question.conseils}
                         </p>
-                    )}
+                    )} */}
                 </div>
                 <div className="mt-3">
                     {/* SELECT */}

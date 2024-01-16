@@ -71,11 +71,11 @@ class SurveyController extends Controller
      */
     public function show(Survey $survey, Request $request)
     {
-        $user = $request->user();
-        // check to see if user has permission to read survey
-        if($user->id !== $survey->user_id) {
-            return abort(403, 'Unauthorized action');
-        }
+        // $user = $request->user();
+        // // check to see if user has permission to read survey
+        // if($user->id !== $survey->user_id) {
+        //     return abort(403, 'Unauthorized action');
+        // }
         return new SurveyResource($survey);
     }
 

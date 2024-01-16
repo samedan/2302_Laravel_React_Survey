@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { Link, useParams, useNavigate, redirect } from "react-router-dom";
 import PublicQuestionView from "../components/PublicQuestionView";
 import axiosClient from "./../axios";
 import PatientData from "./PatientData";
@@ -7,6 +7,13 @@ import { useStateContext } from "../contexts/ContextProvider";
 import { stringify } from "uuid";
 import PageComponent from "../components/PageComponent";
 import SurveyListItemPublic from "../components/SurveyListItemPublic";
+import TButton from "../components/core/TButton";
+import {
+    PlusCircleIcon,
+    ExclamationTriangleIcon,
+    CheckBadgeIcon,
+} from "@heroicons/react/20/solid";
+import { useIdleTimer } from "react-idle-timer/legacy";
 
 export default function SurveyPublicView() {
     const [surveyFinished, setSurveyFinished] = useState(false);
@@ -20,6 +27,7 @@ export default function SurveyPublicView() {
     const [manquements, setManquements] = useState([]);
     // const [answers, setAnswers] = useState({ 0: "cur" });
     const [answersQuestions, setAnswersQuestions] = useState({});
+    const [error, setError] = useState("");
     const [answers2, setAnswers2] = useState({});
     const [additionalSurveys, setAdditionalSurveys] = useState();
     const [finishedAllSurveys, setFinishedAllSurveys] = useState(false);
@@ -110,6 +118,11 @@ export default function SurveyPublicView() {
 
     useEffect(() => {
         setLoading(true);
+        setError("");
+        if (currentPatient) {
+            console.log("currentPatient");
+            console.log(currentPatient);
+        }
         axiosClient
             .get(`survey/get-by-slug/${slug}`)
             .then(({ data }) => {
@@ -365,7 +378,43 @@ export default function SurveyPublicView() {
                 // verifyAvailableSurveys(currentPatient["user"]);
                 resetPatient();
                 // setAdditionalSurveys();
+            })
+            .catch((error) => {
+                console.log(error.message);
+                if (error) {
+                    setError(
+                        "veuillez choisir au moins une réponse avant de valider"
+                    );
+                }
+                // if (error.message == "Network Error") {
+                //     console.log(error.message);
+                //     setError({ __html: error.message });
+                // }
+
+                // if (error.response) {
+                //     console.log(error.response.data);
+                //     if (error.response.data.errors) {
+                //         console.log("here");
+                //         const finalErrors = Object.values(
+                //             error.response.data.errors
+                //         ).reduce((accum, next) => [...accum, ...next], []);
+                //         setError({ __html: finalErrors.join("<br>") });
+                //     } else {
+                //         const finalErrors = Object.values(error.response.data);
+                //         setError({ __html: finalErrors[0] });
+                //     }
+                // }
             });
+    }
+
+    function goHome() {
+        // setCurrentPatient();
+        console.log("goHome");
+        setCurrentPatient({});
+        console.log("currentPatient");
+        console.log(currentPatient);
+        // verifyAvailableSurveys(currentPatient);
+        navigate("/");
     }
 
     function getOnlyLeftOverSurveys(data) {
@@ -439,17 +488,24 @@ export default function SurveyPublicView() {
     return (
         <PageComponent
             title="Veuillez remplir vos données."
-            // buttons={
-            //     <TButton color="green" to="/surveys/create">
-            //         <PlusCircleIcon className="h-6 w-6 mr-2" />
-            //         Create new
-            //     </TButton>
-            // }
+            buttons={
+                <TButton
+                    color="red"
+                    onClick={goHome}
+                    className="w-60 flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                >
+                    Revenir au debut / Recommencer
+                    <ExclamationTriangleIcon className="h-6 w-6 ml-2" />
+                </TButton>
+            }
             // image={logo}
         >
             <>
                 {isObjEmpty(currentPatient) && (
-                    <div className="grid grid-cols-3">
+                    <div
+                        className="grid lg:grid-cols-3 md:grid-cols-3 sm:grid-cols"
+                        style={{ paddingLeft: "10px", paddingRight: "10px" }}
+                    >
                         <PatientData />
                     </div>
                 )}
@@ -662,6 +718,38 @@ export default function SurveyPublicView() {
                                                             )
                                                         )}
                                                 </div>
+
+                                                {additionalSurveys && (
+                                                    <li>
+                                                        <p className="mt-6 mb-1">
+                                                            Ou vous pouvez
+                                                            trouver et
+                                                            sauvegarder vos
+                                                            réponses et voir nos
+                                                            recomandations :
+                                                        </p>
+                                                        <div
+                                                            className="place-content-center"
+                                                            style={{
+                                                                display: "flex",
+                                                            }}
+                                                        >
+                                                            <TButton
+                                                                // color="green"
+                                                                to={`/display-results/${currentPatient.other}`}
+                                                                className="w-40 flex rounded-md border border-transparent bg-orange-500 py-2 px-4 text-sm font-medium text-white hover:bg-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
+                                                                style={{
+                                                                    backgroundColor:
+                                                                        "orange !important",
+                                                                }}
+                                                            >
+                                                                Voir les
+                                                                résultats
+                                                                <CheckBadgeIcon className="h-6 w-6 ml-2" />
+                                                            </TButton>
+                                                        </div>
+                                                    </li>
+                                                )}
                                             </ul>
                                         </>
                                     )}
@@ -691,6 +779,15 @@ export default function SurveyPublicView() {
                                                         )
                                                     )}
                                             </div>
+                                            {error && (
+                                                <p
+                                                    className="text-red"
+                                                    style={{ color: "red" }}
+                                                >
+                                                    Veuillez choisir au moins
+                                                    une réponse avant de valider
+                                                </p>
+                                            )}
                                             <button
                                                 type="submit"
                                                 className="inline-flex justify-center py-2 px-4 borer border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600

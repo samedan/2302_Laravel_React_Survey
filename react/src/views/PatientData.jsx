@@ -225,7 +225,7 @@ export default function PatientData() {
                                 aria-hidden="true"
                             />
                         </span>
-                        Submit
+                        Valider
                     </button>
                 </div>
             </form>

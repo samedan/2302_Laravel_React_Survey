@@ -11,12 +11,17 @@ export default function PageComponent({
     return (
         <>
             <header className="bg-white shadow">
-                <div className=" flex justify-between items-center mx-auto max-w-7xl py-6 px-4 sm:px-6 lg:px-8">
+                <div className="justify-between items-center mx-auto max-w-7xl py-6 px-4 sm:px-6 lg:px-8 grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-2">
                     {image && <img className="mr-5" src={image} />}
                     <h1 className="text-3xl font-bold tracking-tight text-gray-900">
                         {title}
                     </h1>
-                    {buttons}
+                    <div
+                        className="float-right"
+                        style={{ display: "flex", flexFlow: "row-reverse" }}
+                    >
+                        {buttons}
+                    </div>
                 </div>
             </header>
             <main>

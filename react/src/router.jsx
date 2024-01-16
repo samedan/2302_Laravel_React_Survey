@@ -14,6 +14,10 @@ import SurveysPublic from "./views/SurveysPublic";
 const router = createBrowserRouter([
     {
         path: "/",
+        element: <SurveysPublic />,
+    },
+    {
+        path: "/",
         element: <DefaultLayout />, // Authorized users
         children: [
             {
@@ -69,10 +73,7 @@ const router = createBrowserRouter([
         path: "/display-results/:user",
         element: <DisplayResults />,
     },
-    {
-        path: "/start",
-        element: <SurveysPublic />,
-    },
+    { path: "*", element: <SurveysPublic /> },
 ]);
 
 export default router;

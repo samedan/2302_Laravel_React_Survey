@@ -15,33 +15,33 @@ export default function Signup() {
     const onSubmit = (ev) => {
         ev.preventDefault();
         setError({ __html: "" });
-        axiosClient
-            .post("/signup", {
-                name: fullName,
-                email,
-                password,
-                password_confirmation: passwordConfirmation,
-            })
-            .then(({ data }) => {
-                console.log(data);
-                setCurrentUser(data.user);
-                setUserToken(data.token);
-            })
-            .catch((error) => {
-                // error.response.data =
-                // {"message":"The name field is required. (and 2 more errors)",
-                //  "errors":{
-                //         "name":["The name field is required."],
-                //         "email":["The email field is required."],
-                //         "password":["The password field is required."]
-                //     }} => Object.values = [[], [], []] => [].reduce() => [ "error1", "error2", "error3" ]
-                if (error.response) {
-                    const finalErrors = Object.values(
-                        error.response.data.errors
-                    ).reduce((accum, next) => [...accum, ...next], []);
-                    setError({ __html: finalErrors.join("<br>") });
-                }
-            });
+        // axiosClient
+        //     .post("/signup", {
+        //         name: fullName,
+        //         email,
+        //         password,
+        //         password_confirmation: passwordConfirmation,
+        //     })
+        //     .then(({ data }) => {
+        //         console.log(data);
+        //         setCurrentUser(data.user);
+        //         setUserToken(data.token);
+        //     })
+        //     .catch((error) => {
+        //         // error.response.data =
+        //         // {"message":"The name field is required. (and 2 more errors)",
+        //         //  "errors":{
+        //         //         "name":["The name field is required."],
+        //         //         "email":["The email field is required."],
+        //         //         "password":["The password field is required."]
+        //         //     }} => Object.values = [[], [], []] => [].reduce() => [ "error1", "error2", "error3" ]
+        //         if (error.response) {
+        //             const finalErrors = Object.values(
+        //                 error.response.data.errors
+        //             ).reduce((accum, next) => [...accum, ...next], []);
+        //             setError({ __html: finalErrors.join("<br>") });
+        //         }
+        //     });
     };
 
     return (

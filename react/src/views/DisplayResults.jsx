@@ -1,7 +1,7 @@
 import { LockClosedIcon } from "@heroicons/react/20/solid";
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useStateContext } from "../contexts/ContextProvider";
 import axiosClient from "./../axios";
 import { stringify } from "uuid";
@@ -15,12 +15,16 @@ import {
     translateIntoNumbers,
 } from "../helpers/functions";
 import QuestionWithAnswers from "./QuestionWithAnswers";
+import TButton from "../components/core/TButton";
+import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
+import logo from "../assets/logo.png";
 
 export default function DisplayResults() {
     const { setCurrentUser, setUserToken } = useStateContext();
     const { currentPatient, setCurrentPatient } = useStateContext();
     const [email, setEmail] = useState("");
     // const [user, setUser] = useState("");
+    const navigate = useNavigate();
     const [age, setAge] = useState("");
     const [weight, setWeight] = useState("");
     const [height, setHeight] = useState("");
@@ -29,6 +33,7 @@ export default function DisplayResults() {
     const [surveyArrayResults, setSurveyArrayResults] = useState([]);
     const [answers, setAnswers] = useState();
     const [questions, setQuestions] = useState();
+
     const [surveys, setSurveys] = useState();
     const [product, setProduct] = useState();
     const [loading, setLoading] = useState(false);
@@ -40,6 +45,16 @@ export default function DisplayResults() {
     // useEffect(() => {
     //     setProduct();
     // }, [translateIntoNumbers]);
+
+    function goHome() {
+        // setCurrentPatient();
+        console.log("goHome");
+        setCurrentPatient({});
+        console.log("currentPatient");
+        console.log(currentPatient);
+        // verifyAvailableSurveys(currentPatient);
+        navigate("/");
+    }
 
     useEffect(() => {
         setLoading(true);
@@ -179,7 +194,20 @@ export default function DisplayResults() {
     }
 
     return (
-        <PageComponent>
+        <PageComponent
+            title="Merci pour votre participation. Voici vos résultats : "
+            buttons={
+                <TButton
+                    color="red"
+                    onClick={goHome}
+                    className="w-60 flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                >
+                    Revenir au debut / Recommencer
+                    <ExclamationTriangleIcon className="h-6 w-6 ml-2" />
+                </TButton>
+            }
+            image={logo}
+        >
             <div>
                 <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
                     Voici vos résultats :

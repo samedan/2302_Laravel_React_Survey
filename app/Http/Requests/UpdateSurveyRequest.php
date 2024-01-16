@@ -14,9 +14,9 @@ class UpdateSurveyRequest extends FormRequest
     public function authorize()
     {
         $survey = $this->route('survey'); // get the id from the URL (api.php) Route::apiResource('survey', SurveyController::class);
-        if ($this->user()->id !== $survey->user_id) {
-            return false;
-        }
+        // if ($this->user()->id !== $survey->user_id) {
+        //     return false;
+        // }
         return true;
     }
 

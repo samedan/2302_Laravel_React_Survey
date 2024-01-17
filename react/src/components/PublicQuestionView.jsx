@@ -35,9 +35,43 @@ export default function PublicQuestionView({
         <>
             <fieldset className="mb-4 ">
                 <div>
-                    <legend className="text-base font-bold text-green-700 #15803d">
+                    {question.type === "radio" && (
+                        <div>
+                            {question.data.options.map((option, ind) => (
+                                <div
+                                    className="flex items-center"
+                                    key={option.uuid}
+                                >
+                                    <input
+                                        id={option.uuid}
+                                        name={"question" + question.id}
+                                        value={option.text}
+                                        onChange={(ev) => {
+                                            console.log(ev.target.value);
+                                            answerChanged(ev.target.value);
+                                            setVisible(ev.target.value);
+                                        }}
+                                        type="radio"
+                                        // className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
+                                        className="h-5 w-5 border-indigo-900 text-indigo-600 focus:ring-indigo-600"
+                                        label={index + 1 + question.question}
+                                    />
+                                    <label
+                                        htmlFor={option.uuid}
+                                        className="text-2xl font-bold text-green-700 #15803d ml-3"
+                                    >
+                                        {" " +
+                                            (index + 1) +
+                                            ". " +
+                                            question.question}
+                                    </label>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                    {/* <legend className="text-base font-bold text-green-700 #15803d">
                         {index + 1} . {question.question}
-                    </legend>
+                    </legend> */}
 
                     {/* produits conseils - code  */}
                     {/* <p className="text-gray-500 text-sm">
@@ -74,7 +108,7 @@ export default function PublicQuestionView({
                         </div>
                     )}
                     {/* RADIO */}
-                    {question.type === "radio" && (
+                    {/* {question.type === "radio" && (
                         <div>
                             {question.data.options.map((option, ind) => (
                                 <div
@@ -102,7 +136,7 @@ export default function PublicQuestionView({
                                 </div>
                             ))}
                         </div>
-                    )}
+                    )} */}
                     {/* CHECKBOX */}
                     {question.type === "checkbox" && (
                         <div>
@@ -177,7 +211,7 @@ export default function PublicQuestionView({
                     )}
                 </div>
             </fieldset>
-            <hr className="mb-4" />
+            {/* <hr className="mb-4" /> */}
         </>
     );
 }

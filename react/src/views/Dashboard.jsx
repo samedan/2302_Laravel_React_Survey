@@ -15,6 +15,7 @@ export default function Dashboard() {
 
     useEffect(() => {
         setLoading(true);
+        console.log("dashboard");
         axiosClient
             .get("/dashboard")
             .then((res) => {

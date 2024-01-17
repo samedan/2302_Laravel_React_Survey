@@ -20,12 +20,12 @@ const router = createBrowserRouter([
         path: "/",
         element: <DefaultLayout />, // Authorized users
         children: [
+            // {
+            //     path: "/dashboard",
+            //     element: <Navigate to="/" />,
+            // },
             {
                 path: "/dashboard",
-                element: <Navigate to="/" />,
-            },
-            {
-                path: "/",
                 element: <Dashboard />,
             },
             {

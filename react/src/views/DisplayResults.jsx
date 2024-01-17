@@ -18,8 +18,46 @@ import QuestionWithAnswers from "./QuestionWithAnswers";
 import TButton from "../components/core/TButton";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import logo from "../assets/logo.png";
+import { useIdleTimer } from "react-idle-timer";
 
 export default function DisplayResults() {
+    // Idle timer
+    const [state, setState] = useState("Active");
+    const [count, setCount] = useState(0);
+    const [remaining, setRemaining] = useState(1);
+    const onIdle = () => {
+        setState("Idle");
+    };
+
+    const onActive = () => {
+        setState("Active");
+    };
+
+    const onAction = () => {
+        setCount(count + 1);
+    };
+
+    const { getRemainingTime } = useIdleTimer({
+        onIdle,
+        onActive,
+        onAction,
+        timeout: 6000_000,
+        throttle: 500,
+    });
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            console.log("setRemaining");
+            setRemaining(Math.ceil(getRemainingTime() / 1000));
+        }, 500);
+
+        return () => {
+            console.log("clearInterval");
+            clearInterval(interval);
+        };
+    });
+    // END Idle timer
+
     const { setCurrentUser, setUserToken } = useStateContext();
     const { currentPatient, setCurrentPatient } = useStateContext();
     const [email, setEmail] = useState("");
@@ -55,6 +93,12 @@ export default function DisplayResults() {
         // verifyAvailableSurveys(currentPatient);
         navigate("/");
     }
+
+    // useEffect(() => {
+    //     if (remaining === 0) {
+    //         goHome();
+    //     }
+    // }, [remaining]);
 
     useEffect(() => {
         setLoading(true);
@@ -209,9 +253,25 @@ export default function DisplayResults() {
             image={logo}
         >
             <div>
+                <p>
+                    {currentPatient && (
+                        <>
+                            <p>User: {currentPatient.user}</p>
+                            <p>age: {currentPatient.age}</p>
+                            <p>weight: {currentPatient.weight}</p>
+                            <p>height: {currentPatient.height}</p>
+                            <p>OTHER: {currentPatient.other}</p>
+                        </>
+                    )}
+                </p>
                 <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
                     Voici vos résultats :
                 </h2>
+            </div>
+            <div>
+                <p>Current State: {state}</p>
+                <p>Action Events: {count}</p>
+                <p>{remaining} seconds remaining</p>
             </div>
             {/* {currentPatient && (
                 <>

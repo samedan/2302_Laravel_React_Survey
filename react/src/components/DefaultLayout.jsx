@@ -13,7 +13,7 @@ import Toast from "./Toast";
 import "tw-elements"; // Loading CSS
 
 const navigation = [
-    { name: "Dashboard", to: "/" },
+    { name: "Dashboard", to: "/dashboard" },
     { name: "Surveys", to: "/surveys" },
 ];
 

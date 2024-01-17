@@ -113,14 +113,14 @@ export default function GetPrestashop({ indexProduct }) {
             {!loading && product !== null && (
                 <DashboardCard
                     // title={s.title}
-                    className="order-4 lg:order-2 row-span-2 mb-10 bg-white"
+                    className="p-0 h-96 order-4 lg:order-2 row-span-2 mb-10 bg-white overflow-auto border border-indigo-500/50 rounded-md"
                     style={{
                         animationDelay: "0.3s",
                     }}
                 >
                     {/* <p>getPrestashop: {JSON.stringify(getPrestashop(indexProduct))}</p> */}
 
-                    <p className="font-bold min-h-5">
+                    <p className="font-bold min-h-5 bg-sky-500 text-white p-3">
                         {productName &&
                             JSON.stringify(productName).replace('"', "")}
                     </p>
@@ -136,27 +136,24 @@ export default function GetPrestashop({ indexProduct }) {
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
-                                <div>
+                                <div className="relative">
                                     {
                                         <img
-                                            class="max-w-48 object-cover"
+                                            class="max-h-38 object-cover"
                                             src={`https://shop.pharmacie-en-couleurs-eragny.com/${product.associations.images[0].id}-medium_default/${product.link_rewrite}.jpg`}
                                         />
                                     }
                                     {
-                                        <TButton
-                                            color="green"
-                                            className="max-w-[120px] "
-                                            style={{
-                                                maxWidth: "120px",
-                                                position: "fixed",
-                                                top: "90px",
-                                                right: "10px",
-                                            }}
-                                        >
-                                            <ArrowTopRightOnSquareIcon className="h-4 w-4 mr-2" />
-                                        </TButton>
+                                        <div className="my-custom-class">
+                                            <TButton
+                                                color="green"
+                                                className="max-w-[120px] "
+                                            >
+                                                <ArrowTopRightOnSquareIcon className="h-4 w-4" />
+                                            </TButton>
+                                        </div>
                                     }
+
                                     {/* {<>Description: {product.description_short}</>} */}
                                     <div
                                         dangerouslySetInnerHTML={{

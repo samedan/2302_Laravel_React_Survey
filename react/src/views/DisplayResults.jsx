@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useStateContext } from "../contexts/ContextProvider";
 import axiosClient from "./../axios";
-import { stringify } from "uuid";
+import Modal from "react-modal";
 import "tw-elements"; // Loading CSS
 import SurveyListItem from "../components/SurveyListItem";
 import PageComponent from "../components/PageComponent";
@@ -21,10 +21,43 @@ import logo from "../assets/logo.png";
 import { useIdleTimer } from "react-idle-timer";
 
 export default function DisplayResults() {
+    // Modal
+    const customStyles = {
+        content: {
+            top: "50%",
+            left: "50%",
+            right: "auto",
+            bottom: "auto",
+            marginRight: "-50%",
+            transform: "translate(-50%, -50%)",
+        },
+    };
+
+    // Make sure to bind modal to your appElement (https://reactcommunity.org/react-modal/accessibility/)
+    // Modal.setAppElement("#yourAppElement");
+    Modal.setAppElement(document.getElementById("yourAppElement"));
+    let subtitle;
+    const [modalIsOpen, setIsOpen] = useState(false);
+    function openModal() {
+        setIsOpen(true);
+    }
+
+    function afterOpenModal() {
+        // references are now sync'd and can be accessed.
+        subtitle.style.color = "#f00";
+    }
+
+    function closeModal() {
+        setRemaining(50);
+        setIsOpen(false);
+    }
+    // END Modal
+
     // Idle timer
     const [state, setState] = useState("Active");
     const [count, setCount] = useState(0);
     const [remaining, setRemaining] = useState(1);
+
     const onIdle = () => {
         setState("Idle");
     };
@@ -41,7 +74,7 @@ export default function DisplayResults() {
         onIdle,
         onActive,
         onAction,
-        timeout: 6000_000,
+        timeout: 50_000,
         throttle: 500,
     });
 
@@ -94,11 +127,17 @@ export default function DisplayResults() {
         navigate("/");
     }
 
-    // useEffect(() => {
-    //     if (remaining === 0) {
-    //         goHome();
-    //     }
-    // }, [remaining]);
+    useEffect(() => {
+        if (remaining === 30) {
+            openModal();
+        }
+        // if (remaining10 === 10) {
+
+        // }
+        if (remaining === 0) {
+            goHome();
+        }
+    }, [remaining]);
 
     useEffect(() => {
         setLoading(true);
@@ -239,6 +278,7 @@ export default function DisplayResults() {
 
     return (
         <PageComponent
+            id="yourAppElement"
             title="Merci pour votre participation. Voici vos résultats : "
             buttons={
                 <TButton
@@ -252,7 +292,8 @@ export default function DisplayResults() {
             }
             image={logo}
         >
-            <div>
+            {/* User DATA */}
+            {/* <div>
                 <p>
                     {currentPatient && (
                         <>
@@ -264,15 +305,71 @@ export default function DisplayResults() {
                         </>
                     )}
                 </p>
-                <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
-                    Voici vos résultats :
-                </h2>
-            </div>
+            </div> */}
+            {/* END User DATA */}
+
+            {/* TIMER */}
             <div>
                 <p>Current State: {state}</p>
-                <p>Action Events: {count}</p>
+                {/* <p>Action Events: {count}</p> */}
                 <p>{remaining} seconds remaining</p>
             </div>
+            {/* END TIMER */}
+
+            {/* MODAL */}
+            <div id="yourAppElement">
+                <button onClick={openModal}>Open Modal</button>
+                <Modal
+                    isOpen={modalIsOpen}
+                    onAfterOpen={afterOpenModal}
+                    onRequestClose={closeModal}
+                    style={customStyles}
+                    contentLabel="Example Modal"
+                    // className="items-center"
+                >
+                    <h2 ref={(_subtitle) => (subtitle = _subtitle)}>
+                        {" "}
+                        <span className="text-2xl font-bold">
+                            Vous êtes toujours là ?
+                        </span>
+                    </h2>
+                    <div className="w-80 flex flex-col items-center  border-t-4 border-green-500">
+                        <div className="text-2xl font-bold">
+                            Sinon vous allez perdre vos résultats et l'enquete
+                            va redemaré en {remaining} secondes.
+                        </div>
+                        <div className="mb-5 mt-3">
+                            <TButton
+                                color="green"
+                                onClick={closeModal}
+                                className="w-60 flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                            >
+                                {" "}
+                                Cliquez ici pour révenir aux résultats
+                            </TButton>
+                        </div>
+
+                        <TButton
+                            color="red"
+                            onClick={goHome}
+                            className="w-60 flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                        >
+                            Revenir au debut en {remaining} secondes
+                            <ExclamationTriangleIcon className="h-6 w-6 ml-2" />
+                        </TButton>
+                    </div>
+
+                    {/* <form>
+                        <input />
+                        <button>tab navigation</button>
+                        <button>stays</button>
+                        <button>inside</button>
+                        <button>the modal</button>
+                    </form> */}
+                </Modal>
+            </div>
+            {/* END MODAL */}
+
             {/* {currentPatient && (
                 <>
                     <p>User: {currentPatient.user}</p>
@@ -291,7 +388,7 @@ export default function DisplayResults() {
                         <>
                             <DashboardCard
                                 // title={s.title}
-                                className="order-4 lg:order-2 row-span-2 mb-10"
+                                className="order-4 lg:order-2 row-span-2 mb-2"
                                 style={{ animationDelay: "0.3s" }}
                             >
                                 {/* <div className="flex flex-col py-4 px-6 shadow-md bg-white hover:bg-gray-50 h-[470px]"> */}
@@ -314,41 +411,10 @@ export default function DisplayResults() {
                                             {s.title}
                                         </h3>
                                     </div>
-
-                                    {/* <h4 className="mt-4 text-lg font-bold">
-                                        {s.title}
-                                    </h4> */}
-                                    {/* <strong>Description:</strong>
-                                    <div
-                                        dangerouslySetInnerHTML={{
-                                            __html: s.description,
-                                        }}
-                                        className="overflow-hidden flex-1"
-                                    ></div>
-                                    Conseils:
-                                    <div
-                                        dangerouslySetInnerHTML={{
-                                            __html: s.conseils,
-                                        }}
-                                        className="overflow-hidden flex-1"
-                                    ></div> */}
                                 </div>
 
                                 {/* Questions & Conseils */}
                                 <div>
-                                    {/* <div className="flex flex-col py-4 px-6 shadow-md bg-white hover:bg-gray-50 h-[470px]">
-                                    <img
-                                        src={
-                                            import.meta.env.VITE_API_BASE_URL +
-                                            "/" +
-                                            s.image
-                                        }
-                                        alt={s.title}
-                                        className="w-full h-48 object-cover"
-                                    />
-                                    <h3>{s.title}</h3>
-                                </div> */}
-
                                     <ul>
                                         {answers.map((answer) => (
                                             <li>
@@ -489,7 +555,7 @@ export default function DisplayResults() {
             {/* End Category Image */}
 
             {results && <p>{JSON.stringify(results, null, 2)}</p>}
-            <p className="mt-2 text-center text-sm text-gray-600">
+            {/* <p className="mt-2 text-center text-sm text-gray-600">
                 Or{" "}
                 <Link
                     to="/signup"
@@ -497,7 +563,7 @@ export default function DisplayResults() {
                 >
                     Signup for free
                 </Link>
-            </p>
+            </p> */}
 
             {results !== undefined &&
                 results.totalSurveys &&

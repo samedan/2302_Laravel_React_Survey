@@ -11,3 +11,7 @@ body {
     top: 10px !important;
     left: 10px !important;
 }
+
+.button-header {
+    float: right;
+}

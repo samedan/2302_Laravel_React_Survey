@@ -66,12 +66,6 @@ export default function PatientData() {
     };
     return (
         <>
-            <div>
-                {/* <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
-                    Sign in to your account
-                </h2> */}
-            </div>
-
             {/* <p className="mt-2 text-center text-sm text-gray-600">
                 Or{" "}
                 <Link
@@ -89,19 +83,12 @@ export default function PatientData() {
             )}
             <form
                 onSubmit={onSubmit}
-                className="mt-8 space-y-6"
+                className="mt-0 space-y-6 w-full max-w-96"
                 action="#"
                 method="POST"
             >
                 <input type="hidden" name="remember" defaultValue="true" />
-                <div className="-space-y-px rounded-md shadow-sm">
-                    <p>
-                        Les champs de données à remplir ne sont pas
-                        obligatoires. Si vous voulez garder les résultats de
-                        l'étude, vous devez remplir les champs{" "}
-                        <strong>Email</strong> et/ou{" "}
-                        <strong>Téléphone mobile</strong>.
-                    </p>
+                <div className="-space-y-px rounded-md shadow-sm text-lg max-w-96">
                     <p></p>
                     <div>
                         {/* <label htmlFor="user" className="sr-only_">
@@ -114,7 +101,7 @@ export default function PatientData() {
                             // autoComplete="email"
                             value={user}
                             onChange={(ev) => setUser(ev.target.value)}
-                            className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                            className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-lg"
                             placeholder="Nom Prenom"
                         />
                     </div>
@@ -129,7 +116,7 @@ export default function PatientData() {
                             // autoComplete="email"
                             value={age}
                             onChange={(ev) => setAge(ev.target.value)}
-                            className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                            className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-lg"
                             placeholder="Age"
                         />
                     </div>
@@ -144,7 +131,7 @@ export default function PatientData() {
                             // autoComplete="email"
                             value={weight}
                             onChange={(ev) => setWeight(ev.target.value)}
-                            className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                            className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-lg"
                             placeholder="Email"
                         />
                     </div>
@@ -159,7 +146,7 @@ export default function PatientData() {
                             // autoComplete="email"
                             value={height}
                             onChange={(ev) => setHeight(ev.target.value)}
-                            className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                            className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-lg"
                             placeholder="Tél mobile"
                         />
                     </div>
@@ -174,7 +161,7 @@ export default function PatientData() {
                             // autoComplete="email"
                             value={other}
                             // onChange={(ev) => setOther(ev.target.value)}
-                            className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                            className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-lg"
                             placeholder="Nom Prenom other"
                             readOnly
                         />
@@ -191,7 +178,7 @@ export default function PatientData() {
                             value={password}
                             onChange={(ev) => setPassword(ev.target.value)}
                             autoComplete="current-password"
-                            className="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                            className="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-lg"
                             placeholder="Password"
                         />
                     </div> */}
@@ -219,13 +206,13 @@ export default function PatientData() {
                         type="submit"
                         className="group relative flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                     >
-                        <span className="absolute inset-y-0 left-0 flex items-center pl-3">
+                        <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-lg">
                             <LockClosedIcon
                                 className="h-5 w-5 text-indigo-500 group-hover:text-indigo-400"
                                 aria-hidden="true"
                             />
                         </span>
-                        Valider
+                        <span className="text-lg">Valider</span>
                     </button>
                 </div>
             </form>

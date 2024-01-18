@@ -74,7 +74,7 @@ export default function DisplayResults() {
         onIdle,
         onActive,
         onAction,
-        timeout: 50_000,
+        timeout: 180_000,
         throttle: 500,
     });
 
@@ -284,13 +284,16 @@ export default function DisplayResults() {
                 <TButton
                     color="red"
                     onClick={goHome}
-                    className="w-60 flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    className="w-60 flex justify-center rounded-md border 
+                    border-transparent bg-indigo-600 py-4 px-4  font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2  text-lg"
                 >
-                    Revenir au debut / Recommencer
+                    <span className="text-xl">
+                        Revenir au debut / Recommencer
+                    </span>
                     <ExclamationTriangleIcon className="h-6 w-6 ml-2" />
                 </TButton>
             }
-            image={logo}
+            // image={logo}
         >
             {/* User DATA */}
             {/* <div>
@@ -309,16 +312,16 @@ export default function DisplayResults() {
             {/* END User DATA */}
 
             {/* TIMER */}
-            <div>
-                <p>Current State: {state}</p>
-                {/* <p>Action Events: {count}</p> */}
-                <p>{remaining} seconds remaining</p>
-            </div>
+            {/* <div> */}
+            {/* <p>Current State: {state}</p> */}
+            {/* <p>Action Events: {count}</p> */}
+            {/* <p>{remaining} seconds remaining</p> */}
+            {/* </div> */}
             {/* END TIMER */}
 
             {/* MODAL */}
             <div id="yourAppElement">
-                <button onClick={openModal}>Open Modal</button>
+                {/* <button onClick={openModal}>Open Modal</button> */}
                 <Modal
                     isOpen={modalIsOpen}
                     onAfterOpen={afterOpenModal}
@@ -327,34 +330,38 @@ export default function DisplayResults() {
                     contentLabel="Example Modal"
                     // className="items-center"
                 >
-                    <h2 ref={(_subtitle) => (subtitle = _subtitle)}>
+                    <h2>
                         {" "}
                         <span className="text-2xl font-bold">
                             Vous êtes toujours là ?
                         </span>
                     </h2>
+
                     <div className="w-80 flex flex-col items-center  border-t-4 border-green-500">
-                        <div className="text-2xl font-bold">
-                            Sinon vous allez perdre vos résultats et l'enquete
-                            va redemaré en {remaining} secondes.
-                        </div>
-                        <div className="mb-5 mt-3">
+                        <div className="mb-2 mt-3">
                             <TButton
                                 color="green"
                                 onClick={closeModal}
                                 className="w-60 flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                             >
                                 {" "}
-                                Cliquez ici pour révenir aux résultats
+                                <span className="text-xl">
+                                    Cliquez ici pour révenir aux résultats
+                                </span>
                             </TButton>
+                        </div>
+
+                        <div className="text-2xl font-bold">
+                            Sinon vous allez perdre vos résultats et l'enquete
+                            va redemaré en {remaining} secondes.
                         </div>
 
                         <TButton
                             color="red"
                             onClick={goHome}
-                            className="w-60 flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                            className="mt-3 w-60 flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                         >
-                            Revenir au debut en {remaining} secondes
+                            <span className="text-xl">Revenir au debut</span>
                             <ExclamationTriangleIcon className="h-6 w-6 ml-2" />
                         </TButton>
                     </div>

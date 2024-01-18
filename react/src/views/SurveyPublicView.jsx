@@ -7,6 +7,7 @@ import { useStateContext } from "../contexts/ContextProvider";
 import { stringify } from "uuid";
 import PageComponent from "../components/PageComponent";
 import SurveyListItemPublic from "../components/SurveyListItemPublic";
+import { useMediaQuery } from "./hooks";
 import TButton from "../components/core/TButton";
 import {
     PlusCircleIcon,
@@ -485,6 +486,7 @@ export default function SurveyPublicView() {
     var object = { foo: "bar" };
     // return <div>{JSON.stringify(survey, undefined, 2)}</div>;
 
+    const isRowBased = useMediaQuery("(min-width: 500px)");
     return (
         <PageComponent
             title="Veuillez remplir vos données."
@@ -492,9 +494,12 @@ export default function SurveyPublicView() {
                 <TButton
                     color="red"
                     onClick={goHome}
-                    className="w-60 flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    className="w-60 flex justify-center rounded-md border 
+                    border-transparent bg-indigo-600 py-4 px-4  font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2  text-lg"
                 >
-                    Revenir au debut / Recommencer
+                    <span className="text-lg">
+                        Revenir au debut / Recommencer
+                    </span>
                     <ExclamationTriangleIcon className="h-6 w-6 ml-2" />
                 </TButton>
             }
@@ -502,11 +507,31 @@ export default function SurveyPublicView() {
         >
             <>
                 {isObjEmpty(currentPatient) && (
-                    <div
-                        className="grid lg:grid-cols-3 md:grid-cols-3 sm:grid-cols"
-                        style={{ paddingLeft: "10px", paddingRight: "10px" }}
-                    >
-                        <PatientData />
+                    <div className="content-center">
+                        <div
+                            className="content-center "
+                            style={{
+                                margin: "auto",
+                                width: isRowBased ? "50%" : "90%",
+                            }}
+                        >
+                            <p className="max-w-md text-lg">
+                                Les champs de données à remplir ne sont pas
+                                obligatoires. Si vous voulez garder les
+                                résultats de l'étude, vous devez remplir les
+                                champs <strong>Email</strong> et/ou{" "}
+                                <strong>Téléphone mobile</strong>.
+                            </p>
+                        </div>
+                        <div
+                            className=" md:container md:mx-auto sm:grid-cols max-w-lg"
+                            style={{
+                                margin: "auto",
+                                width: isRowBased ? "50%" : "90%",
+                            }}
+                        >
+                            <PatientData />
+                        </div>
                     </div>
                 )}
                 <div>
@@ -534,7 +559,7 @@ export default function SurveyPublicView() {
                             <div className="flex flex-col py-4 px-6 shadow-md bg-white hover:bg-gray-50">
                                 <form
                                     onSubmit={(ev) => onSubmit(ev)}
-                                    className="container mx-auto px-4"
+                                    className="container mx-auto "
                                 >
                                     <div className="grid grid-cols-6">
                                         {!surveyFinished && (
@@ -649,16 +674,16 @@ export default function SurveyPublicView() {
                                     </div> */}
                                     {finishedAllSurveys && (
                                         <>
-                                            <div className="py-8 px-6 bg-emerald-500 text-white w-[600px] mx-auto">
-                                                Thank you. You finished ALL our
-                                                surveys.
+                                            <div className="py-2 px-2 bg-emerald-500 text-white w-[600px] mx-auto">
+                                                Merci ! Vous avez fini de
+                                                répondre à nos questionnaires.
                                             </div>
                                         </>
                                     )}
                                     {surveyFinished && (
                                         // !finishedAllSurveys &&
                                         <>
-                                            <div className="py-3 px-6 mb-8 bg-sky-500 text-white w-[600px] mx-auto">
+                                            <div className="py-2 px-6 mb-4 bg-sky-500 text-white  mx-auto text-xl">
                                                 Merci d'avoir répondu aux
                                                 questions sur les{" "}
                                                 <strong>{survey.title}</strong>
@@ -666,7 +691,7 @@ export default function SurveyPublicView() {
                                             <ul>
                                                 {additionalSurveys && (
                                                     <li>
-                                                        <p>
+                                                        <p className="text-xl">
                                                             Vous pouvez
                                                             continuer à répondre
                                                             sur les sujets
@@ -721,7 +746,7 @@ export default function SurveyPublicView() {
 
                                                 {additionalSurveys && (
                                                     <li>
-                                                        <p className="mt-6 mb-1">
+                                                        <p className="mt-3 mb-1 text-xl">
                                                             Ou vous pouvez
                                                             trouver et
                                                             sauvegarder vos
@@ -737,14 +762,16 @@ export default function SurveyPublicView() {
                                                             <TButton
                                                                 // color="green"
                                                                 to={`/display-results/${currentPatient.other}`}
-                                                                className="w-40 flex rounded-md border border-transparent bg-orange-500 py-2 px-4 text-sm font-medium text-white hover:bg-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
+                                                                className="w-40 flex rounded-md border border-transparent bg-orange-500 py-4 px-4  font-medium text-white hover:bg-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2  text-xl"
                                                                 style={{
                                                                     backgroundColor:
                                                                         "orange !important",
                                                                 }}
                                                             >
-                                                                Voir les
-                                                                résultats
+                                                                <span className="text-xl">
+                                                                    Voir les
+                                                                    résultats
+                                                                </span>
                                                                 <CheckBadgeIcon className="h-6 w-6 ml-2" />
                                                             </TButton>
                                                         </div>
@@ -781,7 +808,7 @@ export default function SurveyPublicView() {
                                             </div>
                                             {error && (
                                                 <p
-                                                    className="text-red"
+                                                    className="text-red text-xl"
                                                     style={{ color: "red" }}
                                                 >
                                                     Veuillez choisir au moins
@@ -790,7 +817,7 @@ export default function SurveyPublicView() {
                                             )}
                                             <button
                                                 type="submit"
-                                                className="inline-flex justify-center py-2 px-4 borer border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600
+                                                className="inline-flex justify-center py-2 px-4 borer border-transparent shadow-sm text-xl font-medium rounded-md text-white bg-indigo-600
                         hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                             >
                                                 Valider

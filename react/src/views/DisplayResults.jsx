@@ -372,7 +372,11 @@ export default function DisplayResults() {
                                         </label>
                                         <input
                                             type="text"
-                                            value={userEdited}
+                                            value={
+                                                userEdited === "NA"
+                                                    ? ""
+                                                    : userEdited
+                                            }
                                             name="from_name"
                                             id="from_name"
                                             className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-lg"
@@ -399,7 +403,10 @@ export default function DisplayResults() {
                                         name="to_name"
                                         className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-lg"
                                         id="to_name"
-                                        value={ageEdited}
+                                        placeholder="Age"
+                                        value={
+                                            ageEdited === "NA" ? "" : ageEdited
+                                        }
                                         onChange={(e) =>
                                             setAgeEdited(e.target.value)
                                         }
@@ -417,13 +424,24 @@ export default function DisplayResults() {
                                         type="text"
                                         name="recipient"
                                         id="recipient"
+                                        placeholder="Email"
                                         className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-lg"
-                                        value={emailEdited}
+                                        value={
+                                            emailEdited === "NA"
+                                                ? ""
+                                                : emailEdited
+                                        }
                                         onChange={(e) =>
                                             setEmailEdited(e.target.value)
                                         }
                                     />
-
+                                    <input
+                                        type="text"
+                                        name="code"
+                                        id="code"
+                                        hidden
+                                        value={currentPatient.other}
+                                    />
                                     {/* <div class="field">
                                         <label
                                             htmlFor="from_name"

@@ -135,7 +135,7 @@ export default function PatientData() {
                             placeholder="Email"
                         />
                     </div>
-                    <div>
+                    {/* <div>
                         <label htmlFor="height" className="sr-only">
                             height
                         </label>
@@ -143,63 +143,14 @@ export default function PatientData() {
                             id="height"
                             name="height"
                             type="text"
-                            // autoComplete="email"
+                            
                             value={height}
                             onChange={(ev) => setHeight(ev.target.value)}
                             className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-lg"
                             placeholder="Tél mobile"
                         />
-                    </div>
-                    {/* <div>
-                        <label htmlFor="other" className="sr-only">
-                            other
-                        </label>
-                        <input
-                            id="other"
-                            name="other"
-                            type="text"
-                            // autoComplete="email"
-                            value={other}
-                            // onChange={(ev) => setOther(ev.target.value)}
-                            className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-lg"
-                            placeholder="Nom Prenom other"
-                            readOnly
-                        />
-                    </div> */}
-
-                    {/* <div>
-                        <label htmlFor="password" className="sr-only">
-                            Password
-                        </label>
-                        <input
-                            id="password"
-                            name="password"
-                            type="password"
-                            value={password}
-                            onChange={(ev) => setPassword(ev.target.value)}
-                            autoComplete="current-password"
-                            className="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-lg"
-                            placeholder="Password"
-                        />
                     </div> */}
                 </div>
-
-                {/* <div className="flex items-center justify-between">
-                    <div className="flex items-center">
-                        <input
-                            id="remember-me"
-                            name="remember-me"
-                            type="checkbox"
-                            className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                        />
-                        <label
-                            htmlFor="remember-me"
-                            className="ml-2 block text-sm text-gray-900"
-                        >
-                            Remember me
-                        </label>
-                    </div>
-                </div> */}
 
                 <div>
                     <button

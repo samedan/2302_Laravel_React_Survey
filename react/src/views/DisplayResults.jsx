@@ -1,6 +1,6 @@
 import { LockClosedIcon } from "@heroicons/react/20/solid";
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useStateContext } from "../contexts/ContextProvider";
 import axiosClient from "./../axios";
@@ -9,7 +9,8 @@ import "tw-elements"; // Loading CSS
 import SurveyListItem from "../components/SurveyListItem";
 import PageComponent from "../components/PageComponent";
 import DashboardCard from "../components/DashboardCard";
-import Dashboard from "./Dashboard";
+
+import emailjs from "@emailjs/browser";
 import {
     convertObjectOfCountsIntoArray,
     translateIntoNumbers,
@@ -19,6 +20,9 @@ import TButton from "../components/core/TButton";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import logo from "../assets/logo.png";
 import { useIdleTimer } from "react-idle-timer";
+import Form from "./Form.jsx";
+import PatientData from "./PatientData.jsx";
+import PatientDataFinal from "./PatientDataFinal.jsx";
 
 export default function DisplayResults() {
     // Modal
@@ -51,6 +55,8 @@ export default function DisplayResults() {
         setRemaining(50);
         setIsOpen(false);
     }
+
+    const [modalContent, setModalContent] = useState();
     // END Modal
 
     // Idle timer
@@ -78,17 +84,17 @@ export default function DisplayResults() {
         throttle: 500,
     });
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            console.log("setRemaining");
-            setRemaining(Math.ceil(getRemainingTime() / 1000));
-        }, 500);
+    // useEffect(() => {
+    //     const interval = setInterval(() => {
+    //         // console.log("setRemaining");
+    //         setRemaining(Math.ceil(getRemainingTime() / 1000));
+    //     }, 500);
 
-        return () => {
-            console.log("clearInterval");
-            clearInterval(interval);
-        };
-    });
+    //     return () => {
+    //         // console.log("clearInterval");
+    //         clearInterval(interval);
+    //     };
+    // });
     // END Idle timer
 
     const { setCurrentUser, setUserToken } = useStateContext();
@@ -112,7 +118,8 @@ export default function DisplayResults() {
 
     const { user } = useParams();
 
-    // console.log(user);
+    console.log("user");
+    console.log(user);
     // useEffect(() => {
     //     setProduct();
     // }, [translateIntoNumbers]);
@@ -127,17 +134,17 @@ export default function DisplayResults() {
         navigate("/");
     }
 
-    useEffect(() => {
-        if (remaining === 30) {
-            openModal();
-        }
-        // if (remaining10 === 10) {
+    // useEffect(() => {
+    //     if (remaining === 30) {
+    //         openModal();
+    //     }
+    //     // if (remaining10 === 10) {
 
-        // }
-        if (remaining === 0) {
-            goHome();
-        }
-    }, [remaining]);
+    //     // }
+    //     if (remaining === 0) {
+    //         goHome();
+    //     }
+    // }, [remaining]);
 
     useEffect(() => {
         setLoading(true);
@@ -153,6 +160,9 @@ export default function DisplayResults() {
                     // console.log(data);
                     // console.log(data.patientData[0]);
                     setCurrentPatient(data.patientData[0]);
+                    setUserEdited(data.patientData[0].user);
+                    setEmailEdited(data.patientData[0].weight);
+                    setAgeEdited(data.patientData[0].age);
                     setAnswers(data.patientDataAnswers);
                     // console.log("answers");
                     // console.log(answers);
@@ -276,6 +286,50 @@ export default function DisplayResults() {
         return numberedMedsWithSurvey; // onlt numbers
     }
 
+    function envoyerEmail(email, codeOther) {
+        console.log("email", email);
+        console.log("other", other);
+    }
+
+    // Send EMAIL
+    const form = useRef();
+    const [userEdited, setUserEdited] = useState(user.user);
+    const [ageEdited, setAgeEdited] = useState(user.user);
+    const [emailEdited, setEmailEdited] = useState(user.user);
+    const [emailSent, setEmailSent] = useState(false);
+
+    const sendEmail = (e) => {
+        e.preventDefault();
+
+        console.log(form.current);
+
+        emailjs
+            // .sendForm(
+            //     "YOUR_SERVICE_ID",
+            //     "YOUR_TEMPLATE_ID",
+            //     form.current,
+            //     "YOUR_PUBLIC_KEY"
+            // )
+            .sendForm(
+                "service_r7htw3c",
+                "template_bn603m5",
+                form.current,
+                "d-KnZYpZeSh32IPp8"
+            )
+            .then(
+                (result) => {
+                    console.log(result.text);
+                    if (result.text === "OK") {
+                        setEmailSent(true);
+                    }
+                },
+                (error) => {
+                    console.log(error.text);
+                }
+            );
+    };
+    // END Send EMAIL
+
     return (
         <PageComponent
             id="yourAppElement"
@@ -296,19 +350,154 @@ export default function DisplayResults() {
             // image={logo}
         >
             {/* User DATA */}
-            {/* <div>
+            <div>
                 <p>
+                    {/* {currentPatient && (
+                        <PatientDataFinal currentPatient={currentPatient} />
+                    )} */}
                     {currentPatient && (
                         <>
-                            <p>User: {currentPatient.user}</p>
+                            <form
+                                ref={form}
+                                onSubmit={sendEmail}
+                                className="mt-0 w-full max-w-96"
+                            >
+                                <div className="-space-y-px rounded-md shadow-sm text-lg max-w-96">
+                                    <div class="field">
+                                        <label
+                                            htmlFor="from_name"
+                                            className="sr-only_"
+                                        >
+                                            Nom Prénom
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={userEdited}
+                                            name="from_name"
+                                            id="from_name"
+                                            className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-lg"
+                                            placeholder="Nom Prenom"
+                                            onChange={(e) =>
+                                                setUserEdited(e.target.value)
+                                            }
+                                            // onChange={(e) =>
+                                            //     setUserEdited(e.target.value)
+                                            // }
+                                        />
+                                    </div>
+                                </div>
+                                <div className="-space-y-px rounded-md shadow-sm text-lg max-w-96 ">
+                                    <label
+                                        htmlFor="from_name"
+                                        className="sr-only_"
+                                    >
+                                        Age
+                                    </label>
+                                    {/* <label for="to_name">to_name</label> */}
+                                    <input
+                                        type="text"
+                                        name="to_name"
+                                        className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-lg"
+                                        id="to_name"
+                                        value={ageEdited}
+                                        onChange={(e) =>
+                                            setAgeEdited(e.target.value)
+                                        }
+                                    />
+                                </div>
+                                <div className="-space-y-px rounded-md shadow-sm text-lg max-w-96 mb-6">
+                                    {/* <label for="to_name">recipient</label> */}
+                                    <label
+                                        htmlFor="from_name"
+                                        className="sr-only_"
+                                    >
+                                        Email
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="recipient"
+                                        id="recipient"
+                                        className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-lg"
+                                        value={emailEdited}
+                                        onChange={(e) =>
+                                            setEmailEdited(e.target.value)
+                                        }
+                                    />
+
+                                    {/* <div class="field">
+                                        <label
+                                            htmlFor="from_name"
+                                            className="sr-only_"
+                                        >
+                                            Code
+                                        </label>
+                                        
+                                        <input
+                                            type="text"
+                                            name="code"
+                                            id="code"
+                                            value={currentPatient.other}
+                                        />
+                                    </div>
+                                    <div class="field">
+                                        <label for="message">message</label>
+                                        <input
+                                            type="text"
+                                            name="message"
+                                            id="message"
+                                        />
+                                    </div>
+                                    <div class="field">
+                                        <label for="reply_to">reply_to</label>
+                                        <input
+                                            type="text"
+                                            name="reply_to"
+                                            id="reply_to"
+                                        />
+                                    </div> */}
+
+                                    {/* <input type="submit" value="Send" /> */}
+
+                                    <button
+                                        type="submit"
+                                        className="group relative flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                    >
+                                        <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-lg">
+                                            <LockClosedIcon
+                                                className="h-5 w-5 text-indigo-500 group-hover:text-indigo-400"
+                                                aria-hidden="true"
+                                            />
+                                        </span>
+                                        <span className="text-lg">Valider</span>
+                                    </button>
+                                </div>
+                            </form>
+                            {emailSent && <p>Email sent.</p>}
+
+                            {/* <p>User: {currentPatient.user}</p>
                             <p>age: {currentPatient.age}</p>
-                            <p>weight: {currentPatient.weight}</p>
-                            <p>height: {currentPatient.height}</p>
-                            <p>OTHER: {currentPatient.other}</p>
+                            <p>
+                                Email : {currentPatient.weight}
+                                <button
+                                    onClick={envoyerEmail(
+                                        currentPatient.weight,
+                                        currentPatient.other
+                                    )}
+                                >
+                                    envoyer email avec les résultats
+                                </button>
+                            </p>
+                            <p>SMS: {currentPatient.height}</p>
+                            <p>OTHER: {currentPatient.other}</p> */}
                         </>
                     )}
+                    {/* <Form
+                        currentPatient={currentPatient}
+                        // recipientEmail={currentPatient.weight}
+                        // code={currentPatient.other}
+                    /> */}
                 </p>
-            </div> */}
+            </div>
             {/* END User DATA */}
 
             {/* TIMER */}
@@ -395,7 +584,7 @@ export default function DisplayResults() {
                         <>
                             <DashboardCard
                                 // title={s.title}
-                                className="order-4 lg:order-2 row-span-2 mb-2"
+                                className={`order-4 lg:order-2 row-span-2 mb-2 survey${s.id}`}
                                 style={{ animationDelay: "0.3s" }}
                             >
                                 {/* <div className="flex flex-col py-4 px-6 shadow-md bg-white hover:bg-gray-50 h-[470px]"> */}
@@ -479,9 +668,9 @@ export default function DisplayResults() {
                                                                                             color: "black",
                                                                                         }}
                                                                                     >
-                                                                                        Symptômes
-                                                                                        de
-                                                                                        la
+                                                                                        Vous
+                                                                                        avez
+                                                                                        une
                                                                                         carence
                                                                                         en
                                                                                         :{" "}
@@ -511,6 +700,9 @@ export default function DisplayResults() {
                                                                                             }
                                                                                             survey={
                                                                                                 s.title
+                                                                                            }
+                                                                                            classSurvey={
+                                                                                                q.survey_id
                                                                                             }
                                                                                         />
                                                                                         {/* {translateIntoNumbers(

@@ -516,11 +516,10 @@ export default function SurveyPublicView() {
                             }}
                         >
                             <p className="max-w-md text-lg">
-                                Les champs de données à remplir ne sont pas
-                                obligatoires. Si vous voulez garder les
-                                résultats de l'étude, vous devez remplir les
-                                champs <strong>Email</strong> et/ou{" "}
-                                <strong>Téléphone mobile</strong>.
+                                Les champs de données à remplir ne sont{" "}
+                                <strong>pas obligatoires</strong>. Si vous
+                                voulez garder les résultats de l'étude, vous
+                                devez remplir le champ <strong>Email</strong>.
                             </p>
                         </div>
                         <div

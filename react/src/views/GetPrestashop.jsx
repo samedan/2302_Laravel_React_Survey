@@ -28,7 +28,7 @@ export default function GetPrestashop({ indexProduct }) {
         setProductName(getPrestashop(indexProduct));
     }, [indexProduct]);
 
-    console.log(indexProduct);
+    // console.log(indexProduct);
 
     async function getPrestashop(x) {
         //  const response = await axios.post(

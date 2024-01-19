@@ -3,7 +3,7 @@ import axiosClient from "../axios";
 import logo from "../assets/logo.png";
 import PageComponent from "../components/PageComponent";
 import PaginationLinks from "../components/PaginationLinks";
-
+// import ModalVideo from "react-modal-video";
 import "tw-elements"; // Loading CSS
 import { useStateContext } from "../contexts/ContextProvider";
 import SurveyListItemPublic from "../components/SurveyListItemPublic";
@@ -15,6 +15,7 @@ export default function SurveysPublic() {
     const [surveys, setSurveys] = useState([]);
     const [meta, setMeta] = useState({}); // for pagination
     const [loading, setLoading] = useState(false);
+    const [isOpen, setOpen] = useState(false); // video modal
 
     console.log(surveys);
 
@@ -49,7 +50,7 @@ export default function SurveysPublic() {
 
     return (
         <PageComponent
-            title="Commencez votre Etude Santé. Choisisez le premier sujet :"
+            title="Commencez votre Bilan* gratuit Santé. Choissisez le premier Sujet :"
             // buttons={
             //     <TButton color="green" to="/surveys/create">
             //         <PlusCircleIcon className="h-6 w-6 mr-2" />
@@ -70,6 +71,20 @@ export default function SurveysPublic() {
             )}
             {!loading && (
                 <>
+                    {/* <ModalVideo
+                        autoPlay={1}
+                        allow="autoplay"
+                        isOpen={isOpen}
+                        videoId="L61p2uyiMSo"
+                        onClose={() => setOpen(false)}
+                    />
+
+                    <button
+                        className="btn-primary"
+                        onClick={() => setOpen(true)}
+                    >
+                        VIEW DEMO
+                    </button> */}
                     {surveys.length === 0 && (
                         <div className="py-8 text-center text-gray-700">
                             Impossible de charger les études.
@@ -84,6 +99,12 @@ export default function SurveysPublic() {
                                 // onDeleteClick={onDeleteClick}
                             />
                         ))}
+                    </div>
+
+                    <div className="text-xl text-red-700 mt-3 font-bold">
+                        *Cette enquête ne constitue en aucun cas un examen
+                        médical et ne remplace pas l'avis du médecin. Veuillez
+                        demander plus d’informations à votre pharmacien.
                     </div>
                     {surveys.length > 0 && (
                         <PaginationLinks

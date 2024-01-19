@@ -9,6 +9,7 @@ import Surveys from "./views/Surveys";
 import SurveyView from "./views/SurveyView";
 import Answers from "./views/Answers";
 import DisplayResults from "./views/DisplayResults";
+import DisplayResultsEmail from "./views/DisplayResultsEmail";
 import SurveysPublic from "./views/SurveysPublic";
 
 const router = createBrowserRouter([
@@ -72,6 +73,10 @@ const router = createBrowserRouter([
     {
         path: "/display-results/:user",
         element: <DisplayResults />,
+    },
+    {
+        path: "/display-results-email/:user",
+        element: <DisplayResultsEmail />,
     },
     { path: "*", element: <SurveysPublic /> },
 ]);

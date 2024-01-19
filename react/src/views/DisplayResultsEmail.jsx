@@ -18,79 +18,7 @@ import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 
 import { useIdleTimer } from "react-idle-timer";
 
-export default function DisplayResults() {
-    // Modal
-    const customStyles = {
-        content: {
-            top: "50%",
-            left: "50%",
-            right: "auto",
-            bottom: "auto",
-            marginRight: "-50%",
-            transform: "translate(-50%, -50%)",
-        },
-    };
-
-    // Make sure to bind modal to your appElement (https://reactcommunity.org/react-modal/accessibility/)
-    // Modal.setAppElement("#yourAppElement");
-    Modal.setAppElement(document.getElementById("yourAppElement"));
-    let subtitle;
-    const [modalIsOpen, setIsOpen] = useState(false);
-    function openModal() {
-        setIsOpen(true);
-    }
-
-    function afterOpenModal() {
-        // references are now sync'd and can be accessed.
-        subtitle.style.color = "#f00";
-    }
-
-    function closeModal() {
-        setRemaining(50);
-        setIsOpen(false);
-    }
-
-    const [modalContent, setModalContent] = useState();
-    // END Modal
-
-    // Idle timer
-    const [state, setState] = useState("Active");
-    const [count, setCount] = useState(0);
-    const [remaining, setRemaining] = useState(1);
-
-    const onIdle = () => {
-        setState("Idle");
-    };
-
-    const onActive = () => {
-        setState("Active");
-    };
-
-    const onAction = () => {
-        setCount(count + 1);
-    };
-
-    const { getRemainingTime } = useIdleTimer({
-        onIdle,
-        onActive,
-        onAction,
-        timeout: 180_000,
-        throttle: 500,
-    });
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            // console.log("setRemaining");
-            setRemaining(Math.ceil(getRemainingTime() / 1000));
-        }, 500);
-
-        return () => {
-            // console.log("clearInterval");
-            clearInterval(interval);
-        };
-    });
-    // END Idle timer
-
+export default function DisplayResultsEmail() {
     const { setCurrentUser, setUserToken } = useStateContext();
     const { currentPatient, setCurrentPatient } = useStateContext();
     const [email, setEmail] = useState("");
@@ -117,28 +45,6 @@ export default function DisplayResults() {
     // useEffect(() => {
     //     setProduct();
     // }, [translateIntoNumbers]);
-
-    function goHome() {
-        // setCurrentPatient();
-        console.log("goHome");
-        setCurrentPatient({});
-        console.log("currentPatient");
-        console.log(currentPatient);
-        // verifyAvailableSurveys(currentPatient);
-        navigate("/");
-    }
-
-    useEffect(() => {
-        if (remaining === 30) {
-            openModal();
-        }
-        // if (remaining10 === 10) {
-
-        // }
-        if (remaining === 0) {
-            goHome();
-        }
-    }, [remaining]);
 
     useEffect(() => {
         setLoading(true);
@@ -286,7 +192,7 @@ export default function DisplayResults() {
     }
 
     // Send EMAIL
-    const form = useRef();
+    // const form = useRef();
     const [userEdited, setUserEdited] = useState(user.user);
     const [ageEdited, setAgeEdited] = useState(user.user);
     const [emailEdited, setEmailEdited] = useState(user.user);
@@ -296,33 +202,13 @@ export default function DisplayResults() {
         e.preventDefault();
 
         console.log(form.current);
-
-        emailjs
-            // .sendForm(
-            //     "YOUR_SERVICE_ID",
-            //     "YOUR_TEMPLATE_ID",
-            //     form.current,
-            //     "YOUR_PUBLIC_KEY"
-            // )
-            .sendForm(
-                "service_r7htw3c",
-                "template_bn603m5",
-                form.current,
-                "d-KnZYpZeSh32IPp8"
-            )
-            .then(
-                (result) => {
-                    console.log(result.text);
-                    if (result.text === "OK") {
-                        setEmailSent(true);
-                    }
-                },
-                (error) => {
-                    console.log(error.text);
-                }
-            );
     };
     // END Send EMAIL
+
+    const navigateToNewPage = () => {
+        // use the navigate function to navigate to /new-page
+        navigate("/");
+    };
 
     return (
         <PageComponent
@@ -330,14 +216,13 @@ export default function DisplayResults() {
             title="Merci pour votre participation. Voici vos résultats : "
             buttons={
                 <TButton
-                    color="red"
-                    onClick={goHome}
+                    color="green"
+                    onClick={() => navigateToNewPage()}
+                    // onClick={goHome}
                     className="w-60 flex justify-center rounded-md border 
                     border-transparent bg-indigo-600 py-4 px-4  font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2  text-lg"
                 >
-                    <span className="text-xl">
-                        Revenir au debut / Recommencer
-                    </span>
+                    <span className="text-xl">Nouveau Bilan Santé ?</span>
                     <ExclamationTriangleIcon className="h-6 w-6 ml-2" />
                 </TButton>
             }
@@ -345,204 +230,13 @@ export default function DisplayResults() {
         >
             {/* User DATA */}
             <div>
-                <p>
+                <p className="text-xl text-red-500">
                     {/* {currentPatient && (
                         <PatientDataFinal currentPatient={currentPatient} />
                     )} */}
-                    {currentPatient && (
-                        <DashboardCard
-                            // title={s.title}
-                            className={`bg-indigo-700 order-4 lg:order-2 row-span-2 mb-2 grid md:grid-cols-2 sm:grid-flow-row`}
-                            style={{ animationDelay: "0.3s" }}
-                        >
-                            <div className="text-white text-xl text-left mr-3 mb-3 align-middle">
-                                Vous pouvez sauvegarder les résultats en les
-                                envoyant sur votre adresse email (à remplir).
-                                Conformément au RGPD, l'adresse email ne sera
-                                pas conservée et ne sera pas envoyée à d'autres
-                                entités.
-                                {/* Cependant, si vous voulez vous abonné à
-                                nos promotions, veuillez cocher la case
-                                correspondante. */}
-                            </div>
-                            <form
-                                ref={form}
-                                onSubmit={sendEmail}
-                                className="mt-0 w-full max-w-96"
-                            >
-                                <div className="-space-y-px rounded-md shadow-sm text-lg max-w-96">
-                                    <div class="field">
-                                        {/* <label
-                                            htmlFor="from_name"
-                                            className="sr-only_ text-white"
-                                        >
-                                            Nom Prénom
-                                        </label> */}
-                                        <input
-                                            type="text"
-                                            value={
-                                                userEdited === "NA"
-                                                    ? ""
-                                                    : userEdited
-                                            }
-                                            name="from_name"
-                                            id="from_name"
-                                            className="relative block w-full appearance-none rounded rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-lg"
-                                            placeholder="Nom Prenom"
-                                            onChange={(e) =>
-                                                setUserEdited(e.target.value)
-                                            }
-                                            // onChange={(e) =>
-                                            //     setUserEdited(e.target.value)
-                                            // }
-                                        />
-                                    </div>
-                                </div>
-                                <div className="-space-y-px rounded-md shadow-sm text-lg max-w-96 ">
-                                    {/* <label
-                                        htmlFor="from_name"
-                                        className="sr-only_ text-white"
-                                    >
-                                        Age
-                                    </label> */}
-                                    {/* <label for="to_name">to_name</label> */}
-                                    <input
-                                        type="text"
-                                        name="to_name"
-                                        className="relative block w-full appearance-none rounded rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-lg"
-                                        id="to_name"
-                                        placeholder="Age"
-                                        value={
-                                            ageEdited === "NA" ? "" : ageEdited
-                                        }
-                                        onChange={(e) =>
-                                            setAgeEdited(e.target.value)
-                                        }
-                                    />
-                                </div>
-                                <div className="-space-y-px rounded-md shadow-sm text-lg max-w-96 mb-6">
-                                    {/* <label for="to_name">recipient</label> */}
-                                    {/* <label
-                                        htmlFor="from_name"
-                                        className="sr-only_ text-white"
-                                    >
-                                        Email
-                                    </label> */}
-                                    <input
-                                        type="text"
-                                        name="recipient"
-                                        id="recipient"
-                                        placeholder="Email"
-                                        className=" relative block w-full appearance-none rounded rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-lg"
-                                        value={
-                                            emailEdited === "NA"
-                                                ? ""
-                                                : emailEdited
-                                        }
-                                        onChange={(e) =>
-                                            setEmailEdited(e.target.value)
-                                        }
-                                        style={{ marginBottom: "10px" }}
-                                    />
-                                    {/* <input
-                                        type="checkbox"
-                                        name="newsletter"
-                                        id="newsletter"
-                                        placeholder="Je veux m'aboner au newsletter"
-                                        className=" relative block w-full appearance-none rounded rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-lg"
-                                        value={
-                                            emailEdited === "NA"
-                                                ? ""
-                                                : emailEdited
-                                        }
-                                        onChange={(e) =>
-                                            setEmailEdited(e.target.value)
-                                        }
-                                        style={{ marginBottom: "10px" }}
-                                    /> */}
-                                    <input
-                                        type="text"
-                                        name="code"
-                                        id="code"
-                                        hidden
-                                        value={currentPatient.other}
-                                    />
-                                    {/* <div class="field">
-                                        <label
-                                            htmlFor="from_name"
-                                            className="sr-only_"
-                                        >
-                                            Code
-                                        </label>
-                                        
-                                        <input
-                                            type="text"
-                                            name="code"
-                                            id="code"
-                                            value={currentPatient.other}
-                                        />
-                                    </div>
-                                    <div class="field">
-                                        <label for="message">message</label>
-                                        <input
-                                            type="text"
-                                            name="message"
-                                            id="message"
-                                        />
-                                    </div>
-                                    <div class="field">
-                                        <label for="reply_to">reply_to</label>
-                                        <input
-                                            type="text"
-                                            name="reply_to"
-                                            id="reply_to"
-                                        />
-                                    </div> */}
-
-                                    {/* <input type="submit" value="Send" /> */}
-                                    {emailSent && (
-                                        <p className="text-xl text-white">
-                                            Email envoyé. Veuillez verifier
-                                            aussi le dossier Spam (pourriel).{" "}
-                                        </p>
-                                    )}
-                                    <p> </p>
-                                    <button
-                                        type="submit"
-                                        className="group mt-3 relative flex w-full 
-                                        justify-center rounded-md border border-transparent bg-white py-2 px-4 text-sm font-medium text-indigo-700 hover:bg-white-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                                    >
-                                        <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-lg">
-                                            <LockClosedIcon
-                                                className="h-5 w-5 text-indigo-500 group-hover:text-indigo-400"
-                                                aria-hidden="true"
-                                            />
-                                        </span>
-
-                                        <span className="text-lg">
-                                            Sauvegarder les résultats
-                                        </span>
-                                    </button>
-                                </div>
-                            </form>
-
-                            {/* <p>User: {currentPatient.user}</p>
-                            <p>age: {currentPatient.age}</p>
-                            <p>
-                                Email : {currentPatient.weight}
-                                <button
-                                    onClick={envoyerEmail(
-                                        currentPatient.weight,
-                                        currentPatient.other
-                                    )}
-                                >
-                                    envoyer email avec les résultats
-                                </button>
-                            </p>
-                            <p>SMS: {currentPatient.height}</p>
-                            <p>OTHER: {currentPatient.other}</p> */}
-                        </DashboardCard>
-                    )}
+                    Cette enquête ne constitue en aucun cas un examen médical et
+                    ne remplace pas l'avis du médecin. Veuillez demander plus
+                    d’informations à votre pharmacien.
                     {/* <Form
                         currentPatient={currentPatient}
                         // recipientEmail={currentPatient.weight}
@@ -559,64 +253,6 @@ export default function DisplayResults() {
             {/* <p>{remaining} seconds remaining</p> */}
             {/* </div> */}
             {/* END TIMER */}
-
-            {/* MODAL */}
-            <div id="yourAppElement">
-                {/* <button onClick={openModal}>Open Modal</button> */}
-                <Modal
-                    isOpen={modalIsOpen}
-                    onAfterOpen={afterOpenModal}
-                    onRequestClose={closeModal}
-                    style={customStyles}
-                    contentLabel="Example Modal"
-                    // className="items-center"
-                >
-                    <h2>
-                        {" "}
-                        <span className="text-2xl font-bold">
-                            Vous êtes toujours là ?
-                        </span>
-                    </h2>
-
-                    <div className="w-80 flex flex-col items-center  border-t-4 border-green-500">
-                        <div className="mb-2 mt-3">
-                            <TButton
-                                color="green"
-                                onClick={closeModal}
-                                className="w-60 flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                            >
-                                {" "}
-                                <span className="text-xl">
-                                    Cliquez ici pour révenir aux résultats
-                                </span>
-                            </TButton>
-                        </div>
-
-                        <div className="text-2xl font-bold">
-                            Sinon vous allez perdre vos résultats et l'enquete
-                            va redémarrer en {remaining} secondes.
-                        </div>
-
-                        <TButton
-                            color="red"
-                            onClick={goHome}
-                            className="mt-3 w-60 flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                        >
-                            <span className="text-xl">Revenir au debut</span>
-                            <ExclamationTriangleIcon className="h-6 w-6 ml-2" />
-                        </TButton>
-                    </div>
-
-                    {/* <form>
-                        <input />
-                        <button>tab navigation</button>
-                        <button>stays</button>
-                        <button>inside</button>
-                        <button>the modal</button>
-                    </form> */}
-                </Modal>
-            </div>
-            {/* END MODAL */}
 
             {/* {currentPatient && (
                 <>
@@ -873,22 +509,6 @@ export default function DisplayResults() {
                         ))}
                     </>
                 ))}
-
-            <div>
-                <p className="text-xl text-red-500">
-                    {/* {currentPatient && (
-                        <PatientDataFinal currentPatient={currentPatient} />
-                    )} */}
-                    Cette enquête ne constitue en aucun cas un examen médical et
-                    ne remplace pas l'avis du médecin. Veuillez demander plus
-                    d’informations à votre pharmacien.
-                    {/* <Form
-                        currentPatient={currentPatient}
-                        // recipientEmail={currentPatient.weight}
-                        // code={currentPatient.other}
-                    /> */}
-                </p>
-            </div>
             {error.__html && (
                 <div
                     className="bg-red-500 rounded py-2 px-3 text-white"

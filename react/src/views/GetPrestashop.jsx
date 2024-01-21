@@ -53,7 +53,7 @@ export default function GetPrestashop({ indexProduct }) {
                     }
                 )
                 .then((res) => {
-                    console.log(res.data.products);
+                    // console.log(res.data.products);
 
                     if (
                         res.data.products !== undefined

@@ -70,7 +70,7 @@ export default function Dashboard() {
                     {/* END ERROR */}
                     {status != 500 && status != "" && (
                         <DashboardCard
-                            title="Total Surveys"
+                            title="Sujet d'enquête"
                             className="order-1 lg:order-2"
                             style={{ animationDelay: "0.1s" }}
                         >
@@ -81,7 +81,7 @@ export default function Dashboard() {
                     )}
                     {status != 500 && status != "" && (
                         <DashboardCard
-                            title="Total Answers"
+                            title="Total réponses"
                             className="order-2 lg:order-4"
                             style={{ animationDelay: "0.2s" }}
                         >
@@ -94,7 +94,7 @@ export default function Dashboard() {
 
                     {status != 500 && status != "" && (
                         <DashboardCard
-                            title="Latest Survey"
+                            title="Dernier Sujet "
                             className="order-3 lg:order-1 row-span-2"
                             style={{ animationDelay: "0.2s" }}
                         >
@@ -153,51 +153,53 @@ export default function Dashboard() {
                             )}
                             {!data.latestSurvey && (
                                 <div className="text-gray-600 text-center py-16">
-                                    You don't have surveys yet
+                                    Vous n'avez pas des Sujets pour l'instant.
                                 </div>
                             )}
                         </DashboardCard>
                     )}
+
                     {status != 500 && status != "" && (
                         <DashboardCard
-                            title="Latest Answers"
+                            title="Dernières réponses"
                             className="order-4 lg:order-2 row-span-2"
                             style={{ animationDelay: "0.3s" }}
                         >
-                            {data.latestAnswers.length !== undefined && (
-                                <div className="text-left">
-                                    {/* ANSWERS */}
-                                    {data.latestAnswers.map((answer) => (
-                                        <>
-                                            <Link
-                                                target={"_blank"}
-                                                to={`/display-results/${answer.other}`}
-                                                // state={{ answer: "occupation" }}
-                                                // state={{ from: "occupation" }}
-                                                state={answer}
-                                                key={answer.id}
-                                                answer={answer}
-                                                className="block p-2 hover:bg-gray-100/90"
-                                            >
-                                                <div className="font-semibold">
-                                                    {answer.survey.title} by{" "}
-                                                    {answer.user} - age:{" "}
-                                                    {answer.age}
-                                                </div>
+                            {data.latestAnswers &&
+                                data.latestAnswers.length !== undefined && (
+                                    <div className="text-left">
+                                        {/* ANSWERS */}
+                                        {data.latestAnswers.map((answer) => (
+                                            <>
+                                                <Link
+                                                    target={"_blank"}
+                                                    to={`/display-results/${answer.other}`}
+                                                    // state={{ answer: "occupation" }}
+                                                    // state={{ from: "occupation" }}
+                                                    state={answer}
+                                                    key={answer.id}
+                                                    answer={answer}
+                                                    className="block p-2 hover:bg-gray-100/90 bg-blue-300 mb-3"
+                                                >
+                                                    <div className="font-semibold">
+                                                        {answer.survey.title}{" "}
+                                                        par {answer.user} - age:{" "}
+                                                        {answer.age}
+                                                    </div>
 
-                                                <p className="font-bold text-xl mb-3">
-                                                    {answer.weight} -{" "}
-                                                    {answer.height}-{" "}
-                                                    {answer.other}
-                                                </p>
-                                                <small>
-                                                    Answer Made at :{" "}
-                                                    <i className="font-semibold">
-                                                        {answer.end_date}
-                                                    </i>
-                                                </small>
-                                            </Link>
-                                            {/* <Link
+                                                    <p className="font-bold text-xl mb-3">
+                                                        {answer.weight} -{" "}
+                                                        {answer.height}-{" "}
+                                                        {answer.other}
+                                                    </p>
+                                                    <small>
+                                                        Answer Made at :{" "}
+                                                        <i className="font-semibold">
+                                                            {answer.end_date}
+                                                        </i>
+                                                    </small>
+                                                </Link>
+                                                {/* <Link
                                             to={`/answers/${answer.id}`}
                                             // state={{ answer: "occupation" }}
                                             // state={{ from: "occupation" }}
@@ -205,7 +207,7 @@ export default function Dashboard() {
                                         >
                                             <p>Click {answer.id}</p>
                                         </Link> */}
-                                            {/* <TButton
+                                                {/* <TButton
                                             to={`/answers/${answer.id}`}
                                             onClick={(answer) => (
                                                 <Answers
@@ -215,11 +217,11 @@ export default function Dashboard() {
                                             )}
                                             key={answer.id}
                                         ></TButton> */}
-                                            {/* Answer: {answer.id} */}
-                                        </>
-                                    ))}
-                                </div>
-                            )}
+                                                {/* Answer: {answer.id} */}
+                                            </>
+                                        ))}
+                                    </div>
+                                )}
 
                             {!data.latestAnswers.length && (
                                 <div className="text-gray-600 text-center py-16">

@@ -11,6 +11,7 @@ import Answers from "./views/Answers";
 import DisplayResults from "./views/DisplayResults";
 import DisplayResultsEmail from "./views/DisplayResultsEmail";
 import SurveysPublic from "./views/SurveysPublic";
+import DisplayResultsAdmin from "./views/DisplayResultsAdmin";
 
 const router = createBrowserRouter([
     {
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
             {
                 path: "/dashboard",
                 element: <Dashboard />,
+            },
+            {
+                path: "/display-results-admin/:user",
+                element: <DisplayResultsAdmin />,
             },
             {
                 path: "/surveys",

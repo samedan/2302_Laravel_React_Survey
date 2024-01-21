@@ -94,6 +94,7 @@ export default function DisplayResults() {
     const { setCurrentUser, setUserToken } = useStateContext();
     const { currentPatient, setCurrentPatient } = useStateContext();
     const [email, setEmail] = useState("");
+    const [hide, setHide] = useState(false);
     // const [user, setUser] = useState("");
     const navigate = useNavigate();
     const [age, setAge] = useState("");
@@ -112,18 +113,18 @@ export default function DisplayResults() {
 
     const { user } = useParams();
 
-    console.log("user");
-    console.log(user);
+    // console.log("user");
+    // console.log(user);
     // useEffect(() => {
     //     setProduct();
     // }, [translateIntoNumbers]);
 
     function goHome() {
         // setCurrentPatient();
-        console.log("goHome");
+        // console.log("goHome");
         setCurrentPatient({});
-        console.log("currentPatient");
-        console.log(currentPatient);
+        // console.log("currentPatient");
+        // console.log(currentPatient);
         // verifyAvailableSurveys(currentPatient);
         navigate("/");
     }
@@ -151,18 +152,19 @@ export default function DisplayResults() {
                     setLoading(false);
                     // setSurvey(data.data);
                     // console.log("data.data");
-                    // console.log(data);
-                    // console.log(data.patientData[0]);
+                    console.log("data.patientDataAnswers");
+                    console.log(data.patientDataAnswers);
                     setCurrentPatient(data.patientData[0]);
                     setUserEdited(data.patientData[0].user);
                     setEmailEdited(data.patientData[0].weight);
                     setAgeEdited(data.patientData[0].age);
                     setAnswers(data.patientDataAnswers);
-                    // console.log("answers");
-                    // console.log(answers);
+                    console.log("answers");
+                    console.log(answers);
                     setQuestions(data.patientQuestionsAnswered);
-                    // console.log("questions");
-                    // console.log(questions);
+                    console.log("questions");
+                    console.log(questions);
+                    calculateSurveys(answers, questions);
                     setSurveys(data.totalSurveys);
                 })
                 .catch(() => {
@@ -177,6 +179,7 @@ export default function DisplayResults() {
                         .then(({ data }) => {
                             setLoading(false);
                             // setSurvey(data.data);
+                            console.log("data.data");
                             console.log(data.data);
                             setResults(data);
                         })
@@ -202,6 +205,23 @@ export default function DisplayResults() {
             }
         }
     }, []);
+
+    function calculateSurveys(answers, questions) {
+        const arraySurveys = [];
+        answers.map((a) =>
+            questions.map((q) => {
+                if (a.survey_question_id === q.id) {
+                    arraySurveys.map((exist) => {
+                        if (exist !== q.survey_id) {
+                            arraySurveys.push(q.survey_id);
+                        }
+                    });
+                }
+            })
+        );
+        console.log("arraySurveys");
+        console.log(arraySurveys);
+    }
 
     function getUser() {
         const { user } = useParams();
@@ -429,7 +449,7 @@ export default function DisplayResults() {
                                         Email
                                     </label> */}
                                     <input
-                                        type="text"
+                                        type="email"
                                         name="recipient"
                                         id="recipient"
                                         placeholder="Email"
@@ -636,7 +656,10 @@ export default function DisplayResults() {
                         <>
                             <DashboardCard
                                 // title={s.title}
-                                className={`order-4 lg:order-2 row-span-2 mb-2 survey${s.id}`}
+
+                                className={`order-4 lg:order-2 row-span-2 mb-2 ${
+                                    hide && `survey${s.id}`
+                                } `}
                                 style={{ animationDelay: "0.3s" }}
                             >
                                 {/* <div className="flex flex-col py-4 px-6 shadow-md bg-white hover:bg-gray-50 h-[470px]"> */}
@@ -668,6 +691,7 @@ export default function DisplayResults() {
                                             <li>
                                                 {/* <h2>Question answered: </h2> */}
                                                 <div>
+                                                    {}
                                                     {questions.map(
                                                         (q) =>
                                                             q.id ===

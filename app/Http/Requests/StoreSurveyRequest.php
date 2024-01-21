@@ -17,8 +17,11 @@ class StoreSurveyRequest extends FormRequest
     }
 
     protected function prepareForValidation() {
+        dd($this->user);
+        // return $this->user();
         $this->merge([
             'user_id' => $this->user()->id
+            
         ]);
     }
 

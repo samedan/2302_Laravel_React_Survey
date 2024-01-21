@@ -12,6 +12,17 @@ export default function QuestionWithAnswers({
     code,
     classSurvey,
 }) {
+    const customStyles = {
+        content: {
+            top: "50%",
+            left: "50%",
+            right: "auto",
+            bottom: "auto",
+            marginRight: "-50%",
+            transform: "translate(-50%, -50%)",
+        },
+    };
+
     const answers = {};
 
     // const [survey, setSurvey] = useState({
@@ -67,6 +78,8 @@ export default function QuestionWithAnswers({
                 {filteredArr.map((indexProduct) =>
                     // <p>INDEX: {getPrestashop(indexProduct)}</p>
                     {
+                        // console.log("filteredArr");
+                        // console.log(filteredArr);
                         return (
                             <p>
                                 <GetPrestashop indexProduct={indexProduct} />

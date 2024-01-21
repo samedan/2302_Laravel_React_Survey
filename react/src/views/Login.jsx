@@ -1,6 +1,6 @@
 import { LockClosedIcon } from "@heroicons/react/20/solid";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useStateContext } from "../contexts/ContextProvider";
 import axiosClient from "./../axios";
 
@@ -9,6 +9,7 @@ export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState({ __html: "" });
+    const navigate = useNavigate();
 
     const onSubmit = (ev) => {
         ev.preventDefault();
@@ -28,6 +29,7 @@ export default function Login() {
                 }
                 setCurrentUser(data.user);
                 setUserToken(data.token);
+                navigate("/surveys");
             })
             .catch((error) => {
                 console.log(error.message);

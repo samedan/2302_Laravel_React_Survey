@@ -6,10 +6,16 @@ import {
     TrashIcon,
 } from "@heroicons/react/24/outline";
 
-export default function SurveyListItem({ survey, onDeleteClick, inactive }) {
+export default function SurveyListItem({
+    survey,
+    onDeleteClick,
+    inactive,
+    order,
+}) {
     return (
         <>
             <div className="flex flex-col py-4 px-6 shadow-md bg-white hover:bg-gray-50 h-[470px]">
+                <p>Order: {order}</p>
                 <img
                     src={survey.image_url}
                     alt={survey.title}

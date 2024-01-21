@@ -41,6 +41,33 @@ class DashboardController extends Controller
                 'latestAnswers' => SurveyAnswerResource::collection($latestAnswers)
             ];
     }
+    public function getAllAnswers(Request $request) {
+        
+        //Latest 5 answers
+        $allAnswers = SurveyAnswer::query()
+            ->join('surveys', 'survey_answers.survey_id', '=', 'surveys.id')
+            // ->where('surveys.user_id', $user->id)
+            ->orderBy('end_date', 'DESC')
+            ->paginate(10);
+            // ->getModels('survey_answers.*');
+
+            return [
+                'allAnswers' => $allAnswers,
+               
+            ];
+    }
+    public function getAllSurveys(Request $request) {
+        $allSurveys = Survey::get();
+    
+        // $allSurveys = Survey::get()->orderBy('description');
+         return [
+                'allAnswers' => $allSurveys,
+               
+            ];
+    }
+
+    
+
     public function getSurveysForPatient(Request $request) {
         
         $apiKey = `H8MU9WC4GQRDWKAFQ23WRY1HA4CQSBRD`;

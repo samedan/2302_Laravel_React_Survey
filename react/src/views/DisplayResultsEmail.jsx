@@ -9,19 +9,22 @@ import "tw-elements"; // Loading CSS
 // import SurveyListItem from "../components/SurveyListItem";
 import PageComponent from "../components/PageComponent";
 import DashboardCard from "../components/DashboardCard";
-
+import logo from "../assets/logo.png";
 import emailjs from "@emailjs/browser";
-
+import loadingGif from "../assets/loading.svg";
 import QuestionWithAnswers from "./QuestionWithAnswers";
 import TButton from "../components/core/TButton";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 
 import { useIdleTimer } from "react-idle-timer";
 
-export default function DisplayResultsEmail() {
+export default function DisplayResults() {
+    // Make sure to bind modal to your appElement (https://reactcommunity.org/react-modal/accessibility/)
+
     const { setCurrentUser, setUserToken } = useStateContext();
     const { currentPatient, setCurrentPatient } = useStateContext();
     const [email, setEmail] = useState("");
+    const [hide, setHide] = useState(false);
     // const [user, setUser] = useState("");
     const navigate = useNavigate();
     const [age, setAge] = useState("");
@@ -40,11 +43,15 @@ export default function DisplayResultsEmail() {
 
     const { user } = useParams();
 
-    console.log("user");
-    console.log(user);
-    // useEffect(() => {
-    //     setProduct();
-    // }, [translateIntoNumbers]);
+    function goHome() {
+        // setCurrentPatient();
+        // console.log("goHome");
+        setCurrentPatient({});
+        // console.log("currentPatient");
+        // console.log(currentPatient);
+        // verifyAvailableSurveys(currentPatient);
+        navigate("/");
+    }
 
     useEffect(() => {
         setLoading(true);
@@ -54,60 +61,91 @@ export default function DisplayResultsEmail() {
             axiosClient
                 .get(`patientData?user=${user}`)
                 .then(({ data }) => {
-                    setLoading(false);
                     // setSurvey(data.data);
-                    // console.log("data.data");
-                    // console.log(data);
-                    // console.log(data.patientData[0]);
+                    console.log("data");
+                    console.log(data);
+                    console.log("data.patientDataAnswers");
+                    console.log(data.patientDataAnswers);
+
                     setCurrentPatient(data.patientData[0]);
                     setUserEdited(data.patientData[0].user);
                     setEmailEdited(data.patientData[0].weight);
                     setAgeEdited(data.patientData[0].age);
                     setAnswers(data.patientDataAnswers);
+
                     // console.log("answers");
                     // console.log(answers);
+
                     setQuestions(data.patientQuestionsAnswered);
+
                     // console.log("questions");
                     // console.log(questions);
+                    if (answers !== undefined && questions !== undefined) {
+                        setLoading(true);
+                        calculateSurveys(answers, questions);
+                        setLoading(false);
+                    }
+
                     setSurveys(data.totalSurveys);
+                    setLoading(false);
                 })
-                .catch(() => {
+                .catch((error) => {
+                    console.log(error);
                     setLoading(false);
                 });
-        } else {
-            {
-                if (currentPatient.other !== undefined) {
-                    console.log("here");
-                    axiosClient
-                        .get(`available/surveys?user=${currentPatient.other}`)
-                        .then(({ data }) => {
-                            setLoading(false);
-                            // setSurvey(data.data);
-                            console.log(data.data);
-                            setResults(data);
-                        })
-                        .catch(() => {
-                            setLoading(false);
-                        });
-                }
-                // testing
-                else {
-                    axiosClient
-                        .get(`available/surveys?user=${user}`)
-                        .then(({ data }) => {
-                            setLoading(false);
-                            // setSurvey(data.data);
-                            console.log(data);
-                            setResults(data);
-                        })
-                        .catch(() => {
-                            setLoading(false);
-                        });
-                    // end testing
-                }
-            }
         }
+        // else {
+        //     {
+        //         if (currentPatient.other !== undefined) {
+        //             console.log("here");
+        //             axiosClient
+        //                 .get(`available/surveys?user=${currentPatient.other}`)
+        //                 .then(({ data }) => {
+        //                     // setSurvey(data.data);
+        //                     console.log("data.data");
+        //                     console.log(data.data);
+        //                     setResults(data);
+        //                     setLoading(false);
+        //                 })
+        //                 .catch(() => {
+        //                     setLoading(false);
+        //                 });
+        //         }
+        //         // testing
+        //         else {
+        //             axiosClient
+        //                 .get(`available/surveys?user=${user}`)
+        //                 .then(({ data }) => {
+        //                     // setSurvey(data.data);
+        //                     console.log(data);
+        //                     setResults(data);
+        //                     setLoading(false);
+        //                 })
+        //                 .catch(() => {
+        //                     setLoading(false);
+        //                 });
+        //             // end testing
+        //         }
+        //     }
+        // }
     }, []);
+
+    function calculateSurveys(answers, questions) {
+        const arraySurveys = [];
+        answers.map((a) =>
+            questions.map((q) => {
+                if (a.survey_question_id === q.id) {
+                    arraySurveys.map((exist) => {
+                        if (exist !== q.survey_id) {
+                            arraySurveys.push(q.survey_id);
+                        }
+                    });
+                }
+            })
+        );
+        console.log("arraySurveys");
+        console.log(arraySurveys);
+    }
 
     function getUser() {
         const { user } = useParams();
@@ -192,59 +230,46 @@ export default function DisplayResultsEmail() {
     }
 
     // Send EMAIL
-    // const form = useRef();
+
     const [userEdited, setUserEdited] = useState(user.user);
     const [ageEdited, setAgeEdited] = useState(user.user);
     const [emailEdited, setEmailEdited] = useState(user.user);
     const [emailSent, setEmailSent] = useState(false);
-
-    const sendEmail = (e) => {
-        e.preventDefault();
-
-        console.log(form.current);
-    };
-    // END Send EMAIL
-
-    const navigateToNewPage = () => {
-        // use the navigate function to navigate to /new-page
-        navigate("/");
-    };
 
     return (
         <PageComponent
             id="yourAppElement"
             title="Merci pour votre participation. Voici vos résultats : "
             buttons={
-                <TButton
-                    color="green"
-                    onClick={() => navigateToNewPage()}
-                    // onClick={goHome}
-                    className="w-60 flex justify-center rounded-md border 
+                <div className="grid grid-cols-1">
+                    <div
+                        className="mb-2 flex content-end"
+                        style={{
+                            flexDirection: "row-reverse",
+                        }}
+                    >
+                        <img class="mr-5 h-9" src={logo} />
+                    </div>
+                    <TButton
+                        color="green"
+                        onClick={() => navigateToNewPage()}
+                        // onClick={goHome}
+                        className="w-60 flex justify-center rounded-md border 
                     border-transparent bg-indigo-600 py-4 px-4  font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2  text-lg"
-                >
-                    <span className="text-xl">Nouveau Bilan Santé ?</span>
-                    <ExclamationTriangleIcon className="h-6 w-6 ml-2" />
-                </TButton>
+                    >
+                        <span className="text-xl">Nouveau Bilan Santé ?</span>
+                        <ExclamationTriangleIcon className="h-6 w-6 ml-2" />
+                    </TButton>
+                </div>
             }
-            // image={logo}
         >
-            {/* User DATA */}
-            <div>
-                <p className="text-xl text-red-500">
-                    {/* {currentPatient && (
-                        <PatientDataFinal currentPatient={currentPatient} />
-                    )} */}
-                    Cette enquête ne constitue en aucun cas un examen médical et
-                    ne remplace pas l'avis du médecin. Veuillez demander plus
-                    d’informations à votre pharmacien.
-                    {/* <Form
-                        currentPatient={currentPatient}
-                        // recipientEmail={currentPatient.weight}
-                        // code={currentPatient.other}
-                    /> */}
-                </p>
-            </div>
-            {/* END User DATA */}
+            {loading && (
+                <div className="flex justify-center items-center">
+                    <div className=" w-8 h-8" role="status">
+                        <img src={loadingGif} />
+                    </div>
+                </div>
+            )}
 
             {/* TIMER */}
             {/* <div> */}
@@ -254,72 +279,71 @@ export default function DisplayResultsEmail() {
             {/* </div> */}
             {/* END TIMER */}
 
-            {/* {currentPatient && (
-                <>
-                    <p>User: {currentPatient.user}</p>
-                    <p>Age: {currentPatient.age}</p>
-                    <p>Weight: {currentPatient.weight}</p>
-                    <p>Height: {currentPatient.height}</p>
-                    <p>Other: {currentPatient.other}</p>
-                </>
-            )} */}
-
-            {answers && (
+            {!loading && answers && (
                 <>
                     {/* <p>///////////////////////////////</p> */}
                     {/* <ul>Surveys: </ul> */}
-                    {surveys.map((s) => (
-                        <>
-                            <DashboardCard
-                                // title={s.title}
-                                className={`order-4 lg:order-2 row-span-2 mb-2 survey${s.id}`}
-                                style={{ animationDelay: "0.3s" }}
-                            >
-                                {/* <div className="flex flex-col py-4 px-6 shadow-md bg-white hover:bg-gray-50 h-[470px]"> */}
+                    {surveys &&
+                        surveys.map((s) => (
+                            <>
+                                <DashboardCard
+                                    // title={s.title}
 
-                                <div className="flex flex-row py-4 px-6 shadow-md bg-white hover:bg-gray-50">
-                                    <img
-                                        src={
-                                            import.meta.env.VITE_API_BASE_URL +
-                                            "/" +
-                                            s.image
-                                        }
-                                        alt={s.title}
-                                        className="h-28 object-cover mr-10"
-                                    />
-                                    <div className="">
-                                        <p>
-                                            Voici nos conseils sur le sujet :{" "}
-                                        </p>
-                                        <h3 className="text-2xl font-semibold">
-                                            {s.title}
-                                        </h3>
+                                    className={`order-4 lg:order-2 row-span-2 mb-2 ${
+                                        hide && `survey${s.id}`
+                                    } `}
+                                    style={{ animationDelay: "0.3s" }}
+                                >
+                                    {/* <div className="flex flex-col py-4 px-6 shadow-md bg-white hover:bg-gray-50 h-[470px]"> */}
+
+                                    <div className="flex flex-row py-4 px-6 shadow-md bg-white hover:bg-gray-50">
+                                        <img
+                                            src={
+                                                import.meta.env
+                                                    .VITE_API_BASE_URL +
+                                                "/" +
+                                                s.image
+                                            }
+                                            alt={s.title}
+                                            className="h-28 object-cover mr-10"
+                                        />
+                                        <div className="">
+                                            <p>
+                                                Voici nos conseils sur le sujet
+                                                :{" "}
+                                            </p>
+                                            <h3 className="text-2xl font-semibold">
+                                                {s.title}
+                                            </h3>
+                                        </div>
                                     </div>
-                                </div>
 
-                                {/* Questions & Conseils */}
-                                <div>
-                                    <ul>
-                                        {answers.map((answer) => (
-                                            <li>
-                                                {/* <h2>Question answered: </h2> */}
-                                                <div>
-                                                    {questions.map(
-                                                        (q) =>
-                                                            q.id ===
-                                                                answer.survey_question_id &&
-                                                            q.survey_id ==
-                                                                s.id && (
-                                                                <DashboardCard
-                                                                    // title={s.title}
-                                                                    className="order-4 lg:order-2 row-span-2 mb-10 bg-slate-100"
-                                                                    style={{
-                                                                        animationDelay:
-                                                                            "0.3s",
-                                                                    }}
-                                                                >
-                                                                    <ul className="text-left">
-                                                                        {/* <li>
+                                    {/* Questions & Conseils */}
+                                    <div>
+                                        <ul>
+                                            {!loading &&
+                                                answers &&
+                                                answers.map((answer) => (
+                                                    <li>
+                                                        {/* <h2>Question answered: </h2> */}
+                                                        <div>
+                                                            {}
+                                                            {questions.map(
+                                                                (q) =>
+                                                                    q.id ===
+                                                                        answer.survey_question_id &&
+                                                                    q.survey_id ==
+                                                                        s.id && (
+                                                                        <DashboardCard
+                                                                            // title={s.title}
+                                                                            className="order-4 lg:order-2 row-span-2 mb-10 bg-slate-100"
+                                                                            style={{
+                                                                                animationDelay:
+                                                                                    "0.3s",
+                                                                            }}
+                                                                        >
+                                                                            <ul className="text-left">
+                                                                                {/* <li>
                                                                     <strong>
                                                                         SurveyID{" "}
                                                                     </strong>
@@ -327,83 +351,83 @@ export default function DisplayResultsEmail() {
                                                                         q.survey_id
                                                                     }
                                                                 </li> */}
-                                                                        <li>
-                                                                            <h2 className="text-2xl">
-                                                                                {/* Question
+                                                                                <li>
+                                                                                    <h2 className="text-2xl">
+                                                                                        {/* Question
                                                                                 :{" "} */}
-                                                                                <span className="text-green-600 font-bold">
-                                                                                    {
-                                                                                        q.question
-                                                                                    }
-                                                                                </span>
-                                                                            </h2>
-                                                                        </li>
-                                                                        <li>
-                                                                            {/* Products code */}
-                                                                            {/* <strong>
+                                                                                        <span className="text-green-600 font-bold">
+                                                                                            {
+                                                                                                q.question
+                                                                                            }
+                                                                                        </span>
+                                                                                    </h2>
+                                                                                </li>
+                                                                                <li>
+                                                                                    {/* Products code */}
+                                                                                    {/* <strong>
                                                                                 Products{" "}
                                                                             </strong>
                                                                             {
                                                                                 q.description
                                                                             } */}
-                                                                            {/* END Products code */}
+                                                                                    {/* END Products code */}
 
-                                                                            {q.description !=
-                                                                                [] && (
-                                                                                <>
-                                                                                    <h2
-                                                                                        // style={{
-                                                                                        //     color: "black",
-                                                                                        // }}
-                                                                                        className="text-sky-500"
-                                                                                    >
-                                                                                        Vous
-                                                                                        avez
-                                                                                        une
-                                                                                        carence
-                                                                                        en
-                                                                                        :{" "}
-                                                                                        <span className="font-bold">
-                                                                                            {" "}
-                                                                                            {
-                                                                                                q.conseils
-                                                                                            }
-                                                                                        </span>
-                                                                                    </h2>
-                                                                                    <p className="text-left">
-                                                                                        Nous
-                                                                                        vous
-                                                                                        recommandons
-                                                                                        :{" "}
-                                                                                    </p>
-                                                                                    <h3>
-                                                                                        {" "}
-                                                                                        <QuestionWithAnswers
-                                                                                            code={translateIntoArray(
-                                                                                                q.description,
-                                                                                                q.question,
-                                                                                                s.title
-                                                                                            )}
-                                                                                            question={
-                                                                                                q.question
-                                                                                            }
-                                                                                            survey={
-                                                                                                s.title
-                                                                                            }
-                                                                                            classSurvey={
-                                                                                                q.survey_id
-                                                                                            }
-                                                                                        />
-                                                                                        {/* {translateIntoNumbers(
+                                                                                    {q.description !=
+                                                                                        [] && (
+                                                                                        <>
+                                                                                            <h2
+                                                                                                // style={{
+                                                                                                //     color: "black",
+                                                                                                // }}
+                                                                                                className="text-sky-500"
+                                                                                            >
+                                                                                                Vous
+                                                                                                avez
+                                                                                                une
+                                                                                                carence
+                                                                                                en
+                                                                                                :{" "}
+                                                                                                <span className="font-bold">
+                                                                                                    {" "}
+                                                                                                    {
+                                                                                                        q.conseils
+                                                                                                    }
+                                                                                                </span>
+                                                                                            </h2>
+                                                                                            <p className="text-left">
+                                                                                                Nous
+                                                                                                vous
+                                                                                                recommandons
+                                                                                                :{" "}
+                                                                                            </p>
+                                                                                            <h3>
+                                                                                                {" "}
+                                                                                                <QuestionWithAnswers
+                                                                                                    code={translateIntoArray(
+                                                                                                        q.description,
+                                                                                                        q.question,
+                                                                                                        s.title
+                                                                                                    )}
+                                                                                                    question={
+                                                                                                        q.question
+                                                                                                    }
+                                                                                                    survey={
+                                                                                                        s.title
+                                                                                                    }
+                                                                                                    classSurvey={
+                                                                                                        q.survey_id
+                                                                                                    }
+                                                                                                />
+                                                                                                {/* {translateIntoNumbers(
                                                                                         q.description,
                                                                                         q.question,
                                                                                         s.title
                                                                                     )} */}
-                                                                                    </h3>
-                                                                                </>
-                                                                            )}
-                                                                        </li>
-                                                                        {/* <li>
+                                                                                            </h3>
+                                                                                        </>
+                                                                                    )}
+                                                                                </li>
+                                                                                {/* <li>
                                                                             <strong>
                                                                                 Conseils{" "}
                                                                             </strong>
@@ -411,19 +435,19 @@ export default function DisplayResultsEmail() {
                                                                                 q.conseils
                                                                             }
                                                                         </li> */}
-                                                                    </ul>
-                                                                </DashboardCard>
-                                                            )
-                                                    )}
-                                                </div>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                                {/* END Questions & Conseils */}
-                            </DashboardCard>
-                        </>
-                    ))}
+                                                                            </ul>
+                                                                        </DashboardCard>
+                                                                    )
+                                                            )}
+                                                        </div>
+                                                    </li>
+                                                ))}
+                                        </ul>
+                                    </div>
+                                    {/* END Questions & Conseils */}
+                                </DashboardCard>
+                            </>
+                        ))}
                 </>
             )}
 
@@ -509,6 +533,22 @@ export default function DisplayResultsEmail() {
                         ))}
                     </>
                 ))}
+
+            <div>
+                <p className="text-xl text-red-500">
+                    {/* {currentPatient && (
+                        <PatientDataFinal currentPatient={currentPatient} />
+                    )} */}
+                    Cette enquête ne constitue en aucun cas un examen médical et
+                    ne remplace pas l'avis du médecin. Veuillez demander plus
+                    d’informations à votre pharmacien.
+                    {/* <Form
+                        currentPatient={currentPatient}
+                        // recipientEmail={currentPatient.weight}
+                        // code={currentPatient.other}
+                    /> */}
+                </p>
+            </div>
             {error.__html && (
                 <div
                     className="bg-red-500 rounded py-2 px-3 text-white"

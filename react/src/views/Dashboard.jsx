@@ -2,9 +2,12 @@ import React, { useEffect, useState } from "react";
 import PageComponent from "../components/PageComponent";
 import DashboardCard from "../components/DashboardCard";
 import TButton from "../components/core/TButton";
-import { EyeIcon, PencilIcon } from "@heroicons/react/24/outline";
+import {
+    EyeIcon,
+    PencilIcon,
+    PlusCircleIcon,
+} from "@heroicons/react/24/outline";
 import axiosClient from "./../axios";
-import Answers from "./Answers";
 import { Link } from "react-router-dom";
 
 export default function Dashboard() {
@@ -70,7 +73,7 @@ export default function Dashboard() {
                     {/* END ERROR */}
                     {status != 500 && status != "" && (
                         <DashboardCard
-                            title="Sujet d'enquête"
+                            title="Sujet(s) d'enquête"
                             className="order-1 lg:order-2"
                             style={{ animationDelay: "0.1s" }}
                         >
@@ -161,7 +164,7 @@ export default function Dashboard() {
 
                     {status != 500 && status != "" && (
                         <DashboardCard
-                            title="Dernières réponses"
+                            title="Dernières 5 réponses"
                             className="order-4 lg:order-2 row-span-2"
                             style={{ animationDelay: "0.3s" }}
                         >
@@ -169,6 +172,7 @@ export default function Dashboard() {
                                 data.latestAnswers.length !== undefined && (
                                     <div className="text-left">
                                         {/* ANSWERS */}
+
                                         {data.latestAnswers.map((answer) => (
                                             <>
                                                 <Link
@@ -179,7 +183,7 @@ export default function Dashboard() {
                                                     state={answer}
                                                     key={answer.id}
                                                     answer={answer}
-                                                    className="block p-2 hover:bg-gray-100/90 bg-blue-300 mb-3"
+                                                    className="block p-2 text-sm hover:bg-gray-100/90 bg-blue-300 mb-3"
                                                 >
                                                     <div className="font-semibold">
                                                         {answer.survey.title}{" "}
@@ -187,13 +191,13 @@ export default function Dashboard() {
                                                         {answer.age}
                                                     </div>
 
-                                                    <p className="font-bold text-xl mb-3">
+                                                    <p className="font-bold text-sm mb-3">
                                                         {answer.weight} -{" "}
                                                         {answer.height}-{" "}
                                                         {answer.other}
                                                     </p>
-                                                    <small>
-                                                        Answer Made at :{" "}
+                                                    <small className=" text-sm">
+                                                        Date de réponse :{" "}
                                                         <i className="font-semibold">
                                                             {answer.end_date}
                                                         </i>
@@ -220,6 +224,13 @@ export default function Dashboard() {
                                                 {/* Answer: {answer.id} */}
                                             </>
                                         ))}
+                                        <TButton
+                                            color="green"
+                                            to="/get-all-answers"
+                                        >
+                                            <PlusCircleIcon className="h-6 w-6 mr-2" />
+                                            Voir toutes les réponses
+                                        </TButton>
                                     </div>
                                 )}
 

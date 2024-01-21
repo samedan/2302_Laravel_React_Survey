@@ -122,7 +122,7 @@ export default function GetPrestashop({ indexProduct }) {
 
                     <p className="font-bold min-h-5 bg-sky-500 text-white p-3">
                         {productName &&
-                            JSON.stringify(productName).replace('"', "")}
+                            JSON.stringify(productName).replaceAll('"', "")}
                     </p>
 
                     <p>

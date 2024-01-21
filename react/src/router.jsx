@@ -12,6 +12,7 @@ import DisplayResults from "./views/DisplayResults";
 import DisplayResultsEmail from "./views/DisplayResultsEmail";
 import SurveysPublic from "./views/SurveysPublic";
 import DisplayResultsAdmin from "./views/DisplayResultsAdmin";
+import Reponses from "./views/Reponses";
 
 const router = createBrowserRouter([
     {
@@ -49,6 +50,10 @@ const router = createBrowserRouter([
             {
                 path: "/answers/:id",
                 element: <Answers />,
+            },
+            {
+                path: "/get-all-answers",
+                element: <Reponses />,
             },
         ],
     },

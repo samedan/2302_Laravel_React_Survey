@@ -11,7 +11,7 @@ import PageComponent from "../components/PageComponent";
 import DashboardCard from "../components/DashboardCard";
 
 import emailjs from "@emailjs/browser";
-
+import loadingGif from "../assets/loading.svg";
 import QuestionWithAnswers from "./QuestionWithAnswers";
 import TButton from "../components/core/TButton";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
@@ -56,6 +56,8 @@ export default function DisplayResults() {
     // Idle timer
     const [state, setState] = useState("Active");
     const [count, setCount] = useState(0);
+    const [emailError, setEmailError] = useState(false);
+    const [emailErrorText, setEmailErrorText] = useState("");
     const [remaining, setRemaining] = useState(1);
 
     const onIdle = () => {
@@ -142,6 +144,8 @@ export default function DisplayResults() {
     }, [remaining]);
 
     useEffect(() => {
+        setEmailError(false);
+        setEmailSent(false);
         setLoading(true);
         // const { user } = useParams();
         // getPrestashop();
@@ -149,61 +153,73 @@ export default function DisplayResults() {
             axiosClient
                 .get(`patientData?user=${user}`)
                 .then(({ data }) => {
-                    setLoading(false);
                     // setSurvey(data.data);
-                    // console.log("data.data");
+                    console.log("data");
+                    console.log(data);
                     console.log("data.patientDataAnswers");
                     console.log(data.patientDataAnswers);
+
                     setCurrentPatient(data.patientData[0]);
                     setUserEdited(data.patientData[0].user);
                     setEmailEdited(data.patientData[0].weight);
                     setAgeEdited(data.patientData[0].age);
                     setAnswers(data.patientDataAnswers);
-                    console.log("answers");
-                    console.log(answers);
+
+                    // console.log("answers");
+                    // console.log(answers);
+
                     setQuestions(data.patientQuestionsAnswered);
-                    console.log("questions");
-                    console.log(questions);
-                    calculateSurveys(answers, questions);
+
+                    // console.log("questions");
+                    // console.log(questions);
+                    if (answers !== undefined && questions !== undefined) {
+                        setLoading(true);
+                        calculateSurveys(answers, questions);
+                        setLoading(false);
+                    }
+
                     setSurveys(data.totalSurveys);
+                    setLoading(false);
                 })
-                .catch(() => {
+                .catch((error) => {
+                    console.log(error);
                     setLoading(false);
                 });
-        } else {
-            {
-                if (currentPatient.other !== undefined) {
-                    console.log("here");
-                    axiosClient
-                        .get(`available/surveys?user=${currentPatient.other}`)
-                        .then(({ data }) => {
-                            setLoading(false);
-                            // setSurvey(data.data);
-                            console.log("data.data");
-                            console.log(data.data);
-                            setResults(data);
-                        })
-                        .catch(() => {
-                            setLoading(false);
-                        });
-                }
-                // testing
-                else {
-                    axiosClient
-                        .get(`available/surveys?user=${user}`)
-                        .then(({ data }) => {
-                            setLoading(false);
-                            // setSurvey(data.data);
-                            console.log(data);
-                            setResults(data);
-                        })
-                        .catch(() => {
-                            setLoading(false);
-                        });
-                    // end testing
-                }
-            }
         }
+        // else {
+        //     {
+        //         if (currentPatient.other !== undefined) {
+        //             console.log("here");
+        //             axiosClient
+        //                 .get(`available/surveys?user=${currentPatient.other}`)
+        //                 .then(({ data }) => {
+        //                     // setSurvey(data.data);
+        //                     console.log("data.data");
+        //                     console.log(data.data);
+        //                     setResults(data);
+        //                     setLoading(false);
+        //                 })
+        //                 .catch(() => {
+        //                     setLoading(false);
+        //                 });
+        //         }
+        //         // testing
+        //         else {
+        //             axiosClient
+        //                 .get(`available/surveys?user=${user}`)
+        //                 .then(({ data }) => {
+        //                     // setSurvey(data.data);
+        //                     console.log(data);
+        //                     setResults(data);
+        //                     setLoading(false);
+        //                 })
+        //                 .catch(() => {
+        //                     setLoading(false);
+        //                 });
+        //             // end testing
+        //         }
+        //     }
+        // }
     }, []);
 
     function calculateSurveys(answers, questions) {
@@ -300,9 +316,50 @@ export default function DisplayResults() {
         return numberedMedsWithSurvey; // onlt numbers
     }
 
-    function envoyerEmail(email, codeOther) {
-        console.log("email", email);
-        console.log("other", other);
+    function validateEmail(mail) {
+        if (!mail || mail === "NA") {
+            console.log("validateEmail error");
+            setEmailErrorText("Veuillez ajouter une adresse mail");
+            setEmailError(true);
+        } else {
+            var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+            if (mail.match(mailformat)) {
+                console.log("valid");
+                setEmailError(false);
+                setEmailErrorText("");
+                emailjs
+                    // .sendForm(
+                    //     "YOUR_SERVICE_ID",
+                    //     "YOUR_TEMPLATE_ID",
+                    //     form.current,
+                    //     "YOUR_PUBLIC_KEY"
+                    // )
+                    .sendForm(
+                        "service_r7htw3c",
+                        "template_bn603m5",
+                        form.current,
+                        "d-KnZYpZeSh32IPp8"
+                    )
+                    .then(
+                        (result) => {
+                            console.log(result.text);
+                            if (result.text === "OK") {
+                                setEmailError(false);
+                                setEmailErrorText("");
+                                setEmailSent(true);
+                            }
+                        },
+                        (error) => {
+                            console.log(error.text);
+                        }
+                    );
+                return true;
+            }
+            console.log("INVALID");
+            setEmailError(true);
+            setEmailErrorText("Adresse mail invalide");
+            return false;
+        }
     }
 
     // Send EMAIL
@@ -315,32 +372,11 @@ export default function DisplayResults() {
     const sendEmail = (e) => {
         e.preventDefault();
 
-        console.log(form.current);
+        console.log(emailEdited);
+        setEmailError(false);
+        validateEmail(emailEdited);
 
-        emailjs
-            // .sendForm(
-            //     "YOUR_SERVICE_ID",
-            //     "YOUR_TEMPLATE_ID",
-            //     form.current,
-            //     "YOUR_PUBLIC_KEY"
-            // )
-            .sendForm(
-                "service_r7htw3c",
-                "template_bn603m5",
-                form.current,
-                "d-KnZYpZeSh32IPp8"
-            )
-            .then(
-                (result) => {
-                    console.log(result.text);
-                    if (result.text === "OK") {
-                        setEmailSent(true);
-                    }
-                },
-                (error) => {
-                    console.log(error.text);
-                }
-            );
+        console.log(form.current);
     };
     // END Send EMAIL
 
@@ -363,108 +399,154 @@ export default function DisplayResults() {
             }
             // image={logo}
         >
+            {loading && (
+                <div className="flex justify-center items-center">
+                    <div className=" w-8 h-8" role="status">
+                        <img src={loadingGif} />
+                    </div>
+                </div>
+            )}
             {/* User DATA */}
             <div>
                 <p>
                     {/* {currentPatient && (
                         <PatientDataFinal currentPatient={currentPatient} />
                     )} */}
-                    {currentPatient && (
+
+                    {!loading && currentPatient && (
                         <DashboardCard
                             // title={s.title}
-                            className={`bg-indigo-700 order-4 lg:order-2 row-span-2 mb-2 grid md:grid-cols-2 sm:grid-flow-row`}
+                            className={`order-4 lg:order-2 row-span-2 mb-2 grid
+                            ${emailSent ? "md:grid-cols-1" : "md:grid-cols-2"}
+                            sm:grid-flow-row`}
                             style={{ animationDelay: "0.3s" }}
                         >
-                            <div className="text-white text-xl text-left mr-3 mb-3 align-middle">
-                                Vous pouvez sauvegarder les résultats en les
-                                envoyant sur votre adresse email (à remplir).
-                                Conformément au RGPD, l'adresse email ne sera
-                                pas conservée et ne sera pas envoyée à d'autres
-                                entités.
-                                {/* Cependant, si vous voulez vous abonné à
+                            {emailSent && (
+                                <p
+                                    className="text-xl text-green-500"
+                                    style={{ animationDelay: "0.3s" }}
+                                >
+                                    <strong>SUCCÈS !</strong> Email envoyé.
+                                    Veuillez verifier aussi le dossier Spam
+                                    (pourriel).{" "}
+                                </p>
+                            )}
+
+                            {!emailSent && (
+                                <>
+                                    <div className="text-xl text-left mr-3 mb-3 align-middle">
+                                        Vous pouvez sauvegarder les résultats en
+                                        les envoyant sur votre adresse email (à
+                                        remplir). Conformément au RGPD,
+                                        l'adresse email ne sera pas conservée et
+                                        ne sera pas envoyée à d'autres entités.
+                                        {/* Cependant, si vous voulez vous abonné à
                                 nos promotions, veuillez cocher la case
                                 correspondante. */}
-                            </div>
-                            <form
-                                ref={form}
-                                onSubmit={sendEmail}
-                                className="mt-0 w-full max-w-96"
-                            >
-                                <div className="-space-y-px rounded-md shadow-sm text-lg max-w-96">
-                                    <div class="field">
-                                        {/* <label
+                                    </div>
+
+                                    <form
+                                        ref={form}
+                                        onSubmit={sendEmail}
+                                        className="mt-0 w-full max-w-96"
+                                    >
+                                        <div className="-space-y-px rounded-md shadow-sm text-lg max-w-96">
+                                            <div class="field">
+                                                {/* <label
                                             htmlFor="from_name"
                                             className="sr-only_ text-white"
                                         >
                                             Nom Prénom
                                         </label> */}
-                                        <input
-                                            type="text"
-                                            value={
-                                                userEdited === "NA"
-                                                    ? ""
-                                                    : userEdited
-                                            }
-                                            name="from_name"
-                                            id="from_name"
-                                            className="relative block w-full appearance-none rounded rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-lg"
-                                            placeholder="Nom Prenom"
-                                            onChange={(e) =>
-                                                setUserEdited(e.target.value)
-                                            }
-                                            // onChange={(e) =>
-                                            //     setUserEdited(e.target.value)
-                                            // }
-                                        />
-                                    </div>
-                                </div>
-                                <div className="-space-y-px rounded-md shadow-sm text-lg max-w-96 ">
-                                    {/* <label
+                                                <input
+                                                    type="text"
+                                                    value={
+                                                        userEdited === "NA"
+                                                            ? ""
+                                                            : userEdited
+                                                    }
+                                                    name="from_name"
+                                                    id="from_name"
+                                                    className="relative block w-full appearance-none rounded
+                                             rounded-t-md border border-gray-500 px-3 py-2
+                                              text-gray-900 placeholder-gray-500 
+                                              focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-lg"
+                                                    placeholder="Nom Prenom"
+                                                    onChange={(e) =>
+                                                        setUserEdited(
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                    // onChange={(e) =>
+                                                    //     setUserEdited(e.target.value)
+                                                    // }
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="-space-y-px rounded-md shadow-sm text-lg max-w-96 ">
+                                            {/* <label
                                         htmlFor="from_name"
                                         className="sr-only_ text-white"
                                     >
                                         Age
                                     </label> */}
-                                    {/* <label for="to_name">to_name</label> */}
-                                    <input
-                                        type="text"
-                                        name="to_name"
-                                        className="relative block w-full appearance-none rounded rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-lg"
-                                        id="to_name"
-                                        placeholder="Age"
-                                        value={
-                                            ageEdited === "NA" ? "" : ageEdited
-                                        }
-                                        onChange={(e) =>
-                                            setAgeEdited(e.target.value)
-                                        }
-                                    />
-                                </div>
-                                <div className="-space-y-px rounded-md shadow-sm text-lg max-w-96 mb-6">
-                                    {/* <label for="to_name">recipient</label> */}
-                                    {/* <label
+                                            {/* <label for="to_name">to_name</label> */}
+                                            <input
+                                                type="text"
+                                                name="to_name"
+                                                className="relative block w-full appearance-none rounded
+                                         rounded-t-md border border-gray-500 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-lg"
+                                                id="to_name"
+                                                placeholder="Age"
+                                                value={
+                                                    ageEdited === "NA"
+                                                        ? ""
+                                                        : ageEdited
+                                                }
+                                                onChange={(e) =>
+                                                    setAgeEdited(e.target.value)
+                                                }
+                                            />
+                                        </div>
+                                        <div className="-space-y-px rounded-md shadow-sm text-lg max-w-96 mb-6">
+                                            {/* <label for="to_name">recipient</label> */}
+                                            {/* <label
                                         htmlFor="from_name"
                                         className="sr-only_ text-white"
                                     >
                                         Email
                                     </label> */}
-                                    <input
-                                        type="email"
-                                        name="recipient"
-                                        id="recipient"
-                                        placeholder="Email"
-                                        className=" relative block w-full appearance-none rounded rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-lg"
-                                        value={
-                                            emailEdited === "NA"
-                                                ? ""
-                                                : emailEdited
-                                        }
-                                        onChange={(e) =>
-                                            setEmailEdited(e.target.value)
-                                        }
-                                        style={{ marginBottom: "10px" }}
-                                    />
-                                    {/* <input
+                                            {emailError && (
+                                                <p className="text-red-700 text-xl">
+                                                    {emailErrorText}
+                                                </p>
+                                            )}
+                                            <input
+                                                type="email"
+                                                name="recipient"
+                                                id="recipient"
+                                                placeholder="Email"
+                                                // hover:bg-red-700
+                                                className={`${
+                                                    emailError
+                                                        ? "focus:ring-offset-2 border-red-700 placeholder-red-500  focus:ring-red-500 ring-red-500"
+                                                        : "border-gray-500 placeholder-gray-500 "
+                                                } relative block w-full appearance-none rounded rounded-t-md border
+                                          px-3 py-2 text-gray-900   focus:z-10 focus:border-indigo-500 focus:outline-none
+                                           focus:ring-indigo-500 sm:text-lg  `}
+                                                value={
+                                                    emailEdited === "NA"
+                                                        ? ""
+                                                        : emailEdited
+                                                }
+                                                onChange={(e) =>
+                                                    setEmailEdited(
+                                                        e.target.value
+                                                    )
+                                                }
+                                                style={{ marginBottom: "10px" }}
+                                            />
+                                            {/* <input
                                         type="checkbox"
                                         name="newsletter"
                                         id="newsletter"
@@ -480,14 +562,14 @@ export default function DisplayResults() {
                                         }
                                         style={{ marginBottom: "10px" }}
                                     /> */}
-                                    <input
-                                        type="text"
-                                        name="code"
-                                        id="code"
-                                        hidden
-                                        value={currentPatient.other}
-                                    />
-                                    {/* <div class="field">
+                                            <input
+                                                type="text"
+                                                name="code"
+                                                id="code"
+                                                hidden
+                                                value={currentPatient.other}
+                                            />
+                                            {/* <div class="field">
                                         <label
                                             htmlFor="from_name"
                                             className="sr-only_"
@@ -519,32 +601,32 @@ export default function DisplayResults() {
                                         />
                                     </div> */}
 
-                                    {/* <input type="submit" value="Send" /> */}
-                                    {emailSent && (
-                                        <p className="text-xl text-white">
-                                            Email envoyé. Veuillez verifier
-                                            aussi le dossier Spam (pourriel).{" "}
-                                        </p>
-                                    )}
-                                    <p> </p>
-                                    <button
-                                        type="submit"
-                                        className="group mt-3 relative flex w-full 
-                                        justify-center rounded-md border border-transparent bg-white py-2 px-4 text-sm font-medium text-indigo-700 hover:bg-white-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                                    >
-                                        <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-lg">
-                                            <LockClosedIcon
-                                                className="h-5 w-5 text-indigo-500 group-hover:text-indigo-400"
-                                                aria-hidden="true"
-                                            />
-                                        </span>
+                                            {/* <input type="submit" value="Send" /> */}
 
-                                        <span className="text-lg">
-                                            Sauvegarder les résultats
-                                        </span>
-                                    </button>
-                                </div>
-                            </form>
+                                            <p> </p>
+                                            <button
+                                                type="submit"
+                                                className="group mt-3 relative flex w-full 
+                                        justify-center rounded-md border border-transparent 
+                                        bg-emerald-500 py-2 px-4 text-sm font-medium
+                                         text-white hover:bg-white-700 focus:outline-none focus:ring-2
+                                          focus:ring-indigo-500 focus:ring-offset-2"
+                                            >
+                                                <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-lg">
+                                                    <LockClosedIcon
+                                                        className="h-5 w-5 text-white- group-hover:text-indigo-400"
+                                                        aria-hidden="true"
+                                                    />
+                                                </span>
+
+                                                <span className="text-lg font-bold">
+                                                    Sauvegarder les résultats
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </form>
+                                </>
+                            )}
 
                             {/* <p>User: {currentPatient.user}</p>
                             <p>age: {currentPatient.age}</p>
@@ -627,13 +709,15 @@ export default function DisplayResults() {
                         </TButton>
                     </div>
 
-                    {/* <form>
-                        <input />
-                        <button>tab navigation</button>
-                        <button>stays</button>
-                        <button>inside</button>
-                        <button>the modal</button>
-                    </form> */}
+                    {/* <>
+                        <form>
+                            <input />
+                            <button>tab navigation</button>
+                            <button>stays</button>
+                            <button>inside</button>
+                            <button>the modal</button>
+                        </form>
+                    </> */}
                 </Modal>
             </div>
             {/* END MODAL */}
@@ -648,66 +732,71 @@ export default function DisplayResults() {
                 </>
             )} */}
 
-            {answers && (
+            {!loading && answers && (
                 <>
                     {/* <p>///////////////////////////////</p> */}
                     {/* <ul>Surveys: </ul> */}
-                    {surveys.map((s) => (
-                        <>
-                            <DashboardCard
-                                // title={s.title}
+                    {surveys &&
+                        surveys.map((s) => (
+                            <>
+                                <DashboardCard
+                                    // title={s.title}
 
-                                className={`order-4 lg:order-2 row-span-2 mb-2 ${
-                                    hide && `survey${s.id}`
-                                } `}
-                                style={{ animationDelay: "0.3s" }}
-                            >
-                                {/* <div className="flex flex-col py-4 px-6 shadow-md bg-white hover:bg-gray-50 h-[470px]"> */}
+                                    className={`order-4 lg:order-2 row-span-2 mb-2 ${
+                                        hide && `survey${s.id}`
+                                    } `}
+                                    style={{ animationDelay: "0.3s" }}
+                                >
+                                    {/* <div className="flex flex-col py-4 px-6 shadow-md bg-white hover:bg-gray-50 h-[470px]"> */}
 
-                                <div className="flex flex-row py-4 px-6 shadow-md bg-white hover:bg-gray-50">
-                                    <img
-                                        src={
-                                            import.meta.env.VITE_API_BASE_URL +
-                                            "/" +
-                                            s.image
-                                        }
-                                        alt={s.title}
-                                        className="h-28 object-cover mr-10"
-                                    />
-                                    <div className="">
-                                        <p>
-                                            Voici nos conseils sur le sujet :{" "}
-                                        </p>
-                                        <h3 className="text-2xl font-semibold">
-                                            {s.title}
-                                        </h3>
+                                    <div className="flex flex-row py-4 px-6 shadow-md bg-white hover:bg-gray-50">
+                                        <img
+                                            src={
+                                                import.meta.env
+                                                    .VITE_API_BASE_URL +
+                                                "/" +
+                                                s.image
+                                            }
+                                            alt={s.title}
+                                            className="h-28 object-cover mr-10"
+                                        />
+                                        <div className="">
+                                            <p>
+                                                Voici nos conseils sur le sujet
+                                                :{" "}
+                                            </p>
+                                            <h3 className="text-2xl font-semibold">
+                                                {s.title}
+                                            </h3>
+                                        </div>
                                     </div>
-                                </div>
 
-                                {/* Questions & Conseils */}
-                                <div>
-                                    <ul>
-                                        {answers.map((answer) => (
-                                            <li>
-                                                {/* <h2>Question answered: </h2> */}
-                                                <div>
-                                                    {}
-                                                    {questions.map(
-                                                        (q) =>
-                                                            q.id ===
-                                                                answer.survey_question_id &&
-                                                            q.survey_id ==
-                                                                s.id && (
-                                                                <DashboardCard
-                                                                    // title={s.title}
-                                                                    className="order-4 lg:order-2 row-span-2 mb-10 bg-slate-100"
-                                                                    style={{
-                                                                        animationDelay:
-                                                                            "0.3s",
-                                                                    }}
-                                                                >
-                                                                    <ul className="text-left">
-                                                                        {/* <li>
+                                    {/* Questions & Conseils */}
+                                    <div>
+                                        <ul>
+                                            {!loading &&
+                                                answers &&
+                                                answers.map((answer) => (
+                                                    <li>
+                                                        {/* <h2>Question answered: </h2> */}
+                                                        <div>
+                                                            {}
+                                                            {questions.map(
+                                                                (q) =>
+                                                                    q.id ===
+                                                                        answer.survey_question_id &&
+                                                                    q.survey_id ==
+                                                                        s.id && (
+                                                                        <DashboardCard
+                                                                            // title={s.title}
+                                                                            className="order-4 lg:order-2 row-span-2 mb-10 bg-slate-100"
+                                                                            style={{
+                                                                                animationDelay:
+                                                                                    "0.3s",
+                                                                            }}
+                                                                        >
+                                                                            <ul className="text-left">
+                                                                                {/* <li>
                                                                     <strong>
                                                                         SurveyID{" "}
                                                                     </strong>
@@ -715,83 +804,83 @@ export default function DisplayResults() {
                                                                         q.survey_id
                                                                     }
                                                                 </li> */}
-                                                                        <li>
-                                                                            <h2 className="text-2xl">
-                                                                                {/* Question
+                                                                                <li>
+                                                                                    <h2 className="text-2xl">
+                                                                                        {/* Question
                                                                                 :{" "} */}
-                                                                                <span className="text-green-600 font-bold">
-                                                                                    {
-                                                                                        q.question
-                                                                                    }
-                                                                                </span>
-                                                                            </h2>
-                                                                        </li>
-                                                                        <li>
-                                                                            {/* Products code */}
-                                                                            {/* <strong>
+                                                                                        <span className="text-green-600 font-bold">
+                                                                                            {
+                                                                                                q.question
+                                                                                            }
+                                                                                        </span>
+                                                                                    </h2>
+                                                                                </li>
+                                                                                <li>
+                                                                                    {/* Products code */}
+                                                                                    {/* <strong>
                                                                                 Products{" "}
                                                                             </strong>
                                                                             {
                                                                                 q.description
                                                                             } */}
-                                                                            {/* END Products code */}
+                                                                                    {/* END Products code */}
 
-                                                                            {q.description !=
-                                                                                [] && (
-                                                                                <>
-                                                                                    <h2
-                                                                                        // style={{
-                                                                                        //     color: "black",
-                                                                                        // }}
-                                                                                        className="text-sky-500"
-                                                                                    >
-                                                                                        Vous
-                                                                                        avez
-                                                                                        une
-                                                                                        carence
-                                                                                        en
-                                                                                        :{" "}
-                                                                                        <span className="font-bold">
-                                                                                            {" "}
-                                                                                            {
-                                                                                                q.conseils
-                                                                                            }
-                                                                                        </span>
-                                                                                    </h2>
-                                                                                    <p className="text-left">
-                                                                                        Nous
-                                                                                        vous
-                                                                                        recommandons
-                                                                                        :{" "}
-                                                                                    </p>
-                                                                                    <h3>
-                                                                                        {" "}
-                                                                                        <QuestionWithAnswers
-                                                                                            code={translateIntoArray(
-                                                                                                q.description,
-                                                                                                q.question,
-                                                                                                s.title
-                                                                                            )}
-                                                                                            question={
-                                                                                                q.question
-                                                                                            }
-                                                                                            survey={
-                                                                                                s.title
-                                                                                            }
-                                                                                            classSurvey={
-                                                                                                q.survey_id
-                                                                                            }
-                                                                                        />
-                                                                                        {/* {translateIntoNumbers(
+                                                                                    {q.description !=
+                                                                                        [] && (
+                                                                                        <>
+                                                                                            <h2
+                                                                                                // style={{
+                                                                                                //     color: "black",
+                                                                                                // }}
+                                                                                                className="text-sky-500"
+                                                                                            >
+                                                                                                Vous
+                                                                                                avez
+                                                                                                une
+                                                                                                carence
+                                                                                                en
+                                                                                                :{" "}
+                                                                                                <span className="font-bold">
+                                                                                                    {" "}
+                                                                                                    {
+                                                                                                        q.conseils
+                                                                                                    }
+                                                                                                </span>
+                                                                                            </h2>
+                                                                                            <p className="text-left">
+                                                                                                Nous
+                                                                                                vous
+                                                                                                recommandons
+                                                                                                :{" "}
+                                                                                            </p>
+                                                                                            <h3>
+                                                                                                {" "}
+                                                                                                <QuestionWithAnswers
+                                                                                                    code={translateIntoArray(
+                                                                                                        q.description,
+                                                                                                        q.question,
+                                                                                                        s.title
+                                                                                                    )}
+                                                                                                    question={
+                                                                                                        q.question
+                                                                                                    }
+                                                                                                    survey={
+                                                                                                        s.title
+                                                                                                    }
+                                                                                                    classSurvey={
+                                                                                                        q.survey_id
+                                                                                                    }
+                                                                                                />
+                                                                                                {/* {translateIntoNumbers(
                                                                                         q.description,
                                                                                         q.question,
                                                                                         s.title
                                                                                     )} */}
-                                                                                    </h3>
-                                                                                </>
-                                                                            )}
-                                                                        </li>
-                                                                        {/* <li>
+                                                                                            </h3>
+                                                                                        </>
+                                                                                    )}
+                                                                                </li>
+                                                                                {/* <li>
                                                                             <strong>
                                                                                 Conseils{" "}
                                                                             </strong>
@@ -799,19 +888,19 @@ export default function DisplayResults() {
                                                                                 q.conseils
                                                                             }
                                                                         </li> */}
-                                                                    </ul>
-                                                                </DashboardCard>
-                                                            )
-                                                    )}
-                                                </div>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                                {/* END Questions & Conseils */}
-                            </DashboardCard>
-                        </>
-                    ))}
+                                                                            </ul>
+                                                                        </DashboardCard>
+                                                                    )
+                                                            )}
+                                                        </div>
+                                                    </li>
+                                                ))}
+                                        </ul>
+                                    </div>
+                                    {/* END Questions & Conseils */}
+                                </DashboardCard>
+                            </>
+                        ))}
                 </>
             )}
 

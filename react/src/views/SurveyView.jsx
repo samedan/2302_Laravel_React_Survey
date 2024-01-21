@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import TButton from "../components/core/TButton";
 import PageComponent from "../components/PageComponent";
-import QuestionEditor from "../components/QuestionEditor";
+// import QuestionEditor from "../components/QuestionEditor";
 import SurveyQuestions from "../components/SurveyQuestions";
 import { v4 as uuidv4 } from "uuid";
 import axiosClient from "./../axios";
@@ -29,6 +29,19 @@ export default function SurveyView() {
     const [loading, setLoading] = useState(false);
     const [errorExpireDate, setErrorExpireDate] = useState("");
     const [errorTitle, setErrorTitle] = useState("");
+    const [surveys, setSurveys] = useState([]); // for order
+
+    // for order / description in survey
+    // const getSurveys = (url) => {
+    //     url = url || "/survey"; // if first or previous/next pages survey?page=2
+    //     setLoading(true);
+    //     axiosClient.get(url).then(({ data }) => {
+    //         console.log(data.data);
+    //         setSurveys(data.data);
+    //         setMeta(data.meta);
+    //         setLoading(false);
+    //     });
+    // };
 
     const onImageChoose = (ev) => {
         // console.log("On Image choose");
@@ -242,6 +255,7 @@ export default function SurveyView() {
                                     Description
                                 </label>
                                 {/* <pre>{ JSON.stringify(survey, undefined, 2) }</pre> */}
+                                {}
                                 <textarea
                                     name="description"
                                     id="description"

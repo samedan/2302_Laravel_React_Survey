@@ -22,6 +22,7 @@ export default function Surveys() {
         url = url || "/survey"; // if first or previous/next pages survey?page=2
         setLoading(true);
         axiosClient.get(url).then(({ data }) => {
+            console.log(data.data);
             setSurveys(data.data);
             setMeta(data.meta);
             setLoading(false);
@@ -73,14 +74,18 @@ export default function Surveys() {
                         </div>
                     )}
                     <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3">
-                        {surveys.map((survey) => (
-                            <SurveyListItem
-                                inactive={survey.status == 0}
-                                survey={survey}
-                                key={survey.id}
-                                onDeleteClick={onDeleteClick}
-                            />
-                        ))}
+                        {surveys.map((survey) => {
+                            console.log(survey);
+                            return (
+                                <SurveyListItem
+                                    order={survey.description}
+                                    inactive={survey.status == 0}
+                                    survey={survey}
+                                    key={survey.id}
+                                    onDeleteClick={onDeleteClick}
+                                />
+                            );
+                        })}
                     </div>
                     {surveys.length > 0 && (
                         <PaginationLinks

@@ -22,6 +22,7 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::get('/me', [AuthController::class, 'me']); // return user to check
     // Route::apiResource('survey', SurveyController::class);
     Route::get('/dashboard', [DashboardController::class, 'index']);
+    Route::get('/get-all-answers', [DashboardController::class, 'getAllAnswers']);
     
 });
 
@@ -31,6 +32,7 @@ Route::post('/login', [AuthController::class, 'login']);
 // {survey:slug} = survey that will be type casted
 // it will query 'survey' by using the 'slug'
 Route::get('/survey/get-by-slug/{survey:slug}', [SurveyController::class, 'getBySlug']); 
+Route::get('/get-all-surveys', [DashboardController::class, 'getAllSurveys']); 
 Route::post('/survey/{survey}/answer', [SurveyController::class, 'storeAnswer']);
 Route::get('/posts', function() {
     return response()->json([

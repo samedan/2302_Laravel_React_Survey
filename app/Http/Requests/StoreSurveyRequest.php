@@ -17,13 +17,16 @@ class StoreSurveyRequest extends FormRequest
     }
 
     protected function prepareForValidation() {
-        dd($this->user);
+        
         // return $this->user();
+        //// 'user_id' => $this->user()->id
         $this->merge([
-            'user_id' => $this->user()->id
+            
+            'user_id' => '6'
             
         ]);
     }
+    // $my_model->sites = [1,2,3];
 
     /**
      * Get the validation rules that apply to the request.
@@ -32,10 +35,12 @@ class StoreSurveyRequest extends FormRequest
      */
     public function rules()
     {
+        // 'user_id' => 'exists:users,id',
         return [
             'title' => 'required|string|max:1000',
             'image' => 'nullable|string',
-            'user_id' => 'exists:users,id',
+            
+            'user_id' => 'required|string',
             'status' => 'required|boolean',
             'description' => 'nullable|string',
             'conseils' => 'nullable|string',

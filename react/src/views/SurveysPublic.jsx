@@ -20,7 +20,8 @@ export default function SurveysPublic() {
     console.log(surveys);
 
     const getSurveys = (url) => {
-        url = url || "/survey" || "/start"; // if first or previous/next pages survey?page=2
+        // url = url || "/survey" || "/start"; // if first or previous/next pages survey?page=2
+        url = url || "/get-6-surveys"; // if first or previous/next pages survey?page=2
         console.log("url");
         console.log(url);
         setLoading(true);
@@ -50,7 +51,7 @@ export default function SurveysPublic() {
 
     return (
         <PageComponent
-            title="Commencez votre Bilan* gratuit Santé. Choissisez le premier Sujet :"
+            title="Commencez votre Bilan* gratuit Santé :"
             // buttons={
             //     <TButton color="green" to="/surveys/create">
             //         <PlusCircleIcon className="h-6 w-6 mr-2" />
@@ -86,11 +87,11 @@ export default function SurveysPublic() {
                         VIEW DEMO
                     </button> */}
                     {surveys.length === 0 && (
-                        <div className="py-8 text-center text-gray-700">
+                        <div className="py-8 text-center text-gray-700 ">
                             Impossible de charger les études.
                         </div>
                     )}
-                    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3">
+                    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 mb-1">
                         {surveys.map((survey) => (
                             <SurveyListItemPublic
                                 inactive={survey.status == 0}

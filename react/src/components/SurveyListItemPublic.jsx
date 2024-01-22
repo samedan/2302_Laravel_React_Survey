@@ -18,7 +18,7 @@ export default function SurveyListItemPublic({
     return (
         <>
             <Link to={`/survey/public/${survey.slug}`}>
-                <div className="flex flex-col py-4 px-6 shadow-md bg-white hover:bg-gray-50">
+                <div className="flex flex-col py-1 px-6 shadow-md bg-white hover:bg-gray-50 h-[14rem]">
                     {/* Image Loading from SurveyListItemPublic */}
                     {continuedSurvey && (
                         <img
@@ -29,36 +29,39 @@ export default function SurveyListItemPublic({
                                 survey.image
                             }
                             alt={survey.title}
-                            className="w-full h-48 object-cover"
+                            className="w-full h-32 object-cover"
                         />
                     )}
                     {!continuedSurvey && (
                         <img
                             src={survey.image_url}
                             alt={survey.title}
-                            className="w-full h-48 object-cover"
+                            className="w-full_ h-48_ object-cover"
+                            style={{ width: "225px", height: "152px" }}
                         />
                     )}
                     {/* END Image Loading from SurveyListItemPublic */}
 
-                    {inactive && (
+                    {inactive === false && (
                         <div
-                            class="text-block"
+                            className="text-block text-xl bg-green-700"
                             style={{
-                                bottom: "20px",
-                                right: "20px",
-                                backgroundColor: "red",
+                                position: "relative",
+                                top: "-60px",
+                                // right: "20px",
+
                                 color: "white",
                                 paddingLeft: "20px",
                                 paddingRight: "20px",
                             }}
                         >
-                            <h4>INACTIVE</h4>
+                            {/* <h4>INACTIVE</h4> */}
+                            <h4>{survey.title}</h4>
                         </div>
                     )}
-                    <h4 className="mt-4 text-lg font-bold min-h-[60px]">
+                    {/* <h4 className="mt-4 text-lg font-bold min-h-[60px]">
                         {survey.title}
-                    </h4>
+                    </h4> */}
 
                     {/* <TButton
                         color="green"
@@ -88,10 +91,20 @@ export default function SurveyListItemPublic({
                         Commencer
                     </TButton> */}
 
-                    <div>
+                    <div
+                        style={{
+                            position: "relative",
+                            top: "-50px",
+                            // right: "20px",
+
+                            color: "white",
+                            paddingLeft: "20px",
+                            paddingRight: "20px",
+                        }}
+                    >
                         <button
                             // type="submit"
-                            className="group relative flex w-full justify-center rounded-md border border-transparent bg-green-600 py-2 px-4 font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 text-lg"
+                            className="group relative flex w-full justify-center rounded-md border border-transparent bg-indigo-700 py-2 px-4 font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 text-lg"
                         >
                             <span class="absolute inset-y-0 right-0 flex items-center pr-3">
                                 <ArrowRightCircleIcon className="h-6 w-6 text-white-500 group-hover:text-white-400" />

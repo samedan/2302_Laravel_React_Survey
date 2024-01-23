@@ -86,7 +86,8 @@ export default function DisplayResults() {
                         setLoading(false);
                     }
 
-                    setSurveys(data.totalSurveys);
+                    // setSurveys(data.totalSurveys);
+                    setSurveys(data.surveysAnswered);
                     setLoading(false);
                 })
                 .catch((error) => {

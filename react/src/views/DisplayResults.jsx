@@ -178,7 +178,8 @@ export default function DisplayResults() {
                         setLoading(false);
                     }
 
-                    setSurveys(data.totalSurveys);
+                    // setSurveys(data.totalSurveys);
+                    setSurveys(data.surveysAnswered);
                     setLoading(false);
                 })
                 .catch((error) => {
@@ -834,11 +835,12 @@ export default function DisplayResults() {
                                                                                                 // }}
                                                                                                 className="text-sky-500"
                                                                                             >
-                                                                                                Vous
+                                                                                                {/* Vous
                                                                                                 avez
                                                                                                 une
                                                                                                 carence
-                                                                                                en
+                                                                                                en */}
+                                                                                                Conseils
                                                                                                 :{" "}
                                                                                                 <span className="font-bold">
                                                                                                     {" "}

@@ -81,7 +81,7 @@ export default function QuestionWithAnswers({
                         // console.log("filteredArr");
                         // console.log(filteredArr);
                         return (
-                            <p>
+                            <p key={indexProduct}>
                                 <GetPrestashop indexProduct={indexProduct} />
                             </p>
                         );

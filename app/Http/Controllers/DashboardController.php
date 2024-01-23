@@ -122,6 +122,8 @@ class DashboardController extends Controller
         // $totalSurveys = Survey::get()->where('id', 3);
         $totalSurveys = Survey::get();
 
+        
+
         // Total surveys left for user
         // $totalSurveysLeft = SurveyResource::collection (
         //     Survey::where('id','!=' , $extract
@@ -146,15 +148,16 @@ class DashboardController extends Controller
         //     ->getModels('survey_answers.*');
 
             return [
-                // '$studivs'=> $studivs,
                 'authorizationKey'=>$authorizationKey,
                 'answersByUser'=>$answersByUser,
                 'totalQuestions'=>$totalQuestionsAnswered,
                 'totalAnswers' => $total,
                 'totalAnswersByUser' => $totalAnswersByUser,
-                // 'totalSurveysLeft' => $totalSurveysLeft,
                 'totalSurveysNumber' => $totalSurveysNumber,
                 'totalSurveys' => $totalSurveys,
+                
+             
+
                 // 'extract' => $extract,
                 // 'extract2' => $extract2,
                 // 'latestSurveys' => $latestSurveys,
@@ -176,6 +179,25 @@ class DashboardController extends Controller
         $patientQuestionsAnswered = SurveyQuestion::get();                   
         $totalSurveys = Survey::get();                   
             
+
+        // $surveysAnswered = $totalSurveys->query->where('survey_question_id.other_id', $user->user)                   
+        // ->getModels('survey_question_answers.*');
+        
+        // $surveysAnswered = SurveyAnswer::query()->where('survey_id', $totalSurveys->id)->get();
+        // SurveyAnswer::query()->where('other', $user->user)->get()->value('survey_question_id');
+        // $surveysAnswered= $patientDataAnswers->where('survey_id', '9')->get();
+        // $surveysAnswered= $patientDataSurveysAnswered['survey_id'];
+
+        // WORKs
+        // $surveysAnswered= SurveyAnswer::query()->where('other', $user->user)->pluck('survey_id');
+        // WORKs
+        $surveysAnsweredB= SurveyAnswer::query()->where('other', $user->user)->pluck('survey_id');
+
+        
+
+        $surveysAnswered = Survey::whereIn('id', $surveysAnsweredB)->get();;
+       
+       
         
 
         // $latestAnswers = SurveyAnswer::query()
@@ -205,14 +227,22 @@ class DashboardController extends Controller
       
         // $totalSurveys = Survey::get();
 
+       
+
       
             return [
-                // '$studivs'=> $studivs,
+                'surveysAnswered' => $surveysAnswered,
+
+
                 'patientData' => $patientDataSurveysAnswered,
                 'patientDataAnswers' => $patientDataAnswers,
                 'patientQuestionsAnswered' => $patientQuestionsAnswered,
                 'user' => $user->user,
                 'totalSurveys' => $totalSurveys,
+
+
+
+                
                 // 'totalAnswersByUser' => $totalAnswersByUser,
                 // // 'totalSurveysLeft' => $totalSurveysLeft,
                 // 'totalSurveysNumber' => $totalSurveysNumber,

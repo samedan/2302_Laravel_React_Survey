@@ -91,7 +91,7 @@ export default function SurveysPublic() {
                             Impossible de charger les études.
                         </div>
                     )}
-                    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 mb-1">
+                    <div className="grid grid-cols-1 gap-x-5 gap-y-1 sm:grid-cols-2 md:grid-cols-3 ">
                         {surveys.map((survey) => (
                             <SurveyListItemPublic
                                 inactive={survey.status == 0}
@@ -102,7 +102,7 @@ export default function SurveysPublic() {
                         ))}
                     </div>
 
-                    <div className="text-xl text-red-700 mt-3 font-bold">
+                    <div className="text-xl text-red-700 mt-1 font-bold">
                         *Cette enquête ne constitue en aucun cas un examen
                         médical et ne remplace pas l'avis du médecin. Veuillez
                         demander plus d’informations à votre pharmacien.

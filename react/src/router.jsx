@@ -13,6 +13,7 @@ import DisplayResultsEmail from "./views/DisplayResultsEmail";
 import SurveysPublic from "./views/SurveysPublic";
 import DisplayResultsAdmin from "./views/DisplayResultsAdmin";
 import Reponses from "./views/Reponses";
+import { CarouselWithContent } from "./views/Carousel";
 
 const router = createBrowserRouter([
     {
@@ -89,6 +90,10 @@ const router = createBrowserRouter([
         element: <DisplayResultsEmail />,
     },
     { path: "*", element: <SurveysPublic /> },
+    {
+        path: "/carousel",
+        element: <CarouselWithContent />,
+    },
 ]);
 
 export default router;

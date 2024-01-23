@@ -18,7 +18,7 @@ export default function SurveyListItemPublic({
     return (
         <>
             <Link to={`/survey/public/${survey.slug}`}>
-                <div className="flex flex-col py-1 px-6 shadow-md bg-white hover:bg-gray-50 h-[14rem]">
+                <div className="flex flex-col py-1 px-6 shadow-md bg-white hover:bg-gray-50 h-[13rem]">
                     {/* Image Loading from SurveyListItemPublic */}
                     {continuedSurvey && (
                         <img
@@ -33,32 +33,43 @@ export default function SurveyListItemPublic({
                         />
                     )}
                     {!continuedSurvey && (
-                        <img
-                            src={survey.image_url}
-                            alt={survey.title}
-                            className="w-full_ h-48_ object-cover"
-                            style={{ width: "225px", height: "152px" }}
-                        />
+                        <div
+                            style={{
+                                maxWidth: "287px",
+                                maxHeight: "152px",
+                            }}
+                        >
+                            <img
+                                src={survey.image_url}
+                                alt={survey.title}
+                                className="w-full_ h-48_ object-cover"
+                                style={{
+                                    maxWidth: "287px",
+                                    maxHeight: "152px",
+                                }}
+                            />
+
+                            {inactive === false && (
+                                <div
+                                    className="text-block text-xl bg-green-700"
+                                    style={{
+                                        position: "relative",
+                                        top: "-60px",
+                                        // right: "20px",
+
+                                        color: "white",
+                                        paddingLeft: "20px",
+                                        paddingRight: "20px",
+                                    }}
+                                >
+                                    {/* <h4>INACTIVE</h4> */}
+                                    <h4>{survey.title}</h4>
+                                </div>
+                            )}
+                        </div>
                     )}
                     {/* END Image Loading from SurveyListItemPublic */}
 
-                    {inactive === false && (
-                        <div
-                            className="text-block text-xl bg-green-700"
-                            style={{
-                                position: "relative",
-                                top: "-60px",
-                                // right: "20px",
-
-                                color: "white",
-                                paddingLeft: "20px",
-                                paddingRight: "20px",
-                            }}
-                        >
-                            {/* <h4>INACTIVE</h4> */}
-                            <h4>{survey.title}</h4>
-                        </div>
-                    )}
                     {/* <h4 className="mt-4 text-lg font-bold min-h-[60px]">
                         {survey.title}
                     </h4> */}
@@ -94,7 +105,7 @@ export default function SurveyListItemPublic({
                     <div
                         style={{
                             position: "relative",
-                            top: "-50px",
+                            bottom: "-2px",
                             // right: "20px",
 
                             color: "white",

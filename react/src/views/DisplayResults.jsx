@@ -268,7 +268,10 @@ export default function DisplayResults() {
         // console.log(`desc before counting ` + survey);
         // console.log(desc);
 
-        numberedMeds = desc.split(",");
+        if (desc !== "") {
+            numberedMeds = desc.split(",");
+        }
+
         let resultsWithoutSpaces;
         resultsWithoutSpaces = numberedMeds.map((el) => {
             return el.trim();
@@ -292,7 +295,11 @@ export default function DisplayResults() {
     function translateIntoArray(desc, question, survey) {
         let numberedMeds;
         let numberedMedsWithSurvey = [survey, question];
-        numberedMeds = desc.split(",");
+
+        if (desc !== "") {
+            numberedMeds = desc.split(",");
+        }
+
         let resultsArrayWithoutSpaces;
         let resultsArrayWithoutSpacesWithQandS;
 
@@ -311,7 +318,8 @@ export default function DisplayResults() {
         });
 
         // console.log(numberedMedsWithSurvey);
-
+        console.log("numberedMedsWithSurvey");
+        console.log(numberedMedsWithSurvey);
         // console.log(resultsArrayWithoutSpaces);
         // return resultsArrayWithoutSpaces; // only numbers
         return numberedMedsWithSurvey; // onlt numbers
@@ -868,9 +876,6 @@ export default function DisplayResults() {
                                                                                                     }
                                                                                                     survey={
                                                                                                         s.title
-                                                                                                    }
-                                                                                                    classSurvey={
-                                                                                                        q.survey_id
                                                                                                     }
                                                                                                 />
                                                                                                 {/* {translateIntoNumbers(

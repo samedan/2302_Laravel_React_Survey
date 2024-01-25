@@ -6,12 +6,7 @@ import axios from "axios";
 import PublicQuestionView from "../components/PublicQuestionView";
 import GetPrestashop from "./GetPrestashop";
 
-export default function QuestionWithAnswers({
-    survey,
-    question,
-    code,
-    classSurvey,
-}) {
+export default function QuestionWithAnswers({ survey, question, code }) {
     const customStyles = {
         content: {
             top: "50%",
@@ -62,14 +57,16 @@ export default function QuestionWithAnswers({
     //     },
     // };
 
+    console.log("code");
+    console.log(code);
     if (code[0] === survey && code[1] === question) {
         // console.log("code");
         // console.log(code);
         const filteredArr = code.filter(
             (el) => el !== survey && el !== question
         );
-        // console.log("filteredArr");
-        // console.log(filteredArr);
+        console.log("filteredArr");
+        console.log(filteredArr);
         return (
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 classSurvey">
                 {/* <h1>CHILD : {survey}</h1>

@@ -158,7 +158,8 @@ export default function Reponses() {
                                                             : answer.weight}
                                                     </td>
                                                     <td className="pl-2">
-                                                        {answer.created_at}
+                                                        {/* {answer.created_at} */}
+                                                        {answer.start_date}
                                                         {/* {Date.getDay(
                                                             answer.created_at
                                                         )} */}

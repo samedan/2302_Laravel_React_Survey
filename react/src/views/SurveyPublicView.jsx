@@ -672,9 +672,10 @@ export default function SurveyPublicView() {
                         >
                             <p className="max-w-md text-lg">
                                 Les champs de données à remplir ne sont{" "}
-                                <strong>pas obligatoires</strong>. Si vous
+                                <strong>pas obligatoires</strong>.
+                                {/* Si vous
                                 voulez garder les résultats de l'étude, vous
-                                devez remplir le champ <strong>Email</strong>.
+                                devez remplir le champ <strong>Email</strong>. */}
                             </p>
                         </div>
                         <div
@@ -835,7 +836,6 @@ export default function SurveyPublicView() {
                                         </>
                                     )}
                                     {surveyFinished && (
-                                        // !finishedAllSurveys &&
                                         <>
                                             <div className="py-2 px-6 mb-4 bg-sky-500 text-white  mx-auto text-xl">
                                                 Merci d'avoir répondu aux
@@ -843,17 +843,118 @@ export default function SurveyPublicView() {
                                                 <strong>{survey.title}</strong>
                                             </div>
                                             <ul>
-                                                {additionalSurveys && (
+                                                {/* {additionalSurveys && (
                                                     <li>
-                                                        <p className="text-xl">
-                                                            Vous pouvez
-                                                            continuer à répondre
-                                                            sur les sujets
-                                                            suivants :{" "}
+                                                        <p className="mt-3 mb-1 text-xl">
+                                                            Ou vous pouvez
+                                                            trouver et
+                                                            sauvegarder vos
+                                                            réponses et voir nos
+                                                            recomandations :
                                                         </p>
+                                                        <div
+                                                            className="place-content-center"
+                                                            style={{
+                                                                display: "flex",
+                                                            }}
+                                                        >
+                                                            <TButton
+                                                                
+                                                                to={`/display-results/${currentPatient.other}`}
+                                                                className="w-40 flex rounded-md border border-transparent bg-orange-500 py-4 px-4  font-medium text-white hover:bg-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2  text-xl"
+                                                                style={{
+                                                                    backgroundColor:
+                                                                        "orange !important",
+                                                                }}
+                                                            >
+                                                                <span className="text-xl">
+                                                                    Voir les
+                                                                    résultats
+                                                                </span>
+                                                                <CheckBadgeIcon className="h-6 w-6 ml-2" />
+                                                            </TButton>
+                                                        </div>
                                                     </li>
-                                                )}
+                                                )} */}
+
                                                 <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3">
+                                                    {/* {additionalSurveys && (
+                                                        <li>
+                                                            <p className="text-xl">
+                                                                Vous pouvez
+                                                                continuer à
+                                                                répondre sur les
+                                                                sujets suivants
+                                                                :{" "}
+                                                            </p>
+                                                        </li>
+                                                    )} */}
+                                                    {additionalSurveys && (
+                                                        <li>
+                                                            <div className="flex flex-row">
+                                                                <p className="text-xl">
+                                                                    Vous pouvez
+                                                                    continuer à
+                                                                    répondre&nbsp;sur
+                                                                    les sujets
+                                                                    suivants :{" "}
+                                                                </p>
+                                                                <svg
+                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                    fill="none"
+                                                                    viewBox="0 0 24 24"
+                                                                    strokeWidth={
+                                                                        1.5
+                                                                    }
+                                                                    stroke="currentColor"
+                                                                    className=" text-indigo-500 h-12 w-12"
+                                                                >
+                                                                    <path
+                                                                        strokeLinecap="round"
+                                                                        strokeLinejoin="round"
+                                                                        d="m12.75 15 3-3m0 0-3-3m3 3h-7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                                                                    />
+                                                                </svg>
+                                                            </div>
+                                                            <hr></hr>
+                                                            <p className="mt-3 mb-1 text-xl text-sky-500">
+                                                                <strong>
+                                                                    Ou vous
+                                                                    pouvez
+                                                                    trouver et
+                                                                    sauvegarder
+                                                                    vos réponses
+                                                                    et voir nos
+                                                                    recomandations
+                                                                    :
+                                                                </strong>
+                                                            </p>
+                                                            <div
+                                                                className="place-content-center "
+                                                                style={{
+                                                                    display:
+                                                                        "flex",
+                                                                }}
+                                                            >
+                                                                <TButton
+                                                                    color="blue"
+                                                                    to={`/display-results/${currentPatient.other}`}
+                                                                    className="w-40 flex rounded-md border border-transparent
+                                                                    bg-cyan-500  py-4 px-4  font-medium text-white
+                                                                      hover:bg-cyan-600  focus:outline-none focus:ring-2 focus:bg-sky-500
+                                                                       focus:ring-offset-2 text-xl"
+                                                                    style={{
+                                                                        width: "100%",
+                                                                    }}
+                                                                >
+                                                                    <span className="text-xl ">
+                                                                        Voir&nbsp;les&nbsp;résultats
+                                                                    </span>
+                                                                    <CheckBadgeIcon className="h-6 w-6 ml-2" />
+                                                                </TButton>
+                                                            </div>
+                                                        </li>
+                                                    )}
                                                     {additionalSurveys &&
                                                         additionalSurveys.map(
                                                             (surveyLeft) => (
@@ -897,40 +998,6 @@ export default function SurveyPublicView() {
                                                             )
                                                         )}
                                                 </div>
-
-                                                {additionalSurveys && (
-                                                    <li>
-                                                        <p className="mt-3 mb-1 text-xl">
-                                                            Ou vous pouvez
-                                                            trouver et
-                                                            sauvegarder vos
-                                                            réponses et voir nos
-                                                            recomandations :
-                                                        </p>
-                                                        <div
-                                                            className="place-content-center"
-                                                            style={{
-                                                                display: "flex",
-                                                            }}
-                                                        >
-                                                            <TButton
-                                                                // color="green"
-                                                                to={`/display-results/${currentPatient.other}`}
-                                                                className="w-40 flex rounded-md border border-transparent bg-orange-500 py-4 px-4  font-medium text-white hover:bg-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2  text-xl"
-                                                                style={{
-                                                                    backgroundColor:
-                                                                        "orange !important",
-                                                                }}
-                                                            >
-                                                                <span className="text-xl">
-                                                                    Voir les
-                                                                    résultats
-                                                                </span>
-                                                                <CheckBadgeIcon className="h-6 w-6 ml-2" />
-                                                            </TButton>
-                                                        </div>
-                                                    </li>
-                                                )}
                                             </ul>
                                         </>
                                     )}

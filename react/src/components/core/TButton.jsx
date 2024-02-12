@@ -68,6 +68,14 @@ export default function TButton({
                     "focus:ring-emerald-400",
                 ];
                 break;
+            case "blue":
+                classes = [
+                    ...classes,
+                    "bg-sky-500",
+                    "hover:bg-sky-600",
+                    "focus:ring-emerald-400",
+                ];
+                break;
         }
     }
 

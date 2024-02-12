@@ -47,7 +47,8 @@ class DashboardController extends Controller
         $allAnswers = SurveyAnswer::query()
             ->join('surveys', 'survey_answers.survey_id', '=', 'surveys.id')
             // ->where('surveys.user_id', $user->id)
-            ->orderBy('end_date', 'DESC')
+            // ->orderBy('end_date', 'DESC')
+            ->orderBy('start_date', 'DESC')
             ->paginate(10);
             // ->getModels('survey_answers.*');
 

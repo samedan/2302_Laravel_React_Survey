@@ -105,25 +105,27 @@ export default function PatientData() {
                             placeholder="Nom Prenom"
                         />
                     </div>
-                    <div>
-                        {/* <label htmlFor="age" className="sr-only">
+
+                    {/* <label htmlFor="age" className="sr-only">
                             Age
                         </label> */}
+                    {/* <div>
+                       
                         <input
                             id="age"
                             name="age"
                             type="text"
-                            // autoComplete="email"
+                            
                             value={age}
                             onChange={(ev) => setAge(ev.target.value)}
                             className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-lg"
                             placeholder="Age"
                         />
-                    </div>
-                    <div>
-                        {/* <label htmlFor="weight" className="sr-only">
-                            weight
-                        </label> */}
+                    </div> */}
+
+                    {/* <!-- EMAIL --> */}
+                    {/* <div>
+                       
                         <input
                             id="weight"
                             name="weight"
@@ -134,22 +136,9 @@ export default function PatientData() {
                             className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-lg"
                             placeholder="Email"
                         />
-                    </div>
-                    {/* <div>
-                        <label htmlFor="height" className="sr-only">
-                            height
-                        </label>
-                        <input
-                            id="height"
-                            name="height"
-                            type="text"
-                            
-                            value={height}
-                            onChange={(ev) => setHeight(ev.target.value)}
-                            className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-lg"
-                            placeholder="Tél mobile"
-                        />
                     </div> */}
+
+                    {/* <!-- END EMAIL --> */}
                 </div>
 
                 <div>

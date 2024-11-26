@@ -1,5 +1,5 @@
-import { LockClosedIcon } from "@heroicons/react/20/solid";
-
+import { LockClosedIcon, HomeIcon } from "@heroicons/react/20/solid";
+import { goToAnimation } from "../helpers/functions";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useStateContext } from "../contexts/ContextProvider";
@@ -17,6 +17,8 @@ import TButton from "../components/core/TButton";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 
 import { useIdleTimer } from "react-idle-timer";
+import PatientDataFinal from "./PatientDataFinal";
+import ReactMarkdown from "react-markdown";
 
 export default function DisplayResults() {
     // Modal
@@ -115,23 +117,22 @@ export default function DisplayResults() {
 
     const { user } = useParams();
 
-    // console.log("user");
-    // console.log(user);
     // useEffect(() => {
     //     setProduct();
     // }, [translateIntoNumbers]);
 
     function goHome() {
         // setCurrentPatient();
-        // console.log("goHome");
+
         setCurrentPatient({});
-        // console.log("currentPatient");
-        // console.log(currentPatient);
+
         // verifyAvailableSurveys(currentPatient);
         navigate("/");
     }
 
     useEffect(() => {
+        console.log(remaining);
+
         if (remaining === 30) {
             openModal();
         }
@@ -139,7 +140,7 @@ export default function DisplayResults() {
 
         // }
         if (remaining === 0) {
-            goHome();
+            goToAnimation();
         }
     }, [remaining]);
 
@@ -154,10 +155,6 @@ export default function DisplayResults() {
                 .get(`patientData?user=${user}`)
                 .then(({ data }) => {
                     // setSurvey(data.data);
-                    console.log("data");
-                    console.log(data);
-                    console.log("data.patientDataAnswers");
-                    console.log(data.patientDataAnswers);
 
                     setCurrentPatient(data.patientData[0]);
                     setUserEdited(data.patientData[0].user);
@@ -165,13 +162,8 @@ export default function DisplayResults() {
                     setAgeEdited(data.patientData[0].age);
                     setAnswers(data.patientDataAnswers);
 
-                    // console.log("answers");
-                    // console.log(answers);
-
                     setQuestions(data.patientQuestionsAnswered);
 
-                    // console.log("questions");
-                    // console.log(questions);
                     if (answers !== undefined && questions !== undefined) {
                         setLoading(true);
                         calculateSurveys(answers, questions);
@@ -183,44 +175,9 @@ export default function DisplayResults() {
                     setLoading(false);
                 })
                 .catch((error) => {
-                    console.log(error);
                     setLoading(false);
                 });
         }
-        // else {
-        //     {
-        //         if (currentPatient.other !== undefined) {
-        //             console.log("here");
-        //             axiosClient
-        //                 .get(`available/surveys?user=${currentPatient.other}`)
-        //                 .then(({ data }) => {
-        //                     // setSurvey(data.data);
-        //                     console.log("data.data");
-        //                     console.log(data.data);
-        //                     setResults(data);
-        //                     setLoading(false);
-        //                 })
-        //                 .catch(() => {
-        //                     setLoading(false);
-        //                 });
-        //         }
-        //         // testing
-        //         else {
-        //             axiosClient
-        //                 .get(`available/surveys?user=${user}`)
-        //                 .then(({ data }) => {
-        //                     // setSurvey(data.data);
-        //                     console.log(data);
-        //                     setResults(data);
-        //                     setLoading(false);
-        //                 })
-        //                 .catch(() => {
-        //                     setLoading(false);
-        //                 });
-        //             // end testing
-        //         }
-        //     }
-        // }
     }, []);
 
     function calculateSurveys(answers, questions) {
@@ -236,13 +193,11 @@ export default function DisplayResults() {
                 }
             })
         );
-        console.log("arraySurveys");
-        console.log(arraySurveys);
     }
 
     function getUser() {
         const { user } = useParams();
-        console.log(user);
+
         return user;
     }
 
@@ -253,20 +208,11 @@ export default function DisplayResults() {
                     return "xor";
                 }
             });
-
-        // questions.map((question) => {
-        //     if (questionId === question.id) {
-        //         console.log(question.question);
-        //         return <p>{question.question}</p>;
-        //     }
-        // });
     }
 
     let finalArray = [];
     function translateIntoNumbers(desc, question, survey) {
         let numberedMeds;
-        // console.log(`desc before counting ` + survey);
-        // console.log(desc);
 
         if (desc !== "") {
             numberedMeds = desc.split(",");
@@ -284,12 +230,8 @@ export default function DisplayResults() {
 
             // return getPrestashop(res);
         });
-        console.log(productsArray);
 
         // productsArray.map((p) => getPrestashop(p));
-
-        // console.log("after counting");
-        // console.log(resultsWithoutSpaces);
     }
 
     function translateIntoArray(desc, question, survey) {
@@ -317,23 +259,17 @@ export default function DisplayResults() {
             }
         });
 
-        // console.log(numberedMedsWithSurvey);
-        console.log("numberedMedsWithSurvey");
-        console.log(numberedMedsWithSurvey);
-        // console.log(resultsArrayWithoutSpaces);
         // return resultsArrayWithoutSpaces; // only numbers
         return numberedMedsWithSurvey; // onlt numbers
     }
 
     function validateEmail(mail) {
         if (!mail || mail === "NA") {
-            console.log("validateEmail error");
             setEmailErrorText("Veuillez ajouter une adresse mail");
             setEmailError(true);
         } else {
             var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
             if (mail.match(mailformat)) {
-                console.log("valid");
                 setEmailError(false);
                 setEmailErrorText("");
                 emailjs
@@ -351,7 +287,6 @@ export default function DisplayResults() {
                     )
                     .then(
                         (result) => {
-                            console.log(result.text);
                             if (result.text === "OK") {
                                 setEmailError(false);
                                 setEmailErrorText("");
@@ -364,7 +299,7 @@ export default function DisplayResults() {
                     );
                 return true;
             }
-            console.log("INVALID");
+            console.log("INVALID Email");
             setEmailError(true);
             setEmailErrorText("Adresse mail invalide");
             return false;
@@ -380,32 +315,76 @@ export default function DisplayResults() {
 
     const sendEmail = (e) => {
         e.preventDefault();
+        console.log("DisplayResults form onSubmit");
 
+        console.log("emailEdited");
         console.log(emailEdited);
+        console.log("userEdited");
+        console.log(userEdited);
         setEmailError(false);
         validateEmail(emailEdited);
 
-        console.log(form.current);
+        if (emailEdited) {
+            // updateSurveyAnswer
+            axiosClient
+                .post(`/survey/${currentPatient.other}/edit-answer`, {
+                    user: userEdited,
+                    age: ageEdited,
+                    weight: emailEdited,
+                    height: "height",
+                })
+                .then((response) => {
+                    console.log(response);
+                    // debugger;
+                    // setSurveyFinished(true);
+                    // setMeds([]);
+                    // setCountedMeds([]);
+                    // setLoadedConseils([]);
+                    // setManquements([]);
+                    // setAnswersQuestions({});
+                    // resetPatient();
+                })
+                .catch((error) => {
+                    console.log(error.message);
+                    // if (error) {
+                    //     setError(
+                    //         "veuillez choisir au moins une réponse avant de valider"
+                    //     );
+                    // }
+                });
+        }
+
+        // console.log(form.current);
     };
     // END Send EMAIL
 
     return (
         <PageComponent
             id="yourAppElement"
-            title="Merci pour votre participation. Voici vos résultats : "
-            buttons={
-                <TButton
-                    color="red"
-                    onClick={goHome}
-                    className="w-60 flex justify-center rounded-md border 
-                    border-transparent bg-indigo-600 py-4 px-4  font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2  text-lg"
-                >
-                    <span className="text-xl">
-                        Revenir au debut / Recommencer
-                    </span>
-                    <ExclamationTriangleIcon className="h-6 w-6 ml-2" />
-                </TButton>
+            buttonAnimation={
+                <div className="flex flex-row space-x-1.5">
+                    <TButton
+                        color="green"
+                        onClick={goToAnimation}
+                        className="w-60 flex justify-center rounded-md border 
+            border-transparent bg-indigo-600 py-4 px-4  font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2  text-lg mr-4"
+                    >
+                        <span className="text-lg">Accueil</span>
+                        <HomeIcon className="h-6 w-6 ml-2" />
+                    </TButton>
+                    <TButton
+                        color="red"
+                        onClick={goHome}
+                        className="w-60 flex justify-center rounded-md border border-transparent bg-indigo-600 py-4 px-4  ml-4 font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2  text-lg"
+                    >
+                        <span className="text-lg">
+                            Recommencer le Bilan Santé
+                        </span>
+                        <ExclamationTriangleIcon className="h-6 w-6 ml-2" />
+                    </TButton>
+                </div>
             }
+            title="Merci pour votre participation. Voici vos résultats : "
             // image={logo}
         >
             {loading && (
@@ -444,11 +423,18 @@ export default function DisplayResults() {
                             {!emailSent && (
                                 <>
                                     <div className="text-xl text-left mr-3 mb-3 align-middle">
-                                        Vous pouvez sauvegarder les résultats en
-                                        les envoyant sur votre adresse email (à
-                                        remplir). Conformément au RGPD,
-                                        l'adresse email ne sera pas conservée et
-                                        ne sera pas envoyée à d'autres entités.
+                                        Vous pouvez{" "}
+                                        <strong className="text-emerald-500">
+                                            sauvegarder les résultats
+                                        </strong>{" "}
+                                        en les envoyant sur votre adresse email
+                                        (à remplir). Conformément au RGPD,
+                                        <strong className="text-emerald-500">
+                                            l'adresse email ne sera pas
+                                            conservée
+                                        </strong>{" "}
+                                        et ne sera pas envoyée à d'autres
+                                        entités.
                                         {/* Cependant, si vous voulez vous abonné à
                                 nos promotions, veuillez cocher la case
                                 correspondante. */}
@@ -458,6 +444,7 @@ export default function DisplayResults() {
                                         ref={form}
                                         onSubmit={sendEmail}
                                         className="mt-0 w-full max-w-96"
+                                        autocomplete="off"
                                     >
                                         <div className="-space-y-px rounded-md shadow-sm text-lg max-w-96">
                                             <div class="field">
@@ -501,7 +488,7 @@ export default function DisplayResults() {
                                     </label> */}
                                             {/* <label for="to_name">to_name</label> */}
                                             <input
-                                                type="text"
+                                                type="number"
                                                 name="to_name"
                                                 className="relative block w-full appearance-none rounded
                                          rounded-t-md border border-gray-500 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-lg"
@@ -518,13 +505,6 @@ export default function DisplayResults() {
                                             />
                                         </div>
                                         <div className="-space-y-px rounded-md shadow-sm text-lg max-w-96 mb-6">
-                                            {/* <label for="to_name">recipient</label> */}
-                                            {/* <label
-                                        htmlFor="from_name"
-                                        className="sr-only_ text-white"
-                                    >
-                                        Email
-                                    </label> */}
                                             {emailError && (
                                                 <p className="text-red-700 text-xl">
                                                     {emailErrorText}
@@ -534,7 +514,7 @@ export default function DisplayResults() {
                                                 type="email"
                                                 name="recipient"
                                                 id="recipient"
-                                                placeholder="Email"
+                                                placeholder="Email (obligatoire)"
                                                 // hover:bg-red-700
                                                 className={`${
                                                     emailError
@@ -555,22 +535,7 @@ export default function DisplayResults() {
                                                 }
                                                 style={{ marginBottom: "10px" }}
                                             />
-                                            {/* <input
-                                        type="checkbox"
-                                        name="newsletter"
-                                        id="newsletter"
-                                        placeholder="Je veux m'aboner au newsletter"
-                                        className=" relative block w-full appearance-none rounded rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-lg"
-                                        value={
-                                            emailEdited === "NA"
-                                                ? ""
-                                                : emailEdited
-                                        }
-                                        onChange={(e) =>
-                                            setEmailEdited(e.target.value)
-                                        }
-                                        style={{ marginBottom: "10px" }}
-                                    /> */}
+
                                             <input
                                                 type="text"
                                                 name="code"
@@ -636,29 +601,8 @@ export default function DisplayResults() {
                                     </form>
                                 </>
                             )}
-
-                            {/* <p>User: {currentPatient.user}</p>
-                            <p>age: {currentPatient.age}</p>
-                            <p>
-                                Email : {currentPatient.weight}
-                                <button
-                                    onClick={envoyerEmail(
-                                        currentPatient.weight,
-                                        currentPatient.other
-                                    )}
-                                >
-                                    envoyer email avec les résultats
-                                </button>
-                            </p>
-                            <p>SMS: {currentPatient.height}</p>
-                            <p>OTHER: {currentPatient.other}</p> */}
                         </DashboardCard>
                     )}
-                    {/* <Form
-                        currentPatient={currentPatient}
-                        // recipientEmail={currentPatient.weight}
-                        // code={currentPatient.other}
-                    /> */}
                 </p>
             </div>
             {/* END User DATA */}
@@ -710,7 +654,7 @@ export default function DisplayResults() {
 
                         <TButton
                             color="red"
-                            onClick={goHome}
+                            onClick={goToAnimation}
                             className="mt-3 w-60 flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                         >
                             <span className="text-xl">Revenir au debut</span>
@@ -817,9 +761,16 @@ export default function DisplayResults() {
                                                                                     <h2 className="text-2xl">
                                                                                         {/* Question
                                                                                 :{" "} */}
+                                                                                        Nos
+                                                                                        conseils
+                                                                                        pour{" "}
                                                                                         <span className="text-green-600 font-bold">
+                                                                                            {" "}
                                                                                             {
                                                                                                 q.question
+                                                                                            }
+                                                                                            {
+                                                                                                " :"
                                                                                             }
                                                                                         </span>
                                                                                     </h2>
@@ -841,23 +792,30 @@ export default function DisplayResults() {
                                                                                                 // style={{
                                                                                                 //     color: "black",
                                                                                                 // }}
-                                                                                                className="text-sky-500"
+                                                                                                className="text-gray-800 ml-4"
                                                                                             >
                                                                                                 {/* Vous
                                                                                                 avez
                                                                                                 une
                                                                                                 carence
                                                                                                 en */}
-                                                                                                Conseils
-                                                                                                :{" "}
-                                                                                                <span className="font-bold">
+                                                                                                {/* Nos
+                                                                                                conseils */}
+
+                                                                                                {/* <span className="font-bold"> */}
+                                                                                                {/* <span>
                                                                                                     {" "}
+                                                                                                    {dangerouslySetInnerHTML(
+                                                                                                        q.conseils
+                                                                                                    )}
+                                                                                                </span> */}
+                                                                                                <ReactMarkdown>
                                                                                                     {
                                                                                                         q.conseils
                                                                                                     }
-                                                                                                </span>
+                                                                                                </ReactMarkdown>
                                                                                             </h2>
-                                                                                            <p className="text-left">
+                                                                                            {/* <p className="text-left">
                                                                                                 Nous
                                                                                                 vous
                                                                                                 recommandons
@@ -877,13 +835,13 @@ export default function DisplayResults() {
                                                                                                     survey={
                                                                                                         s.title
                                                                                                     }
-                                                                                                />
-                                                                                                {/* {translateIntoNumbers(
+                                                                                                /> */}
+                                                                                            {/* {translateIntoNumbers(
                                                                                         q.description,
                                                                                         q.question,
                                                                                         s.title
                                                                                     )} */}
-                                                                                            </h3>
+                                                                                            {/* </h3> */}
                                                                                         </>
                                                                                     )}
                                                                                 </li>

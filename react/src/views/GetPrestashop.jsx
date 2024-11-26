@@ -128,22 +128,22 @@ export default function GetPrestashop({ indexProduct }) {
                     <p>
                         {/* Category Image */}
                         {product && (
-                            <Link
-                                to={
-                                    `https://shop.pharmacie-en-couleurs-eragny.com/?controller=product&id_product=` +
-                                    product.id
-                                }
-                                target="_blank"
-                                rel="noopener noreferrer"
+                            <div
+                            // to={
+                            //     `https://shop.pharmacie-en-couleurs-eragny.com/?controller=product&id_product=` +
+                            //     product.id
+                            // }
+                            // target="_blank"
+                            // rel="noopener noreferrer"
                             >
                                 <div className="relative">
                                     {
                                         <img
-                                            class="max-h-38 object-cover"
+                                            class="max-h-18 object-cover"
                                             src={`https://shop.pharmacie-en-couleurs-eragny.com/${product.associations.images[0].id}-medium_default/${product.link_rewrite}.jpg`}
                                         />
                                     }
-                                    {
+                                    {/* {
                                         <div className="my-custom-class">
                                             <TButton
                                                 color="green"
@@ -152,7 +152,7 @@ export default function GetPrestashop({ indexProduct }) {
                                                 <ArrowTopRightOnSquareIcon className="h-4 w-4" />
                                             </TButton>
                                         </div>
-                                    }
+                                    } */}
 
                                     {/* {<>Description: {product.description_short}</>} */}
                                     <div
@@ -171,7 +171,7 @@ export default function GetPrestashop({ indexProduct }) {
                                     product.id}
                             </p> */}
                                 </div>
-                            </Link>
+                            </div>
                         )}
                         {/* End Category Image */}
                     </p>

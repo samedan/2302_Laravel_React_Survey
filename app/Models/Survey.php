@@ -31,7 +31,19 @@ class Survey extends Model
         }
 
         public function questions() {
+            // dd($survey->questions);
+            // $ourHTML = Str::markdown($survey['conseils']);
+            // $survey['conseils']=$ourHTML;
+            
+
             return $this->hasMany(SurveyQuestion::class);
+
+            // $returnedQuestions = $this->hasMany(SurveyQuestion::class);
+            // foreach($returnedQuestions as $res) {
+            
+            //     return $res;
+            // }
+            // return $returnedQuestions;
         }
         
         public function answers() {

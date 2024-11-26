@@ -10,9 +10,9 @@ import SurveyListItemPublic from "../components/SurveyListItemPublic";
 import { useMediaQuery } from "./hooks";
 import TButton from "../components/core/TButton";
 import {
-    PlusCircleIcon,
     ExclamationTriangleIcon,
     CheckBadgeIcon,
+    HomeIcon,
 } from "@heroicons/react/20/solid";
 import { useIdleTimer } from "react-idle-timer/legacy";
 import Modal from "react-modal";
@@ -38,6 +38,27 @@ export default function SurveyPublicView() {
     function openModal() {
         setIsOpen(true);
     }
+
+    // sets new patient
+    const handleRandomNum = () => {
+        // setRandomNum(Math.floor(Math.random() * (maxVal - minVal + 1) + minVal));
+        let x = Math.floor(Math.random() * (999999 - 100000 + 1) + 100000);
+        // setOther(x);
+        return x;
+    };
+    useEffect(() => {
+        let patientData = {
+            user: "NA",
+            age: "NA",
+            weight: "NA",
+            height: "NA",
+            other: handleRandomNum(),
+        };
+        setCurrentPatient(patientData);
+        console.log(patientData);
+        console.log(currentPatient);
+    }, []);
+    // END sets new patient
 
     function afterOpenModal() {
         // references are now sync'd and can be accessed.
@@ -126,9 +147,15 @@ export default function SurveyPublicView() {
     const [answers2, setAnswers2] = useState({});
     const [additionalSurveys, setAdditionalSurveys] = useState();
     const [finishedAllSurveys, setFinishedAllSurveys] = useState(false);
-    const { currentPatient, setCurrentPatient } = useStateContext();
+    const {
+        currentPatient,
+        setCurrentPatient,
+        answersToSave,
+        setAnswersToSave,
+    } = useStateContext();
     const { currentPatientHere, setCurrentPatientHere } = useState({});
     const [totalDataPatient, setTotalDataPatient] = useState([]);
+    // const [answersToSave, setAnswersToSave] = useStateContext();
 
     const conseils = [
         {
@@ -223,7 +250,7 @@ export default function SurveyPublicView() {
             .then(({ data }) => {
                 setLoading(false);
                 setSurvey(data.data);
-                console.log(data.data);
+                // console.log(data.data);
             })
             .catch(() => {
                 setLoading(false);
@@ -444,13 +471,10 @@ export default function SurveyPublicView() {
         // console.log("copy");
         // console.log(copy);
         // console.log("answers");
-        console.log("answersQuestions");
-        console.log(answersQuestions);
-
-        // const gipsy = JSON.stringify(answers);
-
-        // console.log(gipsy);
-        // debugger;
+        console.log("Submit on SurveyPublicView");
+        console.log("currentPatient");
+        console.log(currentPatient);
+        setAnswersToSave(answersQuestions);
         axiosClient
             .post(`/survey/${survey.id}/answer`, {
                 answers: answersQuestions,
@@ -481,24 +505,6 @@ export default function SurveyPublicView() {
                         "veuillez choisir au moins une réponse avant de valider"
                     );
                 }
-                // if (error.message == "Network Error") {
-                //     console.log(error.message);
-                //     setError({ __html: error.message });
-                // }
-
-                // if (error.response) {
-                //     console.log(error.response.data);
-                //     if (error.response.data.errors) {
-                //         console.log("here");
-                //         const finalErrors = Object.values(
-                //             error.response.data.errors
-                //         ).reduce((accum, next) => [...accum, ...next], []);
-                //         setError({ __html: finalErrors.join("<br>") });
-                //     } else {
-                //         const finalErrors = Object.values(error.response.data);
-                //         setError({ __html: finalErrors[0] });
-                //     }
-                // }
             });
     }
 
@@ -510,6 +516,17 @@ export default function SurveyPublicView() {
         console.log(currentPatient);
         // verifyAvailableSurveys(currentPatient);
         navigate("/");
+    }
+    function goToAnimation() {
+        // setCurrentPatient();
+        // console.log("goHome");
+        setCurrentPatient({});
+        console.log("currentPatient");
+        console.log(currentPatient);
+        // verifyAvailableSurveys(currentPatient);
+        window.location.replace(
+            "https://bilan-sante.pharmacie-en-couleurs-eragny.com/"
+        );
     }
 
     function getOnlyLeftOverSurveys(data) {
@@ -583,20 +600,46 @@ export default function SurveyPublicView() {
     const isRowBased = useMediaQuery("(min-width: 500px)");
     return (
         <PageComponent
-            title="Veuillez remplir vos données."
-            buttons={
-                <TButton
-                    color="red"
-                    onClick={goHome}
-                    className="w-60 flex justify-center rounded-md border 
-                    border-transparent bg-indigo-600 py-4 px-4  font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2  text-lg"
-                >
-                    <span className="text-lg">
-                        Revenir au debut / Recommencer
-                    </span>
-                    <ExclamationTriangleIcon className="h-6 w-6 ml-2" />
-                </TButton>
+            buttonAnimation={
+                <div className="flex flex-row space-x-1.5">
+                    <TButton
+                        color="green"
+                        onClick={goToAnimation}
+                        className="w-60 flex justify-center rounded-md border 
+            border-transparent bg-indigo-600 py-4 px-4  font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2  text-lg mr-4"
+                    >
+                        <span className="text-lg">Accueil</span>
+                        <HomeIcon className="h-6 w-6 ml-2" />
+                    </TButton>
+                    <TButton
+                        color="red"
+                        onClick={goHome}
+                        className="w-60 flex justify-center rounded-md border border-transparent bg-indigo-600 py-4 px-4  ml-4 font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2  text-lg"
+                    >
+                        <span className="text-lg">
+                            Recommencer le Bilan Santé
+                        </span>
+                        <ExclamationTriangleIcon className="h-6 w-6 ml-2" />
+                    </TButton>
+                </div>
             }
+            // buttons={
+            //     <>
+            //         <TButton
+            //             color="red"
+            //             onClick={goHome}
+            //             className="w-60 flex justify-center rounded-md border
+            //     border-transparent bg-indigo-600 py-4 px-4  font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2  text-lg"
+            //         >
+            //             <span className="text-lg">
+            //                 Recommencer le Bilan Santé
+            //             </span>
+            //             <ExclamationTriangleIcon className="h-6 w-6 ml-2" />
+            //         </TButton>
+            //     </>
+            // }
+            title="Veuillez remplir vos données."
+
             // image={logo}
         >
             <>
@@ -661,6 +704,7 @@ export default function SurveyPublicView() {
                 {/* END MODAL */}
             </>
             <>
+                {/* Ask Name, 'PatientData' user id */}
                 {isObjEmpty(currentPatient) && (
                     <div className="content-center">
                         <div
@@ -673,9 +717,6 @@ export default function SurveyPublicView() {
                             <p className="max-w-md text-lg">
                                 Les champs de données à remplir ne sont{" "}
                                 <strong>pas obligatoires</strong>.
-                                {/* Si vous
-                                voulez garder les résultats de l'étude, vous
-                                devez remplir le champ <strong>Email</strong>. */}
                             </p>
                         </div>
                         <div
@@ -689,11 +730,13 @@ export default function SurveyPublicView() {
                         </div>
                     </div>
                 )}
+                {/* END Ask Name, 'PatientData' user id */}
                 <div>
                     {loading && (
                         <div className="flex justify-center">Chargement...</div>
                     )}
-                    {!loading && !isObjEmpty(currentPatient) && (
+                    {/* {!loading && !isObjEmpty(currentPatient) && ( */}
+                    {!loading && (
                         <>
                             {/* <button
                                 type="submit"

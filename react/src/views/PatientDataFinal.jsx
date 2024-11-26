@@ -29,28 +29,23 @@ export default function PatientDataFinal(currentPatientFinal) {
         e.preventDefault();
 
         console.log(form.current);
+        console.log("sending email");
 
-        emailjs
-            // .sendForm(
-            //     "YOUR_SERVICE_ID",
-            //     "YOUR_TEMPLATE_ID",
-            //     form.current,
-            //     "YOUR_PUBLIC_KEY"
-            // )
-            .sendForm(
-                "service_r7htw3c",
-                "template_bn603m5",
-                form.current,
-                "d-KnZYpZeSh32IPp8"
-            )
-            .then(
-                (result) => {
-                    console.log(result.text);
-                },
-                (error) => {
-                    console.log(error.text);
-                }
-            );
+        // emailjs
+        //     .sendForm(
+        //         "service_r7htw3c",
+        //         "template_bn603m5",
+        //         form.current,
+        //         "d-KnZYpZeSh32IPp8"
+        //     )
+        //     .then(
+        //         (result) => {
+        //             console.log(result.text);
+        //         },
+        //         (error) => {
+        //             console.log(error.text);
+        //         }
+        //     );
     };
 
     const onSubmit = (ev) => {
@@ -67,8 +62,39 @@ export default function PatientDataFinal(currentPatientFinal) {
             other: other,
         };
         setCurrentPatient(patientData);
+        console.log("patientData before post");
+        console.log(patientData);
+
+        // updateSurveyAnswer
+        axiosClient
+            .post(`/survey/${survey.id}/edit-answer`, {
+                user: currentPatient["user"],
+                age: currentPatient["age"],
+                weight: currentPatient["weight"],
+                height: currentPatient["height"],
+            })
+            .then((response) => {
+                console.log(response);
+                // debugger;
+                // setSurveyFinished(true);
+                // setMeds([]);
+                // setCountedMeds([]);
+                // setLoadedConseils([]);
+                // setManquements([]);
+                // setAnswersQuestions({});
+                // resetPatient();
+            })
+            .catch((error) => {
+                console.log(error.message);
+                // if (error) {
+                //     setError(
+                //         "veuillez choisir au moins une réponse avant de valider"
+                //     );
+                // }
+            });
         // console.log(patientData);
         // console.log(currentPatient);
+
         // emailjs
         //     // .sendForm(
         //     //     "YOUR_SERVICE_ID",
@@ -128,7 +154,8 @@ export default function PatientDataFinal(currentPatientFinal) {
                 )}
                 <form
                     ref={form}
-                    onSubmit={sendEmail}
+                    // onSubmit={sendEmail}
+                    onSubmit={onSubmit}
                     className="mt-0 space-y-6 w-full max-w-96"
                 >
                     <input type="hidden" name="remember" defaultValue="true" />

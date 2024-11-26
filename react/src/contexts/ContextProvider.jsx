@@ -209,6 +209,7 @@ export const ContextProvider = ({ children }) => {
         "textarea",
     ]);
     const [toast, setToast] = useState({ message: "", show: false });
+    const [answersToSave, setAnswersToSave] = useState([]);
     const showToast = (message) => {
         setToast({ message, show: true });
         setTimeout(() => {
@@ -240,6 +241,8 @@ export const ContextProvider = ({ children }) => {
                 setToast,
                 currentPatient,
                 setCurrentPatient,
+                answersToSave,
+                setAnswersToSave,
             }}
         >
             {children}

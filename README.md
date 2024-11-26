@@ -10,6 +10,15 @@ https://github.com/LearnWebCode/laravel-course
 
 https://github.com/thecodeholic/laravel-react-survey
 
+## Where to :
+
+D:\_apps_2023\php\23.02_laravel_REACT_Survey
+
+2024.02.14_TEST
+
+Database :
+rart3629_2402_test_surveys
+
 ## This Git
 
 https://github.com/samedan/2302_Laravel_React_Survey

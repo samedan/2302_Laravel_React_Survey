@@ -1,97 +1,25 @@
+import { LockClosedIcon } from "@heroicons/react/20/solid";
+
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useStateContext } from "../contexts/ContextProvider";
 import axiosClient from "./../axios";
 import Modal from "react-modal";
-import logo from "../assets/logo.png";
 import "tw-elements"; // Loading CSS
 // import SurveyListItem from "../components/SurveyListItem";
 import PageComponent from "../components/PageComponent";
 import DashboardCard from "../components/DashboardCard";
-
+import logo from "../assets/logo.png";
 import emailjs from "@emailjs/browser";
 import loadingGif from "../assets/loading.svg";
+import QuestionWithAnswers from "./QuestionWithAnswers";
 import TButton from "../components/core/TButton";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 
 import { useIdleTimer } from "react-idle-timer";
 
-import ReactMarkdown from "react-markdown";
-
 export default function DisplayResults() {
-    // Modal
-    const customStyles = {
-        content: {
-            top: "50%",
-            left: "50%",
-            right: "auto",
-            bottom: "auto",
-            marginRight: "-50%",
-            transform: "translate(-50%, -50%)",
-        },
-    };
-
     // Make sure to bind modal to your appElement (https://reactcommunity.org/react-modal/accessibility/)
-    // Modal.setAppElement("#yourAppElement");
-    Modal.setAppElement(document.getElementById("yourAppElement"));
-    let subtitle;
-    const [modalIsOpen, setIsOpen] = useState(false);
-    function openModal() {
-        setIsOpen(true);
-    }
-
-    function afterOpenModal() {
-        // references are now sync'd and can be accessed.
-        subtitle.style.color = "#f00";
-    }
-
-    function closeModal() {
-        setRemaining(50);
-        setIsOpen(false);
-    }
-
-    const [modalContent, setModalContent] = useState();
-    // END Modal
-
-    // Idle timer
-    const [state, setState] = useState("Active");
-    const [count, setCount] = useState(0);
-    const [emailError, setEmailError] = useState(false);
-    const [emailErrorText, setEmailErrorText] = useState("");
-    const [remaining, setRemaining] = useState(1);
-
-    const onIdle = () => {
-        setState("Idle");
-    };
-
-    const onActive = () => {
-        setState("Active");
-    };
-
-    const onAction = () => {
-        setCount(count + 1);
-    };
-
-    const { getRemainingTime } = useIdleTimer({
-        onIdle,
-        onActive,
-        onAction,
-        timeout: 180_000,
-        throttle: 500,
-    });
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            // console.log("setRemaining");
-            setRemaining(Math.ceil(getRemainingTime() / 1000));
-        }, 500);
-
-        return () => {
-            // console.log("clearInterval");
-            clearInterval(interval);
-        };
-    });
-    // END Idle timer
 
     const { setCurrentUser, setUserToken } = useStateContext();
     const { currentPatient, setCurrentPatient } = useStateContext();
@@ -115,13 +43,17 @@ export default function DisplayResults() {
 
     const { user } = useParams();
 
-    // useEffect(() => {
-    //     setProduct();
-    // }, [translateIntoNumbers]);
+    function goHome() {
+        // setCurrentPatient();
+        // console.log("goHome");
+        setCurrentPatient({});
+        // console.log("currentPatient");
+        // console.log(currentPatient);
+        // verifyAvailableSurveys(currentPatient);
+        navigate("/");
+    }
 
     useEffect(() => {
-        setEmailError(false);
-        setEmailSent(false);
         setLoading(true);
         // const { user } = useParams();
         // getPrestashop();
@@ -130,6 +62,10 @@ export default function DisplayResults() {
                 .get(`patientData?user=${user}`)
                 .then(({ data }) => {
                     // setSurvey(data.data);
+                    console.log("data");
+                    console.log(data);
+                    console.log("data.patientDataAnswers");
+                    console.log(data.patientDataAnswers);
 
                     setCurrentPatient(data.patientData[0]);
                     setUserEdited(data.patientData[0].user);
@@ -137,8 +73,13 @@ export default function DisplayResults() {
                     setAgeEdited(data.patientData[0].age);
                     setAnswers(data.patientDataAnswers);
 
+                    // console.log("answers");
+                    // console.log(answers);
+
                     setQuestions(data.patientQuestionsAnswered);
 
+                    // console.log("questions");
+                    // console.log(questions);
                     if (answers !== undefined && questions !== undefined) {
                         setLoading(true);
                         calculateSurveys(answers, questions);
@@ -150,9 +91,44 @@ export default function DisplayResults() {
                     setLoading(false);
                 })
                 .catch((error) => {
+                    console.log(error);
                     setLoading(false);
                 });
         }
+        // else {
+        //     {
+        //         if (currentPatient.other !== undefined) {
+        //             console.log("here");
+        //             axiosClient
+        //                 .get(`available/surveys?user=${currentPatient.other}`)
+        //                 .then(({ data }) => {
+        //                     // setSurvey(data.data);
+        //                     console.log("data.data");
+        //                     console.log(data.data);
+        //                     setResults(data);
+        //                     setLoading(false);
+        //                 })
+        //                 .catch(() => {
+        //                     setLoading(false);
+        //                 });
+        //         }
+        //         // testing
+        //         else {
+        //             axiosClient
+        //                 .get(`available/surveys?user=${user}`)
+        //                 .then(({ data }) => {
+        //                     // setSurvey(data.data);
+        //                     console.log(data);
+        //                     setResults(data);
+        //                     setLoading(false);
+        //                 })
+        //                 .catch(() => {
+        //                     setLoading(false);
+        //                 });
+        //             // end testing
+        //         }
+        //     }
+        // }
     }, []);
 
     function calculateSurveys(answers, questions) {
@@ -168,11 +144,13 @@ export default function DisplayResults() {
                 }
             })
         );
+        console.log("arraySurveys");
+        console.log(arraySurveys);
     }
 
     function getUser() {
         const { user } = useParams();
-
+        console.log(user);
         return user;
     }
 
@@ -183,11 +161,20 @@ export default function DisplayResults() {
                     return "xor";
                 }
             });
+
+        // questions.map((question) => {
+        //     if (questionId === question.id) {
+        //         console.log(question.question);
+        //         return <p>{question.question}</p>;
+        //     }
+        // });
     }
 
     let finalArray = [];
     function translateIntoNumbers(desc, question, survey) {
         let numberedMeds;
+        // console.log(`desc before counting ` + survey);
+        // console.log(desc);
 
         if (desc !== "") {
             numberedMeds = desc.split(",");
@@ -205,14 +192,17 @@ export default function DisplayResults() {
 
             // return getPrestashop(res);
         });
+        console.log(productsArray);
 
         // productsArray.map((p) => getPrestashop(p));
+
+        // console.log("after counting");
+        // console.log(resultsWithoutSpaces);
     }
 
     function translateIntoArray(desc, question, survey) {
         let numberedMeds;
         let numberedMedsWithSurvey = [survey, question];
-
         if (desc !== "") {
             numberedMeds = desc.split(",");
         }
@@ -234,67 +224,51 @@ export default function DisplayResults() {
             }
         });
 
+        // console.log(numberedMedsWithSurvey);
+
+        // console.log(resultsArrayWithoutSpaces);
         // return resultsArrayWithoutSpaces; // only numbers
         return numberedMedsWithSurvey; // onlt numbers
     }
 
-    function validateEmail(mail) {
-        if (!mail || mail === "NA") {
-            setEmailErrorText("Veuillez ajouter une adresse mail");
-            setEmailError(true);
-        } else {
-            var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-            if (mail.match(mailformat)) {
-                setEmailError(false);
-                setEmailErrorText("");
-                emailjs
-                    // .sendForm(
-                    //     "YOUR_SERVICE_ID",
-                    //     "YOUR_TEMPLATE_ID",
-                    //     form.current,
-                    //     "YOUR_PUBLIC_KEY"
-                    // )
-                    .sendForm(
-                        "service_r7htw3c",
-                        "template_bn603m5",
-                        form.current,
-                        "d-KnZYpZeSh32IPp8"
-                    )
-                    .then(
-                        (result) => {
-                            if (result.text === "OK") {
-                                setEmailError(false);
-                                setEmailErrorText("");
-                                setEmailSent(true);
-                            }
-                        },
-                        (error) => {
-                            console.log(error.text);
-                        }
-                    );
-                return true;
-            }
-            console.log("INVALID Email");
-            setEmailError(true);
-            setEmailErrorText("Adresse mail invalide");
-            return false;
-        }
+    function envoyerEmail(email, codeOther) {
+        console.log("email", email);
+        console.log("other", other);
     }
 
     // Send EMAIL
-    const form = useRef();
+
     const [userEdited, setUserEdited] = useState(user.user);
     const [ageEdited, setAgeEdited] = useState(user.user);
     const [emailEdited, setEmailEdited] = useState(user.user);
     const [emailSent, setEmailSent] = useState(false);
 
-    // END Send EMAIL
-
     return (
         <PageComponent
             id="yourAppElement"
             title="Merci pour votre participation. Voici vos résultats : "
-            image={logo}
+            buttons={
+                <div className="grid grid-cols-1">
+                    <div
+                        className="mb-2 flex content-end"
+                        style={{
+                            flexDirection: "row-reverse",
+                        }}
+                    >
+                        <img class="mr-5 h-9" src={logo} />
+                    </div>
+                    {/* <TButton
+                        color="green"
+                        onClick={() => navigateToNewPage()}
+                        // onClick={goHome}
+                        className="w-60 flex justify-center rounded-md border 
+                    border-transparent bg-indigo-600 py-4 px-4  font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2  text-lg"
+                    >
+                        <span className="text-xl">Nouveau Bilan Santé ?</span>
+                        <ExclamationTriangleIcon className="h-6 w-6 ml-2" />
+                    </TButton> */}
+                </div>
+            }
         >
             {loading && (
                 <div className="flex justify-center items-center">
@@ -303,15 +277,6 @@ export default function DisplayResults() {
                     </div>
                 </div>
             )}
-            {/* User DATA */}
-            <div>
-                <p>
-                    {/* {currentPatient && (
-                        <PatientDataFinal currentPatient={currentPatient} />
-                    )} */}
-                </p>
-            </div>
-            {/* END User DATA */}
 
             {/* TIMER */}
             {/* <div> */}
@@ -320,16 +285,6 @@ export default function DisplayResults() {
             {/* <p>{remaining} seconds remaining</p> */}
             {/* </div> */}
             {/* END TIMER */}
-
-            {/* {currentPatient && (
-                <>
-                    <p>User: {currentPatient.user}</p>
-                    <p>Age: {currentPatient.age}</p>
-                    <p>Weight: {currentPatient.weight}</p>
-                    <p>Height: {currentPatient.height}</p>
-                    <p>Other: {currentPatient.other}</p>
-                </>
-            )} */}
 
             {!loading && answers && (
                 <>
@@ -407,16 +362,9 @@ export default function DisplayResults() {
                                                                                     <h2 className="text-2xl">
                                                                                         {/* Question
                                                                                 :{" "} */}
-                                                                                        Nos
-                                                                                        conseils
-                                                                                        pour{" "}
                                                                                         <span className="text-green-600 font-bold">
-                                                                                            {" "}
                                                                                             {
                                                                                                 q.question
-                                                                                            }
-                                                                                            {
-                                                                                                " :"
                                                                                             }
                                                                                         </span>
                                                                                     </h2>
@@ -438,30 +386,22 @@ export default function DisplayResults() {
                                                                                                 // style={{
                                                                                                 //     color: "black",
                                                                                                 // }}
-                                                                                                className="text-gray-800 ml-4"
+                                                                                                className="text-sky-500"
                                                                                             >
-                                                                                                {/* Vous
+                                                                                                Vous
                                                                                                 avez
                                                                                                 une
                                                                                                 carence
-                                                                                                en */}
-                                                                                                {/* Nos
-                                                                                                conseils */}
-
-                                                                                                {/* <span className="font-bold"> */}
-                                                                                                {/* <span>
+                                                                                                en
+                                                                                                :{" "}
+                                                                                                <span className="font-bold">
                                                                                                     {" "}
-                                                                                                    {dangerouslySetInnerHTML(
-                                                                                                        q.conseils
-                                                                                                    )}
-                                                                                                </span> */}
-                                                                                                <ReactMarkdown>
                                                                                                     {
                                                                                                         q.conseils
                                                                                                     }
-                                                                                                </ReactMarkdown>
+                                                                                                </span>
                                                                                             </h2>
-                                                                                            {/* <p className="text-left">
+                                                                                            <p className="text-left">
                                                                                                 Nous
                                                                                                 vous
                                                                                                 recommandons
@@ -481,13 +421,16 @@ export default function DisplayResults() {
                                                                                                     survey={
                                                                                                         s.title
                                                                                                     }
-                                                                                                /> */}
-                                                                                            {/* {translateIntoNumbers(
+                                                                                                    classSurvey={
+                                                                                                        q.survey_id
+                                                                                                    }
+                                                                                                />
+                                                                                                {/* {translateIntoNumbers(
                                                                                         q.description,
                                                                                         q.question,
                                                                                         s.title
                                                                                     )} */}
-                                                                                            {/* </h3> */}
+                                                                                            </h3>
                                                                                         </>
                                                                                     )}
                                                                                 </li>

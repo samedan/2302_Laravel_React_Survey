@@ -7,6 +7,9 @@ import PaginationLinks from "../components/PaginationLinks";
 import "tw-elements"; // Loading CSS
 import { useStateContext } from "../contexts/ContextProvider";
 import SurveyListItemPublic from "../components/SurveyListItemPublic";
+import TButton from "../components/core/TButton";
+import { HomeIcon } from "@heroicons/react/24/outline";
+import ModalView from "./ModalView";
 
 export default function SurveysPublic() {
     // const state = useStateContext();
@@ -17,13 +20,13 @@ export default function SurveysPublic() {
     const [loading, setLoading] = useState(false);
     const [isOpen, setOpen] = useState(false); // video modal
 
-    console.log(surveys);
+    // console.log(surveys);
 
     const getSurveys = (url) => {
         // url = url || "/survey" || "/start"; // if first or previous/next pages survey?page=2
         url = url || "/get-6-surveys"; // if first or previous/next pages survey?page=2
-        console.log("url");
-        console.log(url);
+        // console.log("url");
+        // console.log(url);
         setLoading(true);
         axiosClient.get(url).then(({ data }) => {
             setSurveys(data.data);
@@ -45,12 +48,31 @@ export default function SurveysPublic() {
         getSurveys(link.url);
     };
 
+    function goToAnimation() {
+        window.location.replace(
+            "https://bilan-sante.pharmacie-en-couleurs-eragny.com/"
+        );
+    }
+
     useEffect(() => {
         getSurveys();
     }, []);
 
     return (
         <PageComponent
+            buttonAnimation={
+                <>
+                    <TButton
+                        color="green"
+                        onClick={goToAnimation}
+                        className="w-60 flex justify-center rounded-md border 
+            border-transparent bg-indigo-600 py-4 px-4  font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2  text-lg"
+                    >
+                        <span className="text-lg">Accueil</span>
+                        <HomeIcon className="h-6 w-6 ml-2" />
+                    </TButton>
+                </>
+            }
             title="Commencez votre Bilan* gratuit Santé :"
             // buttons={
             //     <TButton color="green" to="/surveys/create">
@@ -60,6 +82,7 @@ export default function SurveysPublic() {
             // }
             image={logo}
         >
+            <ModalView />
             {loading && (
                 <div className="flex justify-center items-center">
                     <div

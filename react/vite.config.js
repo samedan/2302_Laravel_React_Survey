@@ -7,4 +7,19 @@ export default defineConfig({
         cors: false,
     },
     plugins: [react()],
+    build: {
+        rollupOptions: {
+            external: "./node_modules/vfile/lib/index.js",
+        },
+    },
 });
+
+// export default defineConfig({
+//   build: {
+//     rollupOptions: {
+//       external: [
+//         /^node:.*/,
+//       ]
+//     }
+//   }
+// })

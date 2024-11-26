@@ -14,7 +14,7 @@ export default function SurveyListItemPublic({
     inactive,
     continuedSurvey,
 }) {
-    console.log(survey);
+    // console.log(survey);
     return (
         <>
             <Link to={`/survey/public/${survey.slug}`}>
@@ -145,7 +145,7 @@ export default function SurveyListItemPublic({
                             // type="submit"
                             className="group relative flex w-full justify-center rounded-md border border-transparent bg-indigo-700 py-2 px-4 font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 text-lg"
                         >
-                            <span class="absolute inset-y-0 right-0 flex items-center pr-3">
+                            <span className="absolute inset-y-0 right-0 flex items-center pr-3">
                                 <ArrowRightCircleIcon className="h-6 w-6 text-white-500 group-hover:text-white-400" />
                             </span>
                             Commencer

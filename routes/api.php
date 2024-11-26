@@ -35,6 +35,7 @@ Route::get('/survey/get-by-slug/{survey:slug}', [SurveyController::class, 'getBy
 Route::get('/get-all-surveys', [DashboardController::class, 'getAllSurveys']); 
 Route::get('/get-6-surveys', [SurveyController::class, 'get6Surveys']); 
 Route::post('/survey/{survey}/answer', [SurveyController::class, 'storeAnswer']);
+Route::post('/survey/{survey}/edit-answer', [SurveyController::class, 'updateSurveyAnswer']);
 Route::get('/posts', function() {
     return response()->json([
         'posts'=> [

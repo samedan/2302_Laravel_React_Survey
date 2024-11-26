@@ -2,6 +2,14 @@ import { PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 import React, { useEffect, useState } from "react";
 import { useStateContext } from "../contexts/ContextProvider";
 import { v4 as uuidv4 } from "uuid";
+import MDEditor from "@uiw/react-md-editor";
+
+// const [value, setValue] = React.useState("");
+//   return (
+//     <div className="container">
+//       <MDEditor value={value} onChange={setValue} />
+//     </div>
+//   );
 
 export default function QuestionEditor({
     index = 0,
@@ -11,6 +19,10 @@ export default function QuestionEditor({
     questionChange,
 }) {
     const [model, setModel] = useState({ ...question });
+
+    // console.log("question");
+    // console.log(question);
+
     const { questionTypes } = useStateContext(); // "text", "select", "radio", "checkbox", "textarea",
 
     useEffect(() => {
@@ -221,7 +233,8 @@ export default function QuestionEditor({
                             htmlFor="questionDescription"
                             className="block text-sm font-medium text-yellow-700 "
                         >
-                            Description
+                            Medicaments (Au moins un médicament pour ne pas
+                            avoir une erreur : Ex: 3525722031400) :
                         </label>
                         <textarea
                             name="questionDescription"
@@ -233,6 +246,7 @@ export default function QuestionEditor({
                                     description: ev.target.value,
                                 })
                             }
+                            placeholder="Au moins un médicament pour ne pas avoir une erreur : 3525722031400"
                             className="my-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500
                  focus:ring-indigo-500 sm:text-sm"
                         ></textarea>
@@ -248,7 +262,7 @@ export default function QuestionEditor({
                         >
                             Conseils
                         </label>
-                        <textarea
+                        {/* <textarea
                             name="questionConseils"
                             id="questionConseils"
                             value={model.conseils || ""}
@@ -260,8 +274,27 @@ export default function QuestionEditor({
                             }
                             className="my-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500
                  focus:ring-indigo-500 sm:text-sm"
-                        ></textarea>
+                        ></textarea> */}
+
+                        <MDEditor
+                            name="questionConseils"
+                            id="questionConseils"
+                            data-color-mode="light"
+                            value={model.conseils || ""}
+                            onChange={
+                                (ev) => {
+                                    console.log(ev);
+
+                                    setModel({
+                                        ...model,
+                                        conseils: ev,
+                                    });
+                                }
+                                //  name="questionConseils"
+                            }
+                        />
                     </div>
+
                     {/* EDN Conseils */}
                 </div>
             </div>

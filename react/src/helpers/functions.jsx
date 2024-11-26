@@ -153,3 +153,9 @@ export function getPrestashop(x) {
 
     // return <div className="App">{image}</div>;
 }
+
+export function goToAnimation() {
+    window.location.replace(
+        "https://bilan-sante.pharmacie-en-couleurs-eragny.com/"
+    );
+}

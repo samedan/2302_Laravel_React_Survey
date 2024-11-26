@@ -29,10 +29,10 @@ export default function PatientData() {
         ev.preventDefault();
         setError({ __html: "" });
         let patientData = {
-            user: user || "NA",
-            age: age || "NA",
-            weight: weight || "NA",
-            height: height || "NA",
+            user: user || "NAx",
+            age: age || "NAx",
+            weight: weight || "NAx",
+            height: height || "NAx",
             other: other,
         };
         setCurrentPatient(patientData);

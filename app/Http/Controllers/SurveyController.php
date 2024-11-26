@@ -30,6 +30,8 @@ class SurveyController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
+
+        
         // return SurveyResource::collection (Survey::where('user_id', $user->id)
         //     ->orderBy('created_at', 'desc')
         //     ->paginate(2));
@@ -86,6 +88,7 @@ class SurveyController extends Controller
         // if($user->id !== $survey->user_id) {
         //     return abort(403, 'Unauthorized action');
         // }
+        
         return new SurveyResource($survey);
     }
 
@@ -132,6 +135,7 @@ class SurveyController extends Controller
 
         // Create new questions
         foreach($data['questions'] as $question) {
+            
             if(in_array($question['id'], $toAdd)) {
                 $question['survey_id'] = $survey->id;
                 $this->createQuestion($question);
@@ -141,6 +145,7 @@ class SurveyController extends Controller
         // Update existing questions
         $questionMap = collect($data['questions'])->keyBy('id');
         foreach($survey->questions as $question) {
+            
             if(isset($questionMap[$question->id])) {
                 $this->updateQuestion($question, $questionMap[$question->id]);
             }
@@ -216,9 +221,9 @@ class SurveyController extends Controller
     public function createQuestion($data)
     {
         if(is_array($data['data'])) // data['data'] is a json (encoded {}) with the options
-         {
+         {            
             $data['data'] = json_encode($data['data']);
-        }
+        }        
         $validator = Validator::make($data, [
             'question' => 'required|string',
             'type' => [
@@ -249,7 +254,7 @@ class SurveyController extends Controller
     private function updateQuestion(SurveyQuestion $question, $data) {
         if(is_array($data['data'])) {
             $data['data'] = json_encode($data['data']);
-        }
+        }        
         $validator = Validator::make($data, [
             'id' => 'exists:App\Models\SurveyQuestion,id',
             'question' => 'required|string',
@@ -259,6 +264,38 @@ class SurveyController extends Controller
             'data' => 'present'
         ]);
         return $question->update($validator->validated());
+    }
+
+    /**
+     * Updates an Answer question and returns true or false
+     */
+    public function updateSurveyAnswer(Request $request, $surveyAnswerId) {
+        // $answerToUpdate = SurveyAnswer::findOrFail($surveyAnswerId);
+        $answerToUpdate = SurveyAnswer::where('other' , '=', $surveyAnswerId)
+            ->update([
+                'age' => $request['age'],
+                'user' => $request['user'],
+                'height' => $request['height'],
+                'weight' => $request['weight'],
+            ]);
+        
+        // $answerToUpdate->update([
+        //     'mark' => $request->input('mark'),
+        //     'reason' => $request->input('reason')
+        // ]);
+        // dd($answerToUpdate);
+        // if(is_array($data['data'])) {
+        //     $data['data'] = json_encode($data['data']);
+        // }
+        // $validator = Validator::make($data, [
+        //     'id' => 'exists:App\Models\SurveyQuestion,id',
+        //     'question' => 'required|string',
+        //     'type' => ['required', new Enum(QuestionTypeEnum::class)],
+        //     'description' =>'nullable|string',
+        //     'conseils' =>'nullable|string',
+        //     'data' => 'present'
+        // ]);
+        return "1";
     }
 
     public function getBySlug (Survey $survey) {
@@ -273,6 +310,7 @@ class SurveyController extends Controller
         return new SurveyResource($survey); // includes answers
     }
 
+    // Saves User & Response 
     public function storeAnswer (StoreSurveyAnswerRequest $request, Survey $survey) {
         $validated = $request->validated();
         
@@ -284,9 +322,8 @@ class SurveyController extends Controller
     
         //also print one by one
         // echo $request->name;
-        // echo $request->email;
-        echo $request->other;
-        
+        // echo $request->email; 
+        echo $request->other;       
         $surveyAnswer = SurveyAnswer::create([
             'survey_id' => $survey->id,
             'start_date' => date('Y-m-d H:i:s'),
@@ -298,8 +335,6 @@ class SurveyController extends Controller
             'other' => $request['other'],
             'other_id' => $request['other'],
             // 'user' => "request->user",
-            
-            
         ]);
 
         // $other_id = $request['other'];
